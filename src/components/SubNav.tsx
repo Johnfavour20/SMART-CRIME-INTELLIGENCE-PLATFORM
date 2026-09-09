@@ -77,19 +77,13 @@ export const SubNav: React.FC<SubNavProps> = ({
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center">
               <button
                 onClick={onSignIn}
-                className="px-3.5 py-2 text-[13.5px] font-semibold text-slate-700 hover:text-purple-700 transition-colors cursor-pointer"
+                className="px-5 py-2 text-[13.5px] font-semibold text-white bg-purple-700 hover:bg-purple-800 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
               >
-                Sign In
-              </button>
-              <button
-                onClick={() => handleLinkClick('dashboard')}
-                className="px-4 py-2 text-[13px] font-semibold text-white bg-purple-700 hover:bg-purple-800 rounded-xl transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>Launch Dashboard</span>
-                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                <span className="material-symbols-outlined text-[17px]">login</span>
+                <span>Sign In</span>
               </button>
             </div>
           )}
