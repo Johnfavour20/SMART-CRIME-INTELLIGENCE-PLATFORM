@@ -39,6 +39,9 @@ export const SubNav: React.FC<SubNavProps> = ({
     } else if (id === 'crime-data') {
       onNavigateTab('crime-data');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'datasets') {
+      onNavigateTab('datasets');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (id === 'analytics') {
       onNavigateTab('analytics');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -64,7 +67,7 @@ export const SubNav: React.FC<SubNavProps> = ({
 
   const navLinks = [
     { id: 'overview', label: 'Home', isTab: activeTab === 'overview' && activeSection === 'overview' },
-    { id: 'crime-data', label: 'Crime Data', isTab: activeTab === 'crime-data' },
+    { id: 'crime-data', label: 'Crime Data', isTab: activeTab === 'crime-data' || activeTab === 'datasets' },
     { id: 'analytics', label: 'Analytics', isTab: activeTab === 'analytics' },
     { id: 'hotspots', label: 'Hotspots', isTab: activeTab === 'hotspots' },
     { id: 'prediction', label: 'Prediction', isTab: activeTab === 'prediction' },

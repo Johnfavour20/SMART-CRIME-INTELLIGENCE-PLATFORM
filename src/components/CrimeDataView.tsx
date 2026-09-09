@@ -19,11 +19,13 @@ export interface CrimeRecord {
 interface CrimeDataViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
   onSelectState?: (stateName: string) => void;
+  onOpenDatasetManagement?: () => void;
 }
 
 export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
   onNavigateTab,
   onSelectState,
+  onOpenDatasetManagement,
 }) => {
   // Build flattened 111 detailed baseline records from 37 states x 3 categories
   const allRecords: CrimeRecord[] = useMemo(() => {
@@ -288,6 +290,17 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
         </div>
 
         <div className="flex items-center flex-wrap gap-3">
+          {onOpenDatasetManagement && (
+            <button
+              onClick={onOpenDatasetManagement}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-50 text-[#6200a9] hover:bg-purple-100 border border-purple-200 text-xs font-semibold shadow-xs transition-all cursor-pointer"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-[18px]">cloud_upload</span>
+              <span>Dataset Ingestion (Admin)</span>
+            </button>
+          )}
+
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-purple-700 text-xs font-semibold shadow-xs">
             <span className="material-symbols-outlined text-[16px]">verified</span>
             <span>Dataset: NBS 2017</span>

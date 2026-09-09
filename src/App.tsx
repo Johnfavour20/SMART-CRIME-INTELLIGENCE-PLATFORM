@@ -90,6 +90,7 @@ export default function App() {
   if (
     activeTab === 'dashboard' ||
     activeTab === 'crime-data' ||
+    activeTab === 'datasets' ||
     activeTab === 'analytics' ||
     activeTab === 'hotspots' ||
     activeTab === 'prediction' ||
@@ -99,7 +100,9 @@ export default function App() {
       <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
         <DashboardView
           initialSubView={
-            activeTab === 'models'
+            activeTab === 'datasets'
+              ? 'datasets'
+              : activeTab === 'models'
               ? 'models'
               : activeTab === 'prediction'
               ? 'prediction'
