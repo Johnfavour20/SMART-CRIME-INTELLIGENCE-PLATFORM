@@ -1,0 +1,6 @@
+{
+  "name": "Smart Crime Intelligence",
+  "description": "Empirical crime analytics, geospatial hotspot clustering, and predictive risk modeling platform standardized on Nigerian National Bureau of Statistics (NBS) data.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
