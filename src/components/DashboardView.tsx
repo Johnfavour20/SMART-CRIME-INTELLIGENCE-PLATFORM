@@ -1431,7 +1431,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* Metadata Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6 pt-5 border-t border-slate-200">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-200">
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Source</span>
                   <span className="text-[14px] font-bold text-slate-900">National Bureau of Statistics (NBS)</span>
@@ -1447,13 +1447,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Total Reported</span>
                   <span className="text-[14px] font-bold text-slate-900">134,663 Cases</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Validation Level</span>
-                  <span className="text-[14px] font-bold text-emerald-700 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                    <span>Academic Verified</span>
-                  </span>
                 </div>
               </div>
             </section>
