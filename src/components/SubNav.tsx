@@ -131,14 +131,6 @@ export const SubNav: React.FC<SubNavProps> = ({
               Sign In
             </button>
           )}
-          <button
-            onClick={onLaunchDashboard}
-            className="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-[13.5px] font-semibold transition-all active:scale-98 flex items-center gap-1.5 cursor-pointer shadow-xs"
-          >
-            <span>Launch Dashboard</span>
-            <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-          </button>
-
           {/* Mobile menu hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

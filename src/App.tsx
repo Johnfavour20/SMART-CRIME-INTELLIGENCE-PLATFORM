@@ -18,6 +18,7 @@ import { ComponentsView } from './components/ComponentsView';
 import { PatternsView } from './components/PatternsView';
 import { AuthPage } from './components/AuthPage';
 import { DashboardView } from './components/DashboardView';
+import { CrimeDataView } from './components/CrimeDataView';
 
 import { ExportTokensModal } from './components/ExportTokensModal';
 import { SearchModal } from './components/SearchModal';
@@ -109,6 +110,30 @@ export default function App() {
           }}
         />
 
+        <SearchModal
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
+          onSelectResult={handleSelectSearchResult}
+        />
+      </div>
+    );
+  }
+
+  if (activeTab === 'crime-data') {
+    return (
+      <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
+        <CrimeDataView
+          onNavigateTab={(tab) => {
+            setActiveTab(tab);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          currentAnalyst={currentAnalyst}
+          onBackToOverview={() => {
+            setActiveTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
         <SearchModal
           isOpen={isSearchOpen}
           onClose={() => setIsSearchOpen(false)}

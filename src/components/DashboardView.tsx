@@ -103,7 +103,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <button
               type="button"
-              onClick={() => onNavigateTab('data-visualizations')}
+              onClick={() => onNavigateTab('crime-data')}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[20px]">database</span>
@@ -190,13 +190,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </nav>
         </div>
 
-        {/* Bottom Verified Baseline Badge */}
-        <div className="p-3 m-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#6200a9] text-[16px]">verified</span>
-          <span className="text-[11px] text-slate-600 font-medium truncate">
-            NBS 2017 Dataset • Verified Baseline
-          </span>
-        </div>
+
       </aside>
 
       {/* Main Panel Wrapper */}
@@ -210,9 +204,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             >
               <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
-            <span className="text-[13px] text-slate-500">Smart Crime</span>
-            <span className="material-symbols-outlined text-slate-400 text-[16px]">chevron_right</span>
-            <span className="text-[15px] text-slate-900 font-semibold">Spatial Intelligence Console</span>
+
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
@@ -231,24 +223,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
             </button>
 
-            {/* Notification Bell */}
-            <button
-              aria-label="Notifications"
-              className="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
-              type="button"
-              onClick={() => alert('Platform notice: Longitudinal baseline calibrated across all 37 jurisdictions.')}
-            >
-              <span className="material-symbols-outlined text-[20px]">notifications</span>
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-600 ring-2 ring-white"></span>
-            </button>
 
-            {/* Encrypted Session Pill */}
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-[11px] text-slate-700 font-medium">Encrypted Session (TLS 1.3)</span>
-            </div>
-
-            <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
 
             {/* User Profile */}
             <div className="flex items-center gap-2.5">
@@ -292,28 +267,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2.5 shrink-0 self-start md:self-auto">
-                    <button
-                      onClick={() => onNavigateTab('data-visualizations')}
-                      className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[13px] font-medium transition-all cursor-pointer"
-                      type="button"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-                      <span>NBS 2017 Dataset</span>
-                    </button>
 
-                    <button
-                      onClick={handleExportBrief}
-                      disabled={isExporting}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#7e22ce] text-white text-[13px] font-semibold hover:bg-[#6200a9] transition-all cursor-pointer disabled:opacity-80"
-                      type="button"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">
-                        {isExporting ? 'sync' : 'download'}
-                      </span>
-                      <span>{isExporting ? 'Exporting...' : 'Export Brief'}</span>
-                    </button>
-                  </div>
                 </div>
 
                 {exportNotification && (
@@ -1149,58 +1103,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
             </section>
 
-            {/* Dataset Information Footer Card */}
-            <section className="rounded-2xl bg-white p-6 sm:p-8 border border-slate-200 shadow-xs">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[22px]">verified_user</span>
-                  </div>
-                  <div>
-                    <h4 className="text-[18px] font-bold text-slate-900">Dataset Information</h4>
-                    <p className="text-[13px] text-slate-600">
-                      Validated governmental baseline reference standard
-                    </p>
-                  </div>
-                </div>
 
-                <button
-                  onClick={() => onNavigateTab('patterns')}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#6200a9] text-[13px] font-semibold transition-colors shrink-0 cursor-pointer"
-                  type="button"
-                >
-                  <span className="material-symbols-outlined text-[16px]">description</span>
-                  <span>View Dataset Documentation</span>
-                </button>
-              </div>
-
-              {/* Metadata Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6 pt-5 border-t border-slate-200">
-                <div>
-                  <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Source</span>
-                  <span className="text-[14px] font-bold text-slate-900">National Bureau of Statistics (NBS)</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Dataset</span>
-                  <span className="text-[14px] font-bold text-slate-900">Crime Statistics: Offences by State</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Period</span>
-                  <span className="text-[14px] font-bold text-slate-900">2017 Historical Baseline</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Total Reported</span>
-                  <span className="text-[14px] font-bold text-slate-900">134,663 Cases</span>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Validation Level</span>
-                  <span className="text-[14px] font-bold text-emerald-700 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                    <span>Academic Verified</span>
-                  </span>
-                </div>
-              </div>
-            </section>
           </div>
         </main>
       </div>
