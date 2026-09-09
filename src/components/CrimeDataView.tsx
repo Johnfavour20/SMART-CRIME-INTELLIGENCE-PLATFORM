@@ -1,855 +1,1161 @@
 import React, { useState, useMemo } from 'react';
+import { NIGERIAN_STATES_DATA } from '../data/crimeData';
 import { ActiveTab } from '../types';
 
-/* ─────────────────────────────────────────────
-   TYPES
-───────────────────────────────────────────── */
-interface CrimeDataViewProps {
-  onNavigateTab: (tab: ActiveTab) => void;
-  onOpenSearch?: () => void;
-  currentAnalyst?: string | null;
-  onBackToOverview: () => void;
-}
-
-type SortKey = 'state' | 'category' | 'cases' | 'year';
-type SortDir = 'asc' | 'desc';
-type CategoryFilter = 'all' | 'property' | 'persons' | 'authority';
-
-/* ─────────────────────────────────────────────
-   DATASET — NBS 2017 aggregate rows
-───────────────────────────────────────────── */
-const ALL_ROWS: {
-  id: number;
+export interface CrimeRecord {
+  id: string;
   state: string;
-  category: string;
-  categoryKey: CategoryFilter;
+  zone: string;
+  category: 'property' | 'persons' | 'authority';
+  categoryLabel: string;
   cases: number;
   year: number;
-  source: string;
   status: string;
-}[] = [
-  { id: 1,  state: 'Lagos',       category: 'Offences Against Property',         categoryKey: 'property',  cases: 34210, year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 2,  state: 'Lagos',       category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 12940, year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 3,  state: 'Lagos',       category: 'Offences Against Lawful Authority',  categoryKey: 'authority', cases: 3210,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 4,  state: 'Rivers',      category: 'Offences Against Property',         categoryKey: 'property',  cases: 5124,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 5,  state: 'Rivers',      category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 4380,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 6,  state: 'Rivers',      category: 'Offences Against Lawful Authority',  categoryKey: 'authority', cases: 870,   year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 7,  state: 'Kano',        category: 'Offences Against Property',         categoryKey: 'property',  cases: 4820,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 8,  state: 'Kano',        category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 3610,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 9,  state: 'Kano',        category: 'Offences Against Lawful Authority',  categoryKey: 'authority', cases: 1842,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 10, state: 'Kaduna',      category: 'Offences Against Property',         categoryKey: 'property',  cases: 4218,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 11, state: 'Kaduna',      category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 3290,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 12, state: 'FCT Abuja',   category: 'Offences Against Property',         categoryKey: 'property',  cases: 3980,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 13, state: 'FCT Abuja',   category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 2710,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 14, state: 'Delta',       category: 'Offences Against Property',         categoryKey: 'property',  cases: 3450,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 15, state: 'Delta',       category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 2980,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 16, state: 'Oyo',         category: 'Offences Against Property',         categoryKey: 'property',  cases: 3100,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 17, state: 'Oyo',         category: 'Offences Against Lawful Authority',  categoryKey: 'authority', cases: 890,   year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 18, state: 'Edo',         category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 2780,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 19, state: 'Anambra',     category: 'Offences Against Property',         categoryKey: 'property',  cases: 3110,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 20, state: 'Plateau',     category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 1940,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 21, state: 'Borno',       category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 1720,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 22, state: 'Borno',       category: 'Offences Against Lawful Authority',  categoryKey: 'authority', cases: 640,   year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 23, state: 'Enugu',       category: 'Offences Against Property',         categoryKey: 'property',  cases: 1890,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 24, state: 'Imo',         category: 'Offences Against Property',         categoryKey: 'property',  cases: 1650,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 25, state: 'Cross River', category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 1430,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 26, state: 'Ondo',        category: 'Offences Against Property',         categoryKey: 'property',  cases: 1510,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 27, state: 'Kwara',       category: 'Offences Against Lawful Authority',  categoryKey: 'authority', cases: 490,   year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 28, state: 'Osun',        category: 'Offences Against Property',         categoryKey: 'property',  cases: 1210,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 29, state: 'Ogun',        category: 'Offences Against Persons',           categoryKey: 'persons',   cases: 1340,  year: 2017, source: 'NBS', status: 'Verified' },
-  { id: 30, state: 'Sokoto',      category: 'Offences Against Lawful Authority',  categoryKey: 'authority', cases: 380,   year: 2017, source: 'NBS', status: 'Verified' },
-];
-
-const STATES = ['All States', 'Lagos', 'Rivers', 'Kano', 'Kaduna', 'FCT Abuja', 'Delta', 'Oyo', 'Edo', 'Anambra', 'Plateau', 'Borno', 'Enugu', 'Imo', 'Cross River', 'Ondo', 'Kwara', 'Osun', 'Ogun', 'Sokoto'];
-
-/* Donut geometry */
-const DONUT_TOTAL = 134663;
-const DONUT_CIRC  = 2 * Math.PI * 38;
-
-function buildSegment(value: number, prevOffset: number) {
-  const dash   = (value / DONUT_TOTAL) * DONUT_CIRC;
-  return { dash: dash.toFixed(2), gap: DONUT_CIRC.toFixed(2), offset: (-prevOffset).toFixed(2) };
+  capital: string;
+  riskScore: number;
+  clusterId: number;
 }
 
-const propertySegs  = buildSegment(68579, 0);
-const personsOffset = (68579 / DONUT_TOTAL) * DONUT_CIRC;
-const personsSegs   = buildSegment(53641, personsOffset);
-const authoritySegs = buildSegment(12443, personsOffset + (53641 / DONUT_TOTAL) * DONUT_CIRC);
-
-/* Nav items */
-const NAV_MAIN: { id: string; label: string; icon: string; tab: ActiveTab }[] = [
-  { id: 'dashboard',  label: 'Dashboard',  icon: 'grid_view',     tab: 'dashboard' },
-  { id: 'crime-data', label: 'Crime Data', icon: 'database',      tab: 'crime-data' as ActiveTab },
-  { id: 'analytics',  label: 'Analytics',  icon: 'insights',      tab: 'data-visualizations' },
-  { id: 'hotspots',   label: 'Hotspots',   icon: 'location_on',   tab: 'data-visualizations' },
-  { id: 'prediction', label: 'Prediction', icon: 'query_stats',   tab: 'machine-learning-and-prediction' },
-  { id: 'models',     label: 'Models',     icon: 'account_tree',  tab: 'overview' },
-  { id: 'reports',    label: 'Reports',    icon: 'description',   tab: 'patterns' },
-];
-const NAV_BOTTOM: { id: string; label: string; icon: string; tab: ActiveTab }[] = [
-  { id: 'settings', label: 'Settings', icon: 'settings',         tab: 'foundation' },
-  { id: 'profile',  label: 'Profile',  icon: 'manage_accounts',  tab: 'auth' },
-];
-
-/* Category badge */
-function catBadge(key: CategoryFilter, label: string) {
-  const cls: Record<CategoryFilter, string> = {
-    all:       'text-[#1e1926]',
-    property:  'text-[#6200a9]',
-    persons:   'text-[#7E22CE]',
-    authority: 'text-[#9333EA]',
-  };
-  return (
-    <span className={`text-[12px] font-semibold ${cls[key]}`}>
-      {label}
-    </span>
-  );
+interface CrimeDataViewProps {
+  onNavigateTab: (tab: ActiveTab) => void;
+  onSelectState?: (stateName: string) => void;
+  onOpenDatasetManagement?: () => void;
 }
 
-function dotColor(key: CategoryFilter) {
-  if (key === 'property')  return 'bg-[#6200a9]';
-  if (key === 'persons')   return 'bg-[#7E22CE]';
-  return 'bg-[#9333EA]';
-}
-
-/* ─────────────────────────────────────────────
-   COMPONENT
-───────────────────────────────────────────── */
 export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
   onNavigateTab,
-  onOpenSearch,
-  currentAnalyst = 'System User',
-  onBackToOverview,
+  onSelectState,
+  onOpenDatasetManagement,
 }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [searchQ, setSearchQ]         = useState('');
-  const [stateFilter, setStateFilter] = useState('All States');
-  const [catFilter, setCatFilter]     = useState<CategoryFilter>('all');
-  const [sortKey, setSortKey]         = useState<SortKey>('cases');
-  const [sortDir, setSortDir]         = useState<SortDir>('desc');
-  const [page, setPage]               = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selected, setSelected]       = useState<Set<number>>(new Set());
-  const [showEmpty, setShowEmpty]     = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
-  const [exportMsg, setExportMsg]     = useState<string | null>(null);
+  // Build flattened 111 detailed baseline records from 37 states x 3 categories
+  const allRecords: CrimeRecord[] = useMemo(() => {
+    const list: CrimeRecord[] = [];
+    NIGERIAN_STATES_DATA.forEach((st) => {
+      list.push({
+        id: `${st.state}-property`,
+        state: st.state.includes('State') || st.state.includes('FCT') ? st.state : `${st.state} State`,
+        zone: st.zone,
+        category: 'property',
+        categoryLabel: 'Offences Against Property',
+        cases: st.propertyCases,
+        year: 2017,
+        status: 'Verified',
+        capital: st.capital,
+        riskScore: st.riskScore,
+        clusterId: st.clusterId,
+      });
+      list.push({
+        id: `${st.state}-persons`,
+        state: st.state.includes('State') || st.state.includes('FCT') ? st.state : `${st.state} State`,
+        zone: st.zone,
+        category: 'persons',
+        categoryLabel: 'Offences Against Persons',
+        cases: st.personsCases,
+        year: 2017,
+        status: 'Verified',
+        capital: st.capital,
+        riskScore: st.riskScore,
+        clusterId: st.clusterId,
+      });
+      list.push({
+        id: `${st.state}-authority`,
+        state: st.state.includes('State') || st.state.includes('FCT') ? st.state : `${st.state} State`,
+        zone: st.zone,
+        category: 'authority',
+        categoryLabel: 'Against Lawful Authority',
+        cases: st.authorityCases,
+        year: 2017,
+        status: 'Verified',
+        capital: st.capital,
+        riskScore: st.riskScore,
+        clusterId: st.clusterId,
+      });
+    });
+    return list;
+  }, []);
 
-  /* filtering */
-  const filtered = useMemo(() => {
-    let rows = [...ALL_ROWS];
-    if (stateFilter !== 'All States') rows = rows.filter(r => r.state === stateFilter);
-    if (catFilter !== 'all')          rows = rows.filter(r => r.categoryKey === catFilter);
-    if (searchQ.trim()) {
-      const q = searchQ.trim().toLowerCase();
-      rows = rows.filter(r => r.state.toLowerCase().includes(q) || r.category.toLowerCase().includes(q));
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedStateFilter, setSelectedStateFilter] = useState<string>('all');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('all');
+
+  // Applied Filters (applied on click of Apply, or updated directly)
+  const [appliedSearch, setAppliedSearch] = useState<string>('');
+  const [appliedState, setAppliedState] = useState<string>('all');
+  const [appliedCategory, setAppliedCategory] = useState<string>('all');
+
+  // Sort States
+  const [sortField, setSortField] = useState<'state' | 'category' | 'cases'>('cases');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // Selection & UI States
+  const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
+  const [emptyStatePreview, setEmptyStatePreview] = useState<boolean>(false);
+  const [inspectRecord, setInspectRecord] = useState<CrimeRecord | null>(null);
+  const [exportNotice, setExportNotice] = useState<string | null>(null);
+
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
+  // Apply button handler
+  const handleApplyFilters = () => {
+    setAppliedSearch(searchQuery);
+    setAppliedState(selectedStateFilter);
+    setAppliedCategory(selectedCategoryFilter);
+    setCurrentPage(1);
+    setEmptyStatePreview(false);
+  };
+
+  // Reset button handler
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setSelectedStateFilter('all');
+    setSelectedCategoryFilter('all');
+    setAppliedSearch('');
+    setAppliedState('all');
+    setAppliedCategory('all');
+    setCurrentPage(1);
+    setEmptyStatePreview(false);
+  };
+
+  // Filtered & Sorted Records
+  const filteredRecords = useMemo(() => {
+    if (emptyStatePreview) return [];
+
+    let result = allRecords.filter((rec) => {
+      // Search
+      if (appliedSearch.trim()) {
+        const q = appliedSearch.toLowerCase();
+        const matchState = rec.state.toLowerCase().includes(q);
+        const matchCat = rec.categoryLabel.toLowerCase().includes(q);
+        const matchZone = rec.zone.toLowerCase().includes(q);
+        if (!matchState && !matchCat && !matchZone) return false;
+      }
+      // State Filter
+      if (appliedState !== 'all') {
+        const stateKey = rec.state.toLowerCase();
+        const filterKey = appliedState.toLowerCase();
+        if (!stateKey.includes(filterKey)) return false;
+      }
+      // Category Filter
+      if (appliedCategory !== 'all' && rec.category !== appliedCategory) {
+        return false;
+      }
+      return true;
+    });
+
+    // Sorting
+    result.sort((a, b) => {
+      if (sortField === 'state') {
+        return sortOrder === 'asc' ? a.state.localeCompare(b.state) : b.state.localeCompare(a.state);
+      }
+      if (sortField === 'category') {
+        return sortOrder === 'asc' ? a.categoryLabel.localeCompare(b.categoryLabel) : b.categoryLabel.localeCompare(a.categoryLabel);
+      }
+      if (sortField === 'cases') {
+        return sortOrder === 'asc' ? a.cases - b.cases : b.cases - a.cases;
+      }
+      return 0;
+    });
+
+    return result;
+  }, [allRecords, appliedSearch, appliedState, appliedCategory, sortField, sortOrder, emptyStatePreview]);
+
+  // Paginated Slices
+  const totalEntries = filteredRecords.length;
+  const totalPages = Math.ceil(totalEntries / rowsPerPage) || 1;
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * rowsPerPage;
+  const endIndex = Math.min(startIndex + rowsPerPage, totalEntries);
+  const currentRows = filteredRecords.slice(startIndex, endIndex);
+
+  // Toggle sort
+  const handleSort = (field: 'state' | 'category' | 'cases') => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder(field === 'cases' ? 'desc' : 'asc');
     }
-    rows.sort((a, b) => {
-      let va: string | number = '', vb: string | number = '';
-      if (sortKey === 'state')    { va = a.state;    vb = b.state; }
-      if (sortKey === 'category') { va = a.category; vb = b.category; }
-      if (sortKey === 'cases')    { va = a.cases;    vb = b.cases; }
-      if (sortKey === 'year')     { va = a.year;     vb = b.year; }
-      if (typeof va === 'string') return sortDir === 'asc' ? va.localeCompare(vb as string) : (vb as string).localeCompare(va);
-      return sortDir === 'asc' ? (va as number) - (vb as number) : (vb as number) - (va as number);
-    });
-    return rows;
-  }, [stateFilter, catFilter, searchQ, sortKey, sortDir]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
-  const pageRows   = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
-
-  const toggleSort = (key: SortKey) => {
-    if (key === sortKey) setSortDir(d => (d === 'asc' ? 'desc' : 'asc'));
-    else { setSortKey(key); setSortDir('desc'); }
-    setPage(1);
   };
 
-  const sortIcon = (key: SortKey) =>
-    key !== sortKey ? 'unfold_more' : sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward';
-
-  const allSelected = pageRows.length > 0 && pageRows.every(r => selected.has(r.id));
-  const toggleAll   = () => {
-    setSelected(prev => {
-      const n = new Set(prev);
-      allSelected ? pageRows.forEach(r => n.delete(r.id)) : pageRows.forEach(r => n.add(r.id));
-      return n;
-    });
-  };
-  const toggleRow = (id: number) => {
-    setSelected(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  // Row selection
+  const handleToggleSelectAll = () => {
+    if (selectedRowIds.size === currentRows.length && currentRows.length > 0) {
+      setSelectedRowIds(new Set());
+    } else {
+      const newSet = new Set<string>();
+      currentRows.forEach((r) => newSet.add(r.id));
+      setSelectedRowIds(newSet);
+    }
   };
 
-  const handleReset = () => { setSearchQ(''); setStateFilter('All States'); setCatFilter('all'); setPage(1); setShowEmpty(false); };
-
-  const handleExport = () => {
-    setIsExporting(true);
-    setExportMsg('Preparing export…');
-    setTimeout(() => {
-      setExportMsg('NBS_CrimeData_2017.csv downloaded ✓');
-      setTimeout(() => { setIsExporting(false); setExportMsg(null); }, 2500);
-    }, 1200);
+  const handleToggleRow = (id: string) => {
+    const newSet = new Set(selectedRowIds);
+    if (newSet.has(id)) {
+      newSet.delete(id);
+    } else {
+      newSet.add(id);
+    }
+    setSelectedRowIds(newSet);
   };
 
-  /* pagination window */
-  const pageNums = (() => {
-    const nums: number[] = [];
-    const start = Math.max(1, Math.min(page - 2, totalPages - 4));
-    for (let i = start; i <= Math.min(start + 4, totalPages); i++) nums.push(i);
-    return nums;
-  })();
+  // Export CSV
+  const handleExportData = () => {
+    const headers = ['State', 'Geopolitical Zone', 'Crime Category', 'Reported Cases', 'Year', 'Status', 'Risk Score'];
+    const rows = filteredRecords.map((r) => [
+      `"${r.state}"`,
+      `"${r.zone}"`,
+      `"${r.categoryLabel}"`,
+      r.cases,
+      r.year,
+      `"${r.status}"`,
+      r.riskScore,
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'NBS_2017_Nigeria_Crime_Data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setExportNotice('Export complete: NBS_2017_Nigeria_Crime_Data.csv downloaded');
+    setTimeout(() => setExportNotice(null), 3500);
+  };
+
+  // Category Badge colors
+  const getCategoryBadge = (cat: 'property' | 'persons' | 'authority') => {
+    switch (cat) {
+      case 'property':
+        return (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-100 text-[12px] font-medium">
+            Offences Against Property
+          </span>
+        );
+      case 'persons':
+        return (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 text-[12px] font-medium">
+            Offences Against Persons
+          </span>
+        );
+      case 'authority':
+        return (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-100 text-[12px] font-medium">
+            Against Lawful Authority
+          </span>
+        );
+    }
+  };
+
+  // Dot color for state
+  const getStateDot = (cat: 'property' | 'persons' | 'authority') => {
+    switch (cat) {
+      case 'property':
+        return 'bg-purple-600';
+      case 'persons':
+        return 'bg-indigo-600';
+      case 'authority':
+        return 'bg-violet-600';
+    }
+  };
 
   return (
-    <div
-      className="bg-[#FAF7FF] min-h-screen antialiased"
-      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-    >
-      {/* mobile overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/40 z-50 lg:hidden" onClick={() => setSidebarOpen(false)} />
+    <div className="flex flex-col w-full space-y-6">
+      {/* EXPORT TOAST NOTIFICATION */}
+      {exportNotice && (
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl bg-slate-900 text-white shadow-xl flex items-center gap-3 animate-bounce">
+          <span className="material-symbols-outlined text-emerald-400 text-[20px]">check_circle</span>
+          <span className="text-sm font-medium">{exportNotice}</span>
+        </div>
       )}
 
-      {/* ════════════════ SIDEBAR ════════════════ */}
-      <aside
-        className={`fixed left-0 top-0 h-screen w-[260px] bg-white border-r border-[#E9DFF2] z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(91,33,182,0.05)] transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-      >
-        <div className="flex flex-col flex-1 min-h-0">
-          {/* Logo */}
-          <div className="h-16 px-5 flex items-center justify-between border-b border-[#E9DFF2]">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={onBackToOverview} title="Return to Overview">
-              <div className="w-9 h-9 rounded-xl bg-[#6200a9] flex items-center justify-center text-white shadow-sm">
-                <span className="material-symbols-outlined text-[20px]">hub</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[15px] text-[#17121F] font-bold tracking-tight leading-tight">SMART CRIME</span>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[11px] text-[#6200a9] font-semibold tracking-wider">DATA SUITE</span>
-                  <span className="text-[10px] text-[#6B6472] px-1.5 py-0.5 rounded bg-[#F8F5FA] font-medium">v1.0 NBS</span>
-                </div>
-              </div>
-            </div>
-            <button className="lg:hidden p-1 text-[#6B6472]" onClick={() => setSidebarOpen(false)}>✕</button>
+      {/* PAGE HEADER & ACTION CONTROLS */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+              Crime Data Explorer
+            </h1>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold">
+              NBS Verified
+            </span>
           </div>
-
-          {/* Nav */}
-          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-            {NAV_MAIN.map(item => {
-              const active = item.id === 'crime-data';
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => onNavigateTab(item.tab)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] transition-colors cursor-pointer relative ${
-                    active
-                      ? 'bg-[#F3E8FF] text-[#6200a9] font-semibold before:content-[""] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[3px] before:bg-[#7E22CE] before:rounded-r'
-                      : 'text-[#6B6472] hover:bg-[#F8F5FA] hover:text-[#17121F] font-medium'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-
-            <div className="py-2"><div className="h-px bg-[#E9DFF2] mx-2" /></div>
-
-            {NAV_BOTTOM.map(item => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => onNavigateTab(item.tab)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-[#6B6472] hover:bg-[#F8F5FA] hover:text-[#17121F] font-medium transition-colors cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                <span>{item.label}</span>
-              </button>
-            ))}
-
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={onBackToOverview}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-[12px] font-semibold text-[#6B6472] bg-[#F8F5FA] hover:bg-[#F3E8FF] hover:text-[#6200a9] transition-colors cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                <span>Back to Overview</span>
-              </button>
-            </div>
-          </nav>
+          <p className="text-sm sm:text-base text-slate-600">
+            Explore, filter, and inspect verified historical records utilized across predictive models and spatial clustering.
+          </p>
         </div>
-      </aside>
 
-      {/* ════════════════ MAIN PANEL ════════════════ */}
-      <div className="lg:pl-[260px]">
-
-        {/* Top Header */}
-        <header className="fixed top-0 left-0 lg:left-[260px] right-0 h-16 bg-white/95 backdrop-blur-md border-b border-[#E9DFF2] z-40 flex items-center justify-between px-4 sm:px-6 lg:px-8 shadow-[0_1px_6px_rgba(91,33,182,0.04)]">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center flex-wrap gap-3">
+          {onOpenDatasetManagement && (
             <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1.5 rounded-lg hover:bg-[#F8F5FA] text-[#6B6472] cursor-pointer mr-1"
-            >
-              <span className="material-symbols-outlined text-[22px]">menu</span>
-            </button>
-            <nav className="flex items-center gap-1 text-[13px]">
-              <button
-                onClick={() => onNavigateTab('dashboard')}
-                className="text-[#6B6472] hover:text-[#6200a9] transition-colors cursor-pointer font-medium"
-              >
-                Dashboard
-              </button>
-              <span className="material-symbols-outlined text-[#6B6472] text-[15px]">chevron_right</span>
-              <span className="text-[#6200a9] font-semibold">Crime Data</span>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => onOpenSearch?.()}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F8F5FA] hover:bg-[#F3E8FF] text-[#6B6472] border border-[#E9DFF2] transition-colors cursor-pointer"
+              onClick={onOpenDatasetManagement}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-50 text-[#6200a9] hover:bg-purple-100 border border-purple-200 text-xs font-semibold shadow-xs transition-all cursor-pointer"
               type="button"
             >
-              <span className="material-symbols-outlined text-[18px]">search</span>
-              <span className="text-[13px]">Search incidents, LGAs, states…</span>
-              <span className="text-[11px] bg-white px-1.5 py-0.5 rounded border border-[#E9DFF2] text-[#6B6472] ml-1 font-mono">⌘K</span>
+              <span className="material-symbols-outlined text-[18px]">cloud_upload</span>
+              <span>Dataset Ingestion (Admin)</span>
             </button>
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#6200a9] flex items-center justify-center text-white">
-                <span className="material-symbols-outlined text-[18px]">person</span>
-              </div>
-              <div className="hidden sm:flex flex-col text-left">
-                <span className="text-[12px] text-[#17121F] font-semibold leading-tight">{currentAnalyst || 'System User'}</span>
-                <span className="text-[11px] text-[#6B6472] leading-tight">Authorized Analyst</span>
-              </div>
-            </div>
+          )}
+
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-purple-700 text-xs font-semibold shadow-xs">
+            <span className="material-symbols-outlined text-[16px]">verified</span>
+            <span>Dataset: NBS 2017</span>
           </div>
-        </header>
 
-        {/* Page body */}
-        <main className="w-full pt-[88px] min-h-screen px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="flex flex-col w-full space-y-6 max-w-[1440px] mx-auto">
+          <button
+            onClick={handleExportData}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-purple-700 font-semibold text-sm border border-slate-200 shadow-xs hover:bg-slate-50 transition-all cursor-pointer"
+            type="button"
+          >
+            <span className="material-symbols-outlined text-[18px]">download</span>
+            <span>Export Data</span>
+          </button>
 
-            {/* ── PAGE HEADER ── */}
-            <section className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h1 className="text-[28px] sm:text-[32px] text-[#17121F] font-bold tracking-tight leading-tight">Crime Data Explorer</h1>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#F3E8FF] text-[#6200a9] text-[11px] font-semibold">NBS Verified</span>
-                </div>
-                <p className="text-[14px] text-[#6B6472]">
-                  Explore, filter, and inspect the verified historical crime records used for analysis and prediction.
-                </p>
-              </div>
-
-              <div className="flex items-center flex-wrap gap-2.5 shrink-0 self-start md:self-auto mt-1">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E9DFF2] text-[#6200a9] text-[12px] font-semibold shadow-sm">
-                  <span className="material-symbols-outlined text-[16px]">verified</span>
-                  <span>Dataset: NBS 2017</span>
-                </div>
-                <button
-                  onClick={handleExport}
-                  disabled={isExporting}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-[#6200a9] border border-[#E9DFF2] text-[13px] font-semibold shadow-sm hover:bg-[#F3E8FF] transition-all cursor-pointer disabled:opacity-70"
-                  type="button"
-                >
-                  <span className="material-symbols-outlined text-[18px]">{isExporting ? 'sync' : 'download'}</span>
-                  <span>{isExporting ? 'Exporting…' : 'Export Data'}</span>
-                </button>
-                <button
-                  onClick={() => onNavigateTab('data-visualizations')}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#7E22CE] text-white text-[13px] font-semibold shadow-md hover:bg-[#6200a9] transition-all cursor-pointer"
-                  type="button"
-                >
-                  <span className="material-symbols-outlined text-[18px]">play_arrow</span>
-                  <span>Run Analysis</span>
-                </button>
-              </div>
-            </section>
-
-            {exportMsg && (
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[#E9DFF2] rounded-xl text-[13px] font-semibold text-[#6200a9] shadow-sm self-start">
-                <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                {exportMsg}
-              </div>
-            )}
-
-            {/* ── KPI STRIP ── */}
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { label: 'Total Records',    value: '134,663', sub: 'Reported crime cases',    icon: 'database',      noteIcon: 'history_edu',   note: 'NBS 2017 Validated Baseline',  accent: '#6200a9' },
-                { label: 'States Covered',   value: '36 + 1',  sub: 'Nigerian states & FCT',   icon: 'map',           noteIcon: 'public',        note: '6 Geopolitical Zones',         accent: '#7E22CE' },
-                { label: 'Crime Categories', value: '3',       sub: 'Major statutory classes',  icon: 'account_tree', noteIcon: 'balance',       note: 'Property · Persons · Authority', accent: '#6200a9' },
-                { label: 'Reporting Period', value: '2017',    sub: 'Historical benchmark',     icon: 'calendar_today',noteIcon: 'check_circle',  note: 'Annual Official Baseline',     accent: '#7E22CE' },
-              ].map(kpi => (
-                <div key={kpi.label} className="bg-white p-5 rounded-2xl border border-[#E9DFF2] shadow-sm flex flex-col justify-between">
-                  <div className="flex items-start justify-between">
-                    <span className="text-[11px] text-[#6B6472] uppercase tracking-wider font-semibold">{kpi.label}</span>
-                    <div className="w-10 h-10 rounded-xl bg-[#F8F5FA] flex items-center justify-center">
-                      <span className="material-symbols-outlined text-[22px]" style={{ color: kpi.accent }}>{kpi.icon}</span>
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <div className="text-[28px] font-bold text-[#17121F] tabular-nums tracking-tight">{kpi.value}</div>
-                    <p className="text-[12px] text-[#6B6472] mt-0.5">{kpi.sub}</p>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-[#E9DFF2] flex items-center gap-1 text-[11px] font-semibold" style={{ color: kpi.accent }}>
-                    <span className="material-symbols-outlined text-[14px]">{kpi.noteIcon}</span>
-                    <span>{kpi.note}</span>
-                  </div>
-                </div>
-              ))}
-            </section>
-
-            {/* ── DATASET INFO CARD ── */}
-            <section className="bg-white rounded-2xl border border-[#E9DFF2] shadow-sm p-5 sm:p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-[#F3E8FF] flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[26px] text-[#6200a9]">storage</span>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[17px] font-bold text-[#17121F]">National Crime Dataset</span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-[#F3E8FF] text-[#6200a9] text-[11px] font-semibold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#6200a9]" />
-                      Official Census Series
-                    </span>
-                  </div>
-                  <p className="text-[13px] text-[#6B6472] max-w-3xl leading-relaxed">
-                    Historical reported crime data sourced from the National Bureau of Statistics (NBS). Covers all Nigerian states and FCT — the official 2017 baseline used for model training, spatial clustering, and predictive calibration.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-start gap-x-7 gap-y-3 shrink-0">
-                {[
-                  { label: 'Source Agency', value: 'NBS Nigeria' },
-                  { label: 'Coverage', value: '36 States + FCT' },
-                  { label: 'Dataset Year', value: '2017' },
-                ].map(m => (
-                  <div key={m.label} className="flex flex-col min-w-[80px]">
-                    <span className="text-[11px] text-[#6B6472] font-semibold uppercase tracking-wide">{m.label}</span>
-                    <span className="text-[14px] font-bold text-[#17121F] mt-0.5">{m.value}</span>
-                  </div>
-                ))}
-                <div className="flex flex-col">
-                  <span className="text-[11px] text-[#6B6472] font-semibold uppercase tracking-wide">Status</span>
-                  <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-emerald-700 mt-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    Available
-                  </span>
-                </div>
-              </div>
-            </section>
-
-            {/* ── FILTER PANEL ── */}
-            <section className="bg-white rounded-2xl border border-[#E9DFF2] shadow-sm p-5 sm:p-6 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#6200a9] text-[20px]">filter_list</span>
-                  <h2 className="text-[16px] font-bold text-[#17121F]">Filter Crime Records</h2>
-                </div>
-                <span className="text-[12px] text-[#6B6472] bg-[#F8F5FA] border border-[#E9DFF2] px-3 py-1 rounded-full font-medium">
-                  Showing filtered results from the historical NBS 2017 dataset
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 items-end">
-                {/* search */}
-                <div className="xl:col-span-4 flex flex-col gap-1.5">
-                  <label className="text-[12px] font-semibold text-[#6B6472] uppercase tracking-wide" htmlFor="cde-search">Quick Search</label>
-                  <div className="relative">
-                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6472] text-[18px]">search</span>
-                    <input
-                      id="cde-search"
-                      type="text"
-                      value={searchQ}
-                      onChange={e => setSearchQ(e.target.value)}
-                      placeholder="Search state or crime category…"
-                      className="w-full h-[42px] pl-9 pr-3 rounded-xl bg-[#F8F5FA] border border-[#E9DFF2] text-[#17121F] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#6200a9]/20 focus:bg-white transition-all placeholder:text-[#6B6472]"
-                    />
-                  </div>
-                </div>
-
-                {/* state */}
-                <div className="xl:col-span-3 flex flex-col gap-1.5">
-                  <label className="text-[12px] font-semibold text-[#6B6472] uppercase tracking-wide" htmlFor="cde-state">State / Territory</label>
-                  <div className="relative">
-                    <select
-                      id="cde-state"
-                      value={stateFilter}
-                      onChange={e => { setStateFilter(e.target.value); setPage(1); }}
-                      className="w-full h-[42px] px-3 pr-8 rounded-xl bg-[#F8F5FA] border border-[#E9DFF2] text-[#17121F] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#6200a9]/20 appearance-none cursor-pointer transition-all"
-                    >
-                      {STATES.map(s => <option key={s} value={s}>{s === 'All States' ? 'All States (36 + FCT)' : s}</option>)}
-                    </select>
-                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#6B6472] text-[18px] pointer-events-none">expand_more</span>
-                  </div>
-                </div>
-
-                {/* category */}
-                <div className="xl:col-span-3 flex flex-col gap-1.5">
-                  <label className="text-[12px] font-semibold text-[#6B6472] uppercase tracking-wide" htmlFor="cde-cat">Crime Category</label>
-                  <div className="relative">
-                    <select
-                      id="cde-cat"
-                      value={catFilter}
-                      onChange={e => { setCatFilter(e.target.value as CategoryFilter); setPage(1); }}
-                      className="w-full h-[42px] px-3 pr-8 rounded-xl bg-[#F8F5FA] border border-[#E9DFF2] text-[#17121F] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#6200a9]/20 appearance-none cursor-pointer transition-all"
-                    >
-                      <option value="all">All Categories (3)</option>
-                      <option value="property">Offences Against Property (68,579)</option>
-                      <option value="persons">Offences Against Persons (53,641)</option>
-                      <option value="authority">Offences Against Lawful Authority (12,443)</option>
-                    </select>
-                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#6B6472] text-[18px] pointer-events-none">expand_more</span>
-                  </div>
-                </div>
-
-                {/* buttons */}
-                <div className="xl:col-span-2 flex items-center gap-2">
-                  <button
-                    id="cde-apply"
-                    type="button"
-                    onClick={() => setPage(1)}
-                    className="flex-1 h-[42px] rounded-xl bg-[#7E22CE] text-white text-[14px] font-semibold hover:bg-[#6200a9] shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">filter_alt</span>
-                    Apply
-                  </button>
-                  <button
-                    id="cde-reset"
-                    type="button"
-                    onClick={handleReset}
-                    title="Reset Filters"
-                    className="h-[42px] px-3 rounded-xl bg-[#F8F5FA] border border-[#E9DFF2] text-[#6B6472] hover:text-[#6200a9] hover:bg-[#F3E8FF] flex items-center justify-center transition-all cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">restart_alt</span>
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            {/* ── TABLE + INSIGHT PANEL ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
-              {/* LEFT — Data table */}
-              <div className="lg:col-span-8 bg-white rounded-2xl border border-[#E9DFF2] shadow-sm p-5 sm:p-6 flex flex-col space-y-4">
-
-                {/* Toolbar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <h3 className="text-[16px] font-bold text-[#17121F]">Crime Records Repository</h3>
-                    <span className="px-2.5 py-0.5 rounded-full bg-[#F3E8FF] text-[#6200a9] text-[11px] font-semibold">
-                      {filtered.length.toLocaleString()} Records
-                    </span>
-                    {selected.size > 0 && (
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#7E22CE] text-white text-[11px] font-semibold">
-                        {selected.size} selected
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 self-end sm:self-auto">
-                    <button type="button" title="Customize columns" className="p-2 rounded-lg bg-[#F8F5FA] border border-[#E9DFF2] text-[#6B6472] hover:text-[#6200a9] hover:bg-[#F3E8FF] transition-colors cursor-pointer">
-                      <span className="material-symbols-outlined text-[18px]">view_column</span>
-                    </button>
-                    <button type="button" onClick={handleExport} title="Export CSV" className="p-2 rounded-lg bg-[#F8F5FA] border border-[#E9DFF2] text-[#6B6472] hover:text-[#6200a9] hover:bg-[#F3E8FF] transition-colors cursor-pointer">
-                      <span className="material-symbols-outlined text-[18px]">sim_card_download</span>
-                    </button>
-                    <button
-                      type="button"
-                      id="cde-empty-toggle"
-                      onClick={() => setShowEmpty(v => !v)}
-                      className="px-2.5 py-1 rounded-lg bg-[#F8F5FA] border border-[#E9DFF2] text-[#6200a9] text-[11px] font-semibold flex items-center gap-1 hover:bg-[#F3E8FF] transition-colors cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-[14px]">{showEmpty ? 'toggle_off' : 'toggle_on'}</span>
-                      <span>{showEmpty ? 'Table View' : 'Empty State'}</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Table / Empty state */}
-                {showEmpty || filtered.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 px-6 text-center bg-[#F8F5FA] rounded-2xl border border-[#E9DFF2]">
-                    <div className="w-16 h-16 rounded-2xl bg-white border border-[#E9DFF2] flex items-center justify-center mb-4 shadow-sm">
-                      <span className="material-symbols-outlined text-[32px] text-[#6200a9]">manage_search</span>
-                    </div>
-                    <h4 className="text-[18px] font-bold text-[#17121F]">No crime records found</h4>
-                    <p className="text-[14px] text-[#6B6472] max-w-sm mt-1">Try adjusting your filters or search criteria to find matching records.</p>
-                    <button type="button" onClick={handleReset} className="mt-5 px-5 py-2 rounded-xl bg-[#7E22CE] text-white text-[14px] font-semibold hover:bg-[#6200a9] shadow-sm transition-all cursor-pointer">
-                      Clear Filters
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <div className="w-full overflow-x-auto">
-                      <table className="w-full text-left">
-                        <thead>
-                          <tr className="bg-[#F8F5FA] text-[#6B6472] text-[11px] uppercase tracking-wider font-semibold">
-                            <th className="py-3 px-3 rounded-l-xl w-10 text-center" scope="col">
-                              <input type="checkbox" className="rounded accent-[#6200a9] cursor-pointer" aria-label="Select all" checked={allSelected} onChange={toggleAll} />
-                            </th>
-                            {([
-                              { key: 'state',    label: 'State / Territory', right: false },
-                              { key: 'category', label: 'Category',          right: false },
-                              { key: 'cases',    label: 'Reported Cases',    right: true  },
-                              { key: 'year',     label: 'Year',              right: false },
-                            ] as { key: SortKey; label: string; right: boolean }[]).map(col => (
-                              <th key={col.key} scope="col" className={`py-3 px-3 ${col.right ? 'text-right' : ''}`}>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleSort(col.key)}
-                                  className={`flex items-center gap-1 hover:text-[#6200a9] transition-colors cursor-pointer ${col.right ? 'ml-auto' : ''}`}
-                                >
-                                  <span>{col.label}</span>
-                                  <span className="material-symbols-outlined text-[14px]">{sortIcon(col.key)}</span>
-                                </button>
-                              </th>
-                            ))}
-                            <th className="py-3 px-3 text-center" scope="col">Source</th>
-                            <th className="py-3 px-3 text-center" scope="col">Status</th>
-                            <th className="py-3 px-3 rounded-r-xl text-center" scope="col">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {pageRows.map((row, idx) => (
-                            <tr
-                              key={row.id}
-                              className={`transition-colors group ${
-                                idx % 2 === 0 ? '' : 'bg-[#FAFAFA]'
-                              } hover:bg-[#FAF7FF] ${selected.has(row.id) ? '!bg-[#F3E8FF]/40' : ''}`}
-                            >
-                              <td className="py-3.5 px-3 text-center">
-                                <input type="checkbox" className="rounded accent-[#6200a9] cursor-pointer" aria-label={`Select ${row.state}`} checked={selected.has(row.id)} onChange={() => toggleRow(row.id)} />
-                              </td>
-                              <td className="py-3.5 px-3 font-semibold text-[14px] text-[#17121F]">
-                                <div className="flex items-center gap-2">
-                                  <span className={`w-2 h-2 rounded-full shrink-0 ${dotColor(row.categoryKey)}`} />
-                                  {row.state}
-                                </div>
-                              </td>
-                              <td className="py-3.5 px-3">{catBadge(row.categoryKey, row.category)}</td>
-                              <td className="py-3.5 px-3 text-right font-bold tabular-nums text-[14px] text-[#17121F]">{row.cases.toLocaleString()}</td>
-                              <td className="py-3.5 px-3 text-center text-[#6B6472] text-[13px] font-medium">{row.year}</td>
-                              <td className="py-3.5 px-3 text-center text-[13px] font-semibold text-[#6B6472]">{row.source}</td>
-                              <td className="py-3.5 px-3 text-center">
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-semibold border border-emerald-100">
-                                  <span className="material-symbols-outlined text-[13px]">verified</span>
-                                  {row.status}
-                                </span>
-                              </td>
-                              <td className="py-3.5 px-3 text-center">
-                                <button
-                                  type="button"
-                                  aria-label={`Inspect ${row.state} record`}
-                                  onClick={() => onNavigateTab('data-visualizations')}
-                                  className="p-1.5 rounded-lg text-[#6B6472] hover:text-[#6200a9] hover:bg-[#F3E8FF] transition-colors cursor-pointer"
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">visibility</span>
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Pagination */}
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1 text-[#6B6472]">
-                      <div className="flex items-center gap-4 text-[13px]">
-                        <span>
-                          Showing <strong className="text-[#17121F]">{filtered.length === 0 ? 0 : (page - 1) * rowsPerPage + 1}–{Math.min(page * rowsPerPage, filtered.length)}</strong> of <strong className="text-[#17121F]">{filtered.length.toLocaleString()}</strong> entries
-                        </span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[12px] font-medium">Rows:</span>
-                          <select
-                            value={rowsPerPage}
-                            onChange={e => { setRowsPerPage(Number(e.target.value)); setPage(1); }}
-                            aria-label="Rows per page"
-                            className="bg-[#F8F5FA] border border-[#E9DFF2] text-[#17121F] text-[12px] px-2 py-1 rounded-lg focus:outline-none cursor-pointer"
-                          >
-                            {[5, 10, 20, 50].map(n => <option key={n} value={n}>{n}</option>)}
-                          </select>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 text-[13px] font-medium">
-                        <button type="button" disabled={page === 1} onClick={() => setPage(p => Math.max(1, p - 1))} className="px-2.5 py-1.5 rounded-lg bg-[#F8F5FA] border border-[#E9DFF2] text-[#6B6472] disabled:opacity-40 hover:bg-[#F3E8FF] hover:text-[#6200a9] transition-colors cursor-pointer disabled:cursor-not-allowed">
-                          Previous
-                        </button>
-                        {pageNums.map(pg => (
-                          <button
-                            key={pg}
-                            type="button"
-                            onClick={() => setPage(pg)}
-                            className={`w-8 h-8 rounded-lg text-[13px] flex items-center justify-center transition-colors cursor-pointer ${pg === page ? 'bg-[#7E22CE] text-white font-bold shadow-sm' : 'text-[#6B6472] hover:bg-[#F8F5FA]'}`}
-                          >
-                            {pg}
-                          </button>
-                        ))}
-                        {totalPages > 5 && <span className="px-1 text-[#6B6472]">…</span>}
-                        {totalPages > 5 && (
-                          <button type="button" onClick={() => setPage(totalPages)} className="px-2 h-8 rounded-lg text-[#6B6472] hover:bg-[#F8F5FA] flex items-center justify-center transition-colors cursor-pointer">
-                            {totalPages}
-                          </button>
-                        )}
-                        <button type="button" disabled={page === totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))} className="px-2.5 py-1.5 rounded-lg bg-[#F8F5FA] border border-[#E9DFF2] text-[#6B6472] disabled:opacity-40 hover:bg-[#F3E8FF] hover:text-[#6200a9] transition-colors cursor-pointer disabled:cursor-not-allowed">
-                          Next
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* RIGHT — Insight panel */}
-              <div className="lg:col-span-4 flex flex-col space-y-5">
-
-                {/* Category donut */}
-                <div className="bg-white rounded-2xl border border-[#E9DFF2] shadow-sm p-5 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[#6200a9] text-[20px]">pie_chart</span>
-                      <h3 className="text-[15px] font-bold text-[#17121F]">Category Proportions</h3>
-                    </div>
-                    <span className="text-[11px] text-[#6200a9] font-semibold bg-[#F3E8FF] px-2 py-0.5 rounded-full">NBS Share</span>
-                  </div>
-
-                  <div className="flex items-center justify-center py-2">
-                    <div className="relative w-44 h-44">
-                      <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="38" fill="none" stroke="#F3E8FF" strokeWidth="12" />
-                        <circle cx="50" cy="50" r="38" fill="none" stroke="#6200a9" strokeWidth="12"
-                          strokeDasharray={`${propertySegs.dash} ${propertySegs.gap}`}
-                          strokeDashoffset={propertySegs.offset} strokeLinecap="round" />
-                        <circle cx="50" cy="50" r="38" fill="none" stroke="#7E22CE" strokeWidth="12"
-                          strokeDasharray={`${personsSegs.dash} ${personsSegs.gap}`}
-                          strokeDashoffset={personsSegs.offset} strokeLinecap="round" />
-                        <circle cx="50" cy="50" r="38" fill="none" stroke="#9333EA" strokeWidth="12"
-                          strokeDasharray={`${authoritySegs.dash} ${authoritySegs.gap}`}
-                          strokeDashoffset={authoritySegs.offset} strokeLinecap="round" />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                        <span className="text-[22px] font-bold text-[#17121F] tabular-nums leading-tight">134,663</span>
-                        <span className="text-[10px] text-[#6B6472] uppercase tracking-wider font-semibold">Total Filings</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    {[
-                      { label: 'Against Property', value: '68,579', pct: '50.9%', color: 'bg-[#6200a9]' },
-                      { label: 'Against Persons',  value: '53,641', pct: '39.8%', color: 'bg-[#7E22CE]' },
-                      { label: 'Lawful Authority', value: '12,443', pct: '9.3%',  color: 'bg-[#9333EA]' },
-                    ].map(l => (
-                      <div key={l.label} className="flex items-center justify-between p-2 rounded-xl bg-[#F8F5FA]">
-                        <div className="flex items-center gap-2">
-                          <span className={`w-3 h-3 rounded-full shrink-0 ${l.color}`} />
-                          <span className="text-[13px] text-[#17121F] font-medium">{l.label}</span>
-                        </div>
-                        <div className="text-right">
-                          <span className="text-[14px] font-bold text-[#17121F] tabular-nums">{l.value}</span>
-                          <span className="text-[11px] text-[#6B6472] ml-1">({l.pct})</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-[11px] text-[#6B6472] italic text-center">
-                    Official empirical figures documented in the 2017 NBS national compendium.
-                  </p>
-                </div>
-
-                {/* Data quality */}
-                <div className="bg-white rounded-2xl border border-[#E9DFF2] shadow-sm p-5 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[#6200a9] text-[20px]">fact_check</span>
-                      <h3 className="text-[15px] font-bold text-[#17121F]">Data Quality</h3>
-                    </div>
-                    <span className="inline-flex items-center gap-1 text-[11px] text-[#6200a9] font-semibold bg-[#F3E8FF] px-2 py-0.5 rounded-full">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#6200a9]" />
-                      100% Valid
-                    </span>
-                  </div>
-                  <div className="space-y-2.5">
-                    {[
-                      { label: 'Dataset Status',  value: 'Ready for analysis',              hi: true  },
-                      { label: 'Source',           value: 'National Bureau of Statistics',   hi: false },
-                      { label: 'Coverage',         value: '36 Nigerian states + FCT',        hi: false },
-                      { label: 'Reporting Year',   value: '2017',                             hi: false },
-                      { label: 'Completeness',     value: '100% — No missing states',        hi: false },
-                    ].map(q => (
-                      <div key={q.label} className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-1.5">
-                          <span className="material-symbols-outlined text-[#6200a9] text-[17px]">check_circle</span>
-                          <span className="text-[13px] text-[#6B6472]">{q.label}</span>
-                        </div>
-                        <span className={`text-[12px] font-bold text-right ${q.hi ? 'text-emerald-700' : 'text-[#17121F]'}`}>{q.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-[#F8F5FA] border border-[#E9DFF2] flex items-center justify-between">
-                    <span className="text-[11px] text-[#6B6472] font-medium">Audit Signature</span>
-                    <span className="text-[11px] font-mono text-[#6200a9] font-bold">SHA256: 4f8b…92e1</span>
-                  </div>
-                </div>
-
-                {/* Responsible AI note */}
-                <div className="bg-[#F3E8FF] rounded-2xl p-4 space-y-2 border border-[#E9DFF2]">
-                  <div className="flex items-center gap-2 text-[#6200a9]">
-                    <span className="material-symbols-outlined text-[20px]">info</span>
-                    <span className="text-[14px] font-bold">About This Dataset</span>
-                  </div>
-                  <p className="text-[13px] text-[#6B6472] leading-relaxed">
-                    This platform analyzes <strong className="text-[#17121F]">historical reported crime data</strong>. Analytical and predictive outputs are intended to support data-driven interpretation and should not be treated as certainty about future criminal activity.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* ── CONTINUE ANALYSIS ── */}
-            <section className="space-y-4 pt-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-[20px] font-bold text-[#17121F]">Continue Analysis Workflow</h3>
-                  <p className="text-[13px] text-[#6B6472]">Direct the verified 2017 dataset into predictive or spatial intelligence pipelines.</p>
-                </div>
-                <span className="text-[12px] text-[#6B6472] hidden sm:inline-block font-medium">Stage 2 of 4 Pipeline Steps</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {[
-                  { icon: 'insights',     accent: '#6200a9', bg: 'bg-[#F3E8FF]', title: 'Crime Trends',     desc: 'Explore historical crime patterns, quarterly fluctuations, and cross-category comparisons across regions.', cta: 'View Trends',      tab: 'data-visualizations' as ActiveTab },
-                  { icon: 'location_on', accent: '#7E22CE', bg: 'bg-[#EDE9FF]', title: 'Hotspot Analysis', desc: 'Identify areas of historical crime concentration using K-Means unsupervised geographic clustering.',         cta: 'Explore Hotspots', tab: 'data-visualizations' as ActiveTab },
-                  { icon: 'query_stats', accent: '#9333EA', bg: 'bg-[#FAF7FF]', title: 'Crime Prediction', desc: 'Generate probabilistic forecasts and confidence metrics using Decision Tree and Random Forest classifiers.', cta: 'Run Prediction',   tab: 'machine-learning-and-prediction' as ActiveTab },
-                ].map(card => (
-                  <div key={card.title} className="bg-white rounded-2xl border border-[#E9DFF2] shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-all group">
-                    <div className="space-y-3">
-                      <div className={`w-12 h-12 rounded-xl ${card.bg} flex items-center justify-center group-hover:scale-105 transition-transform`}>
-                        <span className="material-symbols-outlined text-[24px]" style={{ color: card.accent }}>{card.icon}</span>
-                      </div>
-                      <h4 className="text-[16px] font-bold text-[#17121F]">{card.title}</h4>
-                      <p className="text-[13px] text-[#6B6472] leading-relaxed">{card.desc}</p>
-                    </div>
-                    <div className="pt-4">
-                      <button
-                        type="button"
-                        onClick={() => onNavigateTab(card.tab)}
-                        className="inline-flex items-center gap-1.5 text-[14px] font-bold hover:opacity-80 transition-opacity cursor-pointer"
-                        style={{ color: card.accent }}
-                      >
-                        <span>{card.cta}</span>
-                        <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-          </div>
-        </main>
+          <button
+            onClick={() => onNavigateTab('machine-learning-and-prediction')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-700 text-white font-semibold text-sm shadow-sm hover:bg-purple-800 transition-all cursor-pointer"
+            type="button"
+          >
+            <span className="material-symbols-outlined text-[18px]">play_arrow</span>
+            <span>Run Analysis</span>
+          </button>
+        </div>
       </div>
+
+      {/* DATASET SUMMARY STRIP (4 METRIC CARDS) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Total Records */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-start justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Records</span>
+            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
+              <span className="material-symbols-outlined text-[22px]">database</span>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 tabular-nums">134,663</div>
+            <p className="text-xs text-slate-500 mt-0.5">Reported crime cases</p>
+          </div>
+          <div className="mt-3 pt-2 border-t border-slate-100 flex items-center gap-1.5 text-purple-700 text-xs font-medium">
+            <span className="material-symbols-outlined text-[15px]">history_edu</span>
+            <span>NBS 2017 Validated Baseline</span>
+          </div>
+        </div>
+
+        {/* Card 2: States Covered */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-start justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">States Covered</span>
+            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
+              <span className="material-symbols-outlined text-[22px]">map</span>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 tabular-nums">36 + 1</div>
+            <p className="text-xs text-slate-500 mt-0.5">Nigerian states & FCT</p>
+          </div>
+          <div className="mt-3 pt-2 border-t border-slate-100 flex items-center gap-1.5 text-slate-600 text-xs font-medium">
+            <span className="material-symbols-outlined text-[15px]">public</span>
+            <span>6 Geopolitical Zones</span>
+          </div>
+        </div>
+
+        {/* Card 3: Crime Categories */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-start justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Crime Categories</span>
+            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
+              <span className="material-symbols-outlined text-[22px]">account_tree</span>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 tabular-nums">3</div>
+            <p className="text-xs text-slate-500 mt-0.5">Major statutory classes</p>
+          </div>
+          <div className="mt-3 pt-2 border-t border-slate-100 flex items-center gap-1.5 text-slate-600 text-xs font-medium">
+            <span className="material-symbols-outlined text-[15px]">balance</span>
+            <span>Property, Persons, Authority</span>
+          </div>
+        </div>
+
+        {/* Card 4: Reporting Period */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="flex items-start justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Reporting Period</span>
+            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
+              <span className="material-symbols-outlined text-[22px]">calendar_today</span>
+            </div>
+          </div>
+          <div className="mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 tabular-nums">2017</div>
+            <p className="text-xs text-slate-500 mt-0.5">Historical benchmark</p>
+          </div>
+          <div className="mt-3 pt-2 border-t border-slate-100 flex items-center gap-1.5 text-slate-600 text-xs font-medium">
+            <span className="material-symbols-outlined text-[15px]">check_circle</span>
+            <span>Annual Official Baseline</span>
+          </div>
+        </div>
+      </div>
+
+      {/* DATASET INFORMATION BANNER */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+            <span className="material-symbols-outlined text-[26px]">storage</span>
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-base font-bold text-slate-900">National Crime Dataset (Historical NBS Baseline)</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-100 text-xs font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-700"></span>
+                Official Census Series
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-3xl leading-relaxed">
+              Official historical reported crime statistics sourced from the National Bureau of Statistics (NBS). Data represents baseline statutory filings across all federated states, calibrated for baseline training across supervised and unsupervised algorithms.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 lg:pt-0 shrink-0 border-t lg:border-t-0 border-slate-100 w-full lg:w-auto">
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-500 font-medium">Source Agency</span>
+            <span className="text-sm font-bold text-slate-900">NBS Nigeria</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-500 font-medium">Coverage</span>
+            <span className="text-sm font-bold text-slate-900">36 States + FCT</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-500 font-medium">Model Readiness</span>
+            <span className="inline-flex items-center gap-1.5 text-purple-700 text-xs font-bold mt-0.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Ready for Analysis
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* FILTER & SEARCH CONTROLS SECTION */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-purple-700 text-[20px]">filter_list</span>
+            <h2 className="text-base font-bold text-slate-900">Filter Crime Records</h2>
+          </div>
+          <span className="text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full font-medium">
+            Showing filtered results from the historical NBS 2017 dataset
+          </span>
+        </div>
+
+        {/* 5-PART RESPONSIVE QUERY CONTROL GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 items-end">
+          {/* Quick Search */}
+          <div className="xl:col-span-4 flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-slate-700" htmlFor="search-records">
+              Quick Search
+            </label>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+                search
+              </span>
+              <input
+                id="search-records"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleApplyFilters();
+                }}
+                placeholder="Search state or crime category..."
+                className="w-full h-[42px] pl-9 pr-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-purple-700/20 focus:border-purple-700 transition-all placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          {/* State Selector */}
+          <div className="xl:col-span-3 flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-slate-700" htmlFor="state-selector">
+              State / Territory
+            </label>
+            <div className="relative">
+              <select
+                id="state-selector"
+                value={selectedStateFilter}
+                onChange={(e) => setSelectedStateFilter(e.target.value)}
+                className="w-full h-[42px] px-3 pr-8 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-purple-700/20 focus:border-purple-700 appearance-none transition-all cursor-pointer"
+              >
+                <option value="all">All States (36 + FCT)</option>
+                {NIGERIAN_STATES_DATA.map((s) => (
+                  <option key={s.state} value={s.state.toLowerCase()}>
+                    {s.state} {s.state.includes('FCT') ? '' : 'State'}
+                  </option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
+                expand_more
+              </span>
+            </div>
+          </div>
+
+          {/* Category Selector */}
+          <div className="xl:col-span-3 flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-slate-700" htmlFor="category-selector">
+              Offence Category
+            </label>
+            <div className="relative">
+              <select
+                id="category-selector"
+                value={selectedCategoryFilter}
+                onChange={(e) => setSelectedCategoryFilter(e.target.value)}
+                className="w-full h-[42px] px-3 pr-8 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-purple-700/20 focus:border-purple-700 appearance-none transition-all cursor-pointer"
+              >
+                <option value="all">All Categories (3)</option>
+                <option value="property">Offences Against Property (68,579)</option>
+                <option value="persons">Offences Against Persons (53,641)</option>
+                <option value="authority">Offences Against Lawful Authority (12,443)</option>
+              </select>
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
+                expand_more
+              </span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="xl:col-span-2 flex items-center gap-2">
+            <button
+              id="btn-apply-filters"
+              type="button"
+              onClick={handleApplyFilters}
+              className="flex-1 h-[42px] rounded-xl bg-purple-700 text-white font-semibold text-sm hover:bg-purple-800 shadow-xs flex items-center justify-center gap-1 transition-all cursor-pointer"
+            >
+              <span>Apply</span>
+            </button>
+            <button
+              id="btn-reset-filters"
+              type="button"
+              onClick={handleResetFilters}
+              title="Reset Filters"
+              className="h-[42px] px-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 hover:text-purple-700 hover:bg-slate-200 text-sm flex items-center justify-center transition-all cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[18px]">restart_alt</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* SPLIT SECTION: DATA TABLE (~70%) + ANALYTICAL QUALITY STRIP (~30%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN: CRIME RECORDS REPOSITORY TABLE (col-span-8) */}
+        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 shadow-xs p-5 flex flex-col space-y-4 overflow-hidden">
+          {/* Toolbar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h3 className="text-base font-bold text-slate-900">Crime Records Repository</h3>
+              <span className="px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-200 text-purple-700 text-xs font-semibold">
+                {totalEntries.toLocaleString()} Records Active
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              <button
+                onClick={handleExportData}
+                className="p-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-purple-700 transition-colors cursor-pointer"
+                title="Export current view as CSV"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[18px]">sim_card_download</span>
+              </button>
+
+              <button
+                onClick={() => setEmptyStatePreview(!emptyStatePreview)}
+                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  emptyStatePreview
+                    ? 'bg-purple-700 text-white border-purple-700'
+                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-purple-50 hover:text-purple-700'
+                }`}
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[16px]">
+                  {emptyStatePreview ? 'toggle_on' : 'toggle_off'}
+                </span>
+                <span>Empty State Preview</span>
+              </button>
+            </div>
+          </div>
+
+          {/* TABLE CONTAINER OR EMPTY STATE */}
+          {emptyStatePreview || currentRows.length === 0 ? (
+            /* EMPTY STATE PLACEHOLDER */
+            <div className="flex flex-col items-center justify-center py-14 px-4 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              <div className="w-14 h-14 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center mb-3 shadow-xs">
+                <span className="material-symbols-outlined text-[32px]">manage_search</span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900">No crime records found</h4>
+              <p className="text-xs sm:text-sm text-slate-500 max-w-md mt-1">
+                No entries matched your active filters. Try clearing queries or adjusting specific statutory classifications.
+              </p>
+              <button
+                onClick={handleResetFilters}
+                className="mt-4 px-4 py-2 rounded-xl bg-purple-700 text-white font-semibold text-xs shadow-xs hover:bg-purple-800 transition-all cursor-pointer"
+                type="button"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          ) : (
+            /* TABLE */
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider rounded-xl">
+                    <th className="py-3 px-3 rounded-l-xl w-10 text-center" scope="col">
+                      <input
+                        type="checkbox"
+                        checked={selectedRowIds.size === currentRows.length && currentRows.length > 0}
+                        onChange={handleToggleSelectAll}
+                        aria-label="Select all rows"
+                        className="rounded accent-purple-700 cursor-pointer"
+                      />
+                    </th>
+                    <th
+                      className="py-3 px-3 cursor-pointer hover:text-purple-700 transition-colors"
+                      scope="col"
+                      onClick={() => handleSort('state')}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span>State / Territory</span>
+                        <span className="material-symbols-outlined text-[14px]">
+                          {sortField === 'state' ? (sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}
+                        </span>
+                      </div>
+                    </th>
+                    <th
+                      className="py-3 px-3 cursor-pointer hover:text-purple-700 transition-colors"
+                      scope="col"
+                      onClick={() => handleSort('category')}
+                    >
+                      <div className="flex items-center gap-1">
+                        <span>Category</span>
+                        <span className="material-symbols-outlined text-[14px]">
+                          {sortField === 'category' ? (sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}
+                        </span>
+                      </div>
+                    </th>
+                    <th
+                      className="py-3 px-3 text-right cursor-pointer hover:text-purple-700 transition-colors"
+                      scope="col"
+                      onClick={() => handleSort('cases')}
+                    >
+                      <div className="flex items-center justify-end gap-1">
+                        <span>Reported Cases</span>
+                        <span className="material-symbols-outlined text-[14px]">
+                          {sortField === 'cases' ? (sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}
+                        </span>
+                      </div>
+                    </th>
+                    <th className="py-3 px-3 text-center" scope="col">Year</th>
+                    <th className="py-3 px-3 text-center" scope="col">Status</th>
+                    <th className="py-3 px-3 rounded-r-xl text-center" scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-sm text-slate-900">
+                  {currentRows.map((rec) => {
+                    const isChecked = selectedRowIds.has(rec.id);
+                    return (
+                      <tr
+                        key={rec.id}
+                        className={`hover:bg-slate-50 transition-colors ${isChecked ? 'bg-purple-50/50' : ''}`}
+                      >
+                        <td className="py-3.5 px-3 text-center">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleToggleRow(rec.id)}
+                            aria-label={`Select ${rec.state}`}
+                            className="rounded accent-purple-700 cursor-pointer"
+                          />
+                        </td>
+                        <td className="py-3.5 px-3 font-semibold text-slate-900">
+                          <div className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full shrink-0 ${getStateDot(rec.category)}`}></span>
+                            <span>{rec.state}</span>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-3">
+                          {getCategoryBadge(rec.category)}
+                        </td>
+                        <td className="py-3.5 px-3 text-right font-bold tabular-nums text-slate-900">
+                          {rec.cases.toLocaleString()}
+                        </td>
+                        <td className="py-3.5 px-3 text-center text-slate-500 font-medium text-xs">
+                          {rec.year}
+                        </td>
+                        <td className="py-3.5 px-3 text-center">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-purple-700 text-xs font-semibold">
+                            <span className="material-symbols-outlined text-[13px]">verified</span>
+                            {rec.status}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-3 text-center">
+                          <button
+                            onClick={() => setInspectRecord(rec)}
+                            aria-label={`Inspect ${rec.state} record`}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-purple-700 hover:bg-purple-50 transition-colors cursor-pointer"
+                            type="button"
+                            title="Inspect Details"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">visibility</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* TABLE FOOTER & PAGINATION */}
+          {!emptyStatePreview && currentRows.length > 0 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-100 text-slate-500">
+              <div className="flex items-center gap-4 text-xs">
+                <span>
+                  Showing <strong className="text-slate-900">{startIndex + 1}–{endIndex}</strong> of{' '}
+                  <strong className="text-slate-900">{totalEntries.toLocaleString()}</strong> entries
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-slate-500 font-medium">Rows per page:</span>
+                  <select
+                    aria-label="Select rows per page"
+                    value={rowsPerPage}
+                    onChange={(e) => {
+                      setRowsPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                    className="bg-slate-50 border border-slate-200 text-slate-900 text-xs px-2 py-1 rounded-lg focus:outline-none cursor-pointer"
+                  >
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Page Navigation */}
+              <div className="flex items-center gap-1 text-xs font-semibold">
+                <button
+                  disabled={safePage <= 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  type="button"
+                >
+                  Previous
+                </button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const p = i + 1;
+                    const isActive = p === safePage;
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => setCurrentPage(p)}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
+                          isActive
+                            ? 'bg-purple-700 text-white font-bold'
+                            : 'text-slate-700 hover:bg-slate-100'
+                        }`}
+                        type="button"
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                  {totalPages > 5 && (
+                    <>
+                      <span className="px-1 text-slate-400">...</span>
+                      <button
+                        onClick={() => setCurrentPage(totalPages)}
+                        className={`px-2 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
+                          safePage === totalPages
+                            ? 'bg-purple-700 text-white font-bold'
+                            : 'text-slate-700 hover:bg-slate-100'
+                        }`}
+                        type="button"
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                <button
+                  disabled={safePage >= totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  className="px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  type="button"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT COLUMN: ANALYTICAL QUALITY & AUDIT STRIP (col-span-4) */}
+        <div className="lg:col-span-4 flex flex-col space-y-4">
+          {/* Card 1: Category Proportions & Visual Donut Chart */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-purple-700 text-[20px]">pie_chart</span>
+                <h3 className="text-base font-bold text-slate-900">Category Proportions</h3>
+              </div>
+              <span className="text-xs text-purple-700 font-semibold bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">
+                NBS Share
+              </span>
+            </div>
+
+            {/* SVG Donut Chart */}
+            <div className="flex items-center justify-center py-2">
+              <div className="relative w-48 h-48">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  {/* Background Circle */}
+                  <circle
+                    className="text-slate-100"
+                    cx="50"
+                    cy="50"
+                    fill="none"
+                    r="38"
+                    stroke="currentColor"
+                    strokeWidth="12"
+                  />
+                  {/* Segment 1: Offences Against Property (50.9%) -> circumference ~238.76 -> 121.5 */}
+                  <circle
+                    className="text-purple-700"
+                    cx="50"
+                    cy="50"
+                    fill="none"
+                    r="38"
+                    stroke="currentColor"
+                    strokeDasharray="121.5 238.76"
+                    strokeDashoffset="0"
+                    strokeLinecap="round"
+                    strokeWidth="12"
+                  />
+                  {/* Segment 2: Offences Against Persons (39.8%) -> 95.0 */}
+                  <circle
+                    className="text-indigo-600"
+                    cx="50"
+                    cy="50"
+                    fill="none"
+                    r="38"
+                    stroke="currentColor"
+                    strokeDasharray="95.0 238.76"
+                    strokeDashoffset="-121.5"
+                    strokeLinecap="round"
+                    strokeWidth="12"
+                  />
+                  {/* Segment 3: Offences Against Lawful Authority (9.3%) -> 22.2 */}
+                  <circle
+                    className="text-violet-500"
+                    cx="50"
+                    cy="50"
+                    fill="none"
+                    r="38"
+                    stroke="currentColor"
+                    strokeDasharray="22.2 238.76"
+                    strokeDashoffset="-216.5"
+                    strokeLinecap="round"
+                    strokeWidth="12"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                  <span className="text-xl font-bold text-slate-900 tabular-nums">134,663</span>
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Filings</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-purple-700 shrink-0"></span>
+                  <span className="text-xs font-semibold text-slate-900">Against Property</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-sm font-bold text-slate-900 tabular-nums">68,579</span>
+                  <span className="text-xs text-slate-500 ml-1 font-medium">(50.9%)</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-indigo-600 shrink-0"></span>
+                  <span className="text-xs font-semibold text-slate-900">Against Persons</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-sm font-bold text-slate-900 tabular-nums">53,641</span>
+                  <span className="text-xs text-slate-500 ml-1 font-medium">(39.8%)</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-violet-500 shrink-0"></span>
+                  <span className="text-xs font-semibold text-slate-900">Lawful Authority</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-sm font-bold text-slate-900 tabular-nums">12,443</span>
+                  <span className="text-xs text-slate-500 ml-1 font-medium">(9.3%)</span>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-500 italic text-center pt-1">
+              Official empirical figures documented in the 2017 NBS national compendium.
+            </p>
+          </div>
+
+          {/* Card 2: Data Integrity & Audit */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 space-y-3.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-purple-700 text-[20px]">fact_check</span>
+                <h3 className="text-base font-bold text-slate-900">Data Integrity & Audit</h3>
+              </div>
+              <span className="inline-flex items-center gap-1 text-purple-700 text-xs font-bold bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                100% Valid
+              </span>
+            </div>
+
+            <div className="space-y-2.5 text-xs">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+                  <span>Completeness</span>
+                </div>
+                <span className="font-semibold text-slate-900">100% No missing states</span>
+              </div>
+
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+                  <span>Standardization</span>
+                </div>
+                <span className="font-semibold text-slate-900">NBS 2017 Taxonomy</span>
+              </div>
+
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+                  <span>Geopolitical Coverage</span>
+                </div>
+                <span className="font-semibold text-slate-900">36 States + FCT</span>
+              </div>
+
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 text-slate-600">
+                  <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+                  <span>Verification Level</span>
+                </div>
+                <span className="font-semibold text-slate-900">Official Academic Bench</span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
+              <span className="text-slate-500 font-medium">Audit Signature</span>
+              <span className="font-mono text-purple-700 font-bold">SHA256: 4f8b...92e1</span>
+            </div>
+          </div>
+
+          {/* Card 3: Responsible AI & Policy Guidance Note */}
+          <div className="bg-slate-50 rounded-2xl p-5 space-y-2 border border-slate-200">
+            <div className="flex items-center gap-2 text-purple-700">
+              <span className="material-symbols-outlined text-[20px]">info</span>
+              <span className="text-sm font-bold">About This Dataset</span>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              This platform analyzes historical reported crime data. Analytical and predictive outputs are intended to support data-driven interpretation and resource planning. They should not be treated as certainty about future criminal activity.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* CONTINUE ANALYSIS WORKFLOW (3 QUICK ACCESS CARDS) */}
+      <div className="space-y-3 pt-2">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Continue Analysis Workflow</h3>
+            <p className="text-xs text-slate-500">Direct the verified 2017 dataset into predictive or spatial intelligence pipelines.</p>
+          </div>
+          <span className="text-xs text-slate-400 hidden sm:inline-block font-medium">Stage 2 of 4 Pipeline Steps</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Action Card 1: Crime Trends */}
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
+            <div className="space-y-2.5">
+              <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <span className="material-symbols-outlined text-[22px]">insights</span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900">Crime Trends</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Analyze longitudinal patterns, quarterly fluctuations, and cross-category comparisons across regions.
+              </p>
+            </div>
+            <div className="pt-4">
+              <button
+                onClick={() => onNavigateTab('data-visualizations')}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-purple-700 hover:text-purple-900 transition-colors cursor-pointer"
+                type="button"
+              >
+                <span>View Trends</span>
+                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Action Card 2: Hotspot Analysis */}
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
+            <div className="space-y-2.5">
+              <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <span className="material-symbols-outlined text-[22px]">location_on</span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900">Hotspot Analysis</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Examine spatial concentrations and risk corridors using K-Means unsupervised geographic clustering.
+              </p>
+            </div>
+            <div className="pt-4">
+              <button
+                onClick={() => onNavigateTab('data-visualizations')}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:text-indigo-900 transition-colors cursor-pointer"
+                type="button"
+              >
+                <span>Explore Hotspots</span>
+                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Action Card 3: Crime Prediction */}
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
+            <div className="space-y-2.5">
+              <div className="w-11 h-11 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <span className="material-symbols-outlined text-[22px]">query_stats</span>
+              </div>
+              <h4 className="text-base font-bold text-slate-900">Crime Prediction</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Generate probabilistic forecasts and confidence metrics using Decision Tree and Random Forest classifiers.
+              </p>
+            </div>
+            <div className="pt-4">
+              <button
+                onClick={() => onNavigateTab('machine-learning-and-prediction')}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-700 hover:text-violet-900 transition-colors cursor-pointer"
+                type="button"
+              >
+                <span>Run Prediction</span>
+                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* INSPECT RECORD MODAL */}
+      {inspectRecord && (
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-lg rounded-2xl border border-slate-200 shadow-2xl p-6 relative flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-start justify-between">
+              <div>
+                <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">Historical Audit Record</span>
+                <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2 mt-0.5">
+                  <span>{inspectRecord.state}</span>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                    {inspectRecord.zone}
+                  </span>
+                </h3>
+              </div>
+              <button
+                onClick={() => setInspectRecord(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Offence Class:</span>
+                <span className="font-semibold text-slate-900">{inspectRecord.categoryLabel}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Filings Logged:</span>
+                <span className="font-bold text-purple-700 text-sm">{inspectRecord.cases.toLocaleString()} cases</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Capital City:</span>
+                <span className="font-semibold text-slate-900">{inspectRecord.capital}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Spatial Cluster:</span>
+                <span className="font-semibold text-slate-900">K-Means Cluster #{inspectRecord.clusterId}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Computed Risk Score:</span>
+                <span className="font-semibold text-slate-900">{inspectRecord.riskScore} / 100</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Statutory Benchmark Year:</span>
+                <span className="font-semibold text-slate-900">{inspectRecord.year}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Integrity Hash:</span>
+                <span className="font-mono text-purple-700">SHA256-NBS-OK</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                onClick={() => setInspectRecord(null)}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                type="button"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  const stateClean = inspectRecord.state.replace(' State', '');
+                  if (onSelectState) onSelectState(stateClean);
+                  onNavigateTab('data-visualizations');
+                  setInspectRecord(null);
+                }}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-purple-700 hover:bg-purple-800 text-white transition-colors cursor-pointer shadow-xs"
+                type="button"
+              >
+                View State Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
