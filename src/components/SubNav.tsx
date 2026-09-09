@@ -36,6 +36,18 @@ export const SubNav: React.FC<SubNavProps> = ({
         onNavigateTab('overview');
         setTimeout(() => onNavigateSection('dashboard'), 50);
       }
+    } else if (id === 'crime-data') {
+      onNavigateTab('crime-data');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'analytics') {
+      onNavigateTab('analytics');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'hotspots') {
+      onNavigateTab('hotspots');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'prediction') {
+      onNavigateTab('prediction');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (id === 'ml-prediction') {
       onNavigateTab('machine-learning-and-prediction');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -49,7 +61,10 @@ export const SubNav: React.FC<SubNavProps> = ({
 
   const navLinks = [
     { id: 'overview', label: 'Home', isTab: activeTab === 'overview' && activeSection === 'overview' },
-    { id: 'dashboard', label: 'Analytics', isTab: activeTab === 'overview' && activeSection === 'dashboard' },
+    { id: 'crime-data', label: 'Crime Data', isTab: activeTab === 'crime-data' },
+    { id: 'analytics', label: 'Analytics', isTab: activeTab === 'analytics' },
+    { id: 'hotspots', label: 'Hotspots', isTab: activeTab === 'hotspots' },
+    { id: 'prediction', label: 'Prediction', isTab: activeTab === 'prediction' },
     { id: 'data-workbench', label: 'Workbench', isTab: activeTab === 'data-visualizations' },
     { id: 'how-it-works', label: 'How It Works', isTab: activeTab === 'overview' && activeSection === 'how-it-works' },
     { id: 'nigerian-data', label: 'Nigerian Data', isTab: activeTab === 'overview' && activeSection === 'nigerian-data' },

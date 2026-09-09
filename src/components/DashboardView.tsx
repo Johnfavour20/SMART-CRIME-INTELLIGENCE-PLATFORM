@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActiveTab } from '../types';
+import { CrimeDataView } from './CrimeDataView';
+import { AnalyticsView } from './AnalyticsView';
+import { HotspotsView } from './HotspotsView';
+import { PredictionView } from './PredictionView';
 
 interface DashboardViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
@@ -8,6 +12,7 @@ interface DashboardViewProps {
   currentAnalyst?: string | null;
   onSignOut?: () => void;
   onBackToOverview: () => void;
+  initialSubView?: 'dashboard' | 'crime-data' | 'analytics' | 'hotspots' | 'prediction';
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -16,12 +21,58 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenSearch,
   currentAnalyst = 'System User',
   onBackToOverview,
+  initialSubView = 'dashboard',
 }) => {
+  const [activeSubView, setActiveSubView] = useState<'dashboard' | 'crime-data' | 'analytics' | 'hotspots' | 'prediction'>(initialSubView);
   const [trendCategory, setTrendCategory] = useState<'all' | 'property' | 'persons' | 'authority'>('all');
   const [selectedState, setSelectedState] = useState<string>('Lagos');
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [exportNotification, setExportNotification] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('smart_crime_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('smart_crime_sidebar_collapsed', String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  // Keyboard shortcut: '[' or 'Ctrl+B' / 'Cmd+B' to toggle sidebar collapse
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.target as HTMLElement)?.tagName === 'INPUT' ||
+        (e.target as HTMLElement)?.tagName === 'TEXTAREA' ||
+        (e.target as HTMLElement)?.isContentEditable
+      ) {
+        return;
+      }
+      if (e.key === '[' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b')) {
+        e.preventDefault();
+        toggleSidebarCollapse();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (initialSubView) {
+      setActiveSubView(initialSubView);
+    }
+  }, [initialSubView]);
 
   const handleExportBrief = () => {
     setIsExporting(true);
@@ -42,6 +93,76 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     }
   };
 
+  // Primary navigation entries
+  const primaryNavItems = [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: 'grid_view',
+      onClick: () => setActiveSubView('dashboard'),
+      isActive: activeSubView === 'dashboard',
+    },
+    {
+      id: 'crime-data',
+      label: 'Crime Data',
+      icon: 'database',
+      onClick: () => setActiveSubView('crime-data'),
+      isActive: activeSubView === 'crime-data',
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics',
+      icon: 'insights',
+      onClick: () => setActiveSubView('analytics'),
+      isActive: activeSubView === 'analytics',
+    },
+    {
+      id: 'hotspots',
+      label: 'Hotspots',
+      icon: 'location_on',
+      onClick: () => setActiveSubView('hotspots'),
+      isActive: activeSubView === 'hotspots',
+    },
+    {
+      id: 'prediction',
+      label: 'Prediction',
+      icon: 'query_stats',
+      onClick: () => setActiveSubView('prediction'),
+      isActive: activeSubView === 'prediction',
+    },
+    {
+      id: 'models',
+      label: 'Models',
+      icon: 'account_tree',
+      onClick: () => onNavigateTab('overview'),
+      isActive: false,
+    },
+    {
+      id: 'reports',
+      label: 'Reports',
+      icon: 'description',
+      onClick: () => onNavigateTab('patterns'),
+      isActive: false,
+    },
+  ];
+
+  const secondaryNavItems = [
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: 'settings',
+      onClick: () => onNavigateTab('foundation'),
+      isActive: false,
+    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      icon: 'manage_accounts',
+      onClick: () => onNavigateTab('auth'),
+      isActive: false,
+    },
+  ];
+
   return (
     <div className="bg-white font-sans text-slate-900 antialiased min-h-screen">
       {/* Mobile Sidebar Overlay */}
@@ -54,165 +175,282 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       {/* Aside Navigation Bar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-[260px] bg-white border-r border-slate-200 z-50 flex flex-col justify-between transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed left-0 top-0 h-screen bg-white border-r border-slate-200 z-50 flex flex-col justify-between transition-all duration-300 ${
+          isSidebarCollapsed ? 'w-[260px] lg:w-[76px]' : 'w-[260px]'
+        } ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         <div className="flex flex-col flex-1 min-h-0">
           {/* Logo Header */}
-          <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200">
+          <div className="h-16 px-4 flex items-center justify-between border-b border-slate-200">
+            {/* When collapsed on desktop: show icon button that expands */}
+            {isSidebarCollapsed ? (
+              <div className="hidden lg:flex items-center justify-center w-full">
+                <button
+                  type="button"
+                  onClick={toggleSidebarCollapse}
+                  className="w-10 h-10 rounded-xl bg-purple-50 hover:bg-purple-100 flex items-center justify-center text-[#6200a9] transition-colors cursor-pointer"
+                  title="Expand sidebar ( [ )"
+                  aria-label="Expand sidebar"
+                >
+                  <span className="material-symbols-outlined text-[22px]">menu_open</span>
+                </button>
+              </div>
+            ) : null}
+
+            {/* Expanded view or mobile view */}
             <div
-              className="flex items-center gap-3 cursor-pointer"
+              className={`items-center gap-3 cursor-pointer ${
+                isSidebarCollapsed ? 'flex lg:hidden' : 'flex'
+              }`}
               onClick={onBackToOverview}
               title="Return to Public Overview"
             >
-              <div className="w-9 h-9 rounded-xl bg-[#6200a9] flex items-center justify-center text-white">
+              <div className="w-9 h-9 rounded-xl bg-[#6200a9] flex items-center justify-center text-white shrink-0">
                 <span className="material-symbols-outlined text-[20px]">hub</span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-[15px] text-[#1e1926] font-bold tracking-tight leading-tight">
+              <div className="flex flex-col min-w-0">
+                <span className="text-[15px] text-[#1e1926] font-bold tracking-tight leading-tight truncate">
                   SMART CRIME
                 </span>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[11px] text-[#6200a9] font-semibold tracking-wider">
+                  <span className="text-[11px] text-[#6200a9] font-semibold tracking-wider truncate">
                     DATA SUITE
                   </span>
-                  <span className="text-[10px] text-slate-600 px-1.5 py-0.5 rounded bg-slate-100 font-medium">
+                  <span className="text-[10px] text-slate-600 px-1.5 py-0.5 rounded bg-slate-100 font-medium shrink-0">
                     v1.0 NBS
                   </span>
                 </div>
               </div>
             </div>
+
+            {/* Desktop collapse button in header when expanded */}
+            {!isSidebarCollapsed && (
+              <button
+                type="button"
+                onClick={toggleSidebarCollapse}
+                className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-purple-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                title="Collapse sidebar ( [ )"
+                aria-label="Collapse sidebar"
+              >
+                <span className="material-symbols-outlined text-[20px]">first_page</span>
+              </button>
+            )}
+
+            {/* Mobile close button */}
             <button
-              className="lg:hidden p-1 text-slate-500 hover:text-[#1e1926]"
+              className="lg:hidden p-1 text-slate-500 hover:text-[#1e1926] cursor-pointer"
               onClick={() => setSidebarOpen(false)}
+              aria-label="Close sidebar"
             >
               ✕
             </button>
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-            <button
-              type="button"
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left bg-purple-50 text-[#6200a9] font-semibold relative before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-[#7e22ce] before:rounded-r cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">grid_view</span>
-              <span className="text-[14px]">Dashboard</span>
-            </button>
+          <nav className="flex-1 overflow-y-auto px-2.5 py-4 space-y-1">
+            {primaryNavItems.map((item) => {
+              const isActive = item.isActive;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    item.onClick();
+                    setSidebarOpen(false);
+                  }}
+                  title={item.label}
+                  className={`group relative w-full flex items-center transition-all cursor-pointer rounded-xl ${
+                    isSidebarCollapsed
+                      ? 'lg:justify-center lg:px-0 lg:h-11 px-3 py-2.5 gap-3'
+                      : 'px-3 py-2.5 gap-3'
+                  } ${
+                    isActive
+                      ? 'bg-purple-50 text-[#6200a9] font-semibold shadow-xs'
+                      : 'text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926]'
+                  }`}
+                >
+                  <span
+                    className={`material-symbols-outlined text-[20px] shrink-0 ${
+                      isActive ? 'text-[#7e22ce]' : 'text-slate-500 group-hover:text-slate-900'
+                    }`}
+                  >
+                    {item.icon}
+                  </span>
 
-            <button
-              type="button"
-              onClick={() => onNavigateTab('data-visualizations')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">database</span>
-              <span>Crime Data</span>
-            </button>
+                  <span
+                    className={`text-[14px] truncate ${
+                      isSidebarCollapsed ? 'lg:hidden' : 'inline'
+                    }`}
+                  >
+                    {item.label}
+                  </span>
 
-            <button
-              type="button"
-              onClick={() => onNavigateTab('data-visualizations')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">insights</span>
-              <span>Analytics</span>
-            </button>
+                  {/* Active bar indicator when expanded */}
+                  {isActive && !isSidebarCollapsed && (
+                    <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#7e22ce] rounded-r"></span>
+                  )}
 
-            <button
-              type="button"
-              onClick={() => onNavigateTab('data-visualizations')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">location_on</span>
-              <span>Hotspots</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigateTab('machine-learning-and-prediction')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">query_stats</span>
-              <span>Prediction</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigateTab('overview')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">account_tree</span>
-              <span>Models</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigateTab('patterns')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">description</span>
-              <span>Reports</span>
-            </button>
+                  {/* Tooltip on hover when collapsed on desktop */}
+                  {isSidebarCollapsed && (
+                    <span className="pointer-events-none hidden lg:block absolute left-full ml-3 px-2.5 py-1 bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                      {item.label}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
 
             <div className="py-2">
-              <div className="h-px bg-slate-200 mx-3"></div>
+              <div className="h-px bg-slate-200 mx-2"></div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => onNavigateTab('foundation')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">settings</span>
-              <span>Settings</span>
-            </button>
+            {secondaryNavItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  item.onClick();
+                  setSidebarOpen(false);
+                }}
+                title={item.label}
+                className={`group relative w-full flex items-center transition-all cursor-pointer rounded-xl ${
+                  isSidebarCollapsed
+                    ? 'lg:justify-center lg:px-0 lg:h-11 px-3 py-2.5 gap-3'
+                    : 'px-3 py-2.5 gap-3'
+                } text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926]`}
+              >
+                <span className="material-symbols-outlined text-[20px] shrink-0 text-slate-500 group-hover:text-slate-900">
+                  {item.icon}
+                </span>
 
-            <button
-              type="button"
-              onClick={() => onNavigateTab('auth')}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926] transition-colors cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[20px]">manage_accounts</span>
-              <span>Profile</span>
-            </button>
+                <span
+                  className={`text-[14px] truncate ${
+                    isSidebarCollapsed ? 'lg:hidden' : 'inline'
+                  }`}
+                >
+                  {item.label}
+                </span>
 
+                {/* Tooltip on hover when collapsed on desktop */}
+                {isSidebarCollapsed && (
+                  <span className="pointer-events-none hidden lg:block absolute left-full ml-3 px-2.5 py-1 bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                    {item.label}
+                  </span>
+                )}
+              </button>
+            ))}
+
+            {/* Back to Overview */}
             <div className="pt-2">
               <button
                 type="button"
                 onClick={onBackToOverview}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
+                title="Back to Overview"
+                className={`group relative w-full flex items-center transition-all cursor-pointer rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 ${
+                  isSidebarCollapsed
+                    ? 'lg:justify-center lg:px-0 lg:h-11 px-3 py-2 gap-2 text-xs font-semibold'
+                    : 'px-3 py-2 gap-2 text-xs font-semibold'
+                }`}
               >
-                <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                <span>Back to Overview</span>
+                <span className="material-symbols-outlined text-[16px] shrink-0">arrow_back</span>
+                <span className={`truncate ${isSidebarCollapsed ? 'lg:hidden' : 'inline'}`}>
+                  Back to Overview
+                </span>
+
+                {isSidebarCollapsed && (
+                  <span className="pointer-events-none hidden lg:block absolute left-full ml-3 px-2.5 py-1 bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                    Back to Overview
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {/* Bottom Collapse / Expand Toggle Button for Desktop */}
+            <div className="hidden lg:block pt-3 mt-2 border-t border-slate-200">
+              <button
+                type="button"
+                onClick={toggleSidebarCollapse}
+                title={isSidebarCollapsed ? 'Expand sidebar ( [ )' : 'Collapse sidebar ( [ )'}
+                className={`group relative w-full flex items-center transition-all cursor-pointer rounded-xl text-slate-500 hover:text-purple-700 hover:bg-slate-100 ${
+                  isSidebarCollapsed ? 'justify-center h-11' : 'justify-between px-3 py-2'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px]">
+                    {isSidebarCollapsed ? 'last_page' : 'first_page'}
+                  </span>
+                  {!isSidebarCollapsed && (
+                    <span className="text-xs font-semibold">Collapse sidebar</span>
+                  )}
+                </div>
+                {!isSidebarCollapsed && (
+                  <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                    [
+                  </span>
+                )}
+
+                {isSidebarCollapsed && (
+                  <span className="pointer-events-none hidden lg:block absolute left-full ml-3 px-2.5 py-1 bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                    Expand sidebar
+                  </span>
+                )}
               </button>
             </div>
           </nav>
         </div>
-
-        {/* Bottom Verified Baseline Badge */}
-        <div className="p-3 m-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#6200a9] text-[16px]">verified</span>
-          <span className="text-[11px] text-slate-600 font-medium truncate">
-            NBS 2017 Dataset • Verified Baseline
-          </span>
-        </div>
       </aside>
 
       {/* Main Panel Wrapper */}
-      <div className="lg:pl-[260px]">
+      <div
+        className={`transition-all duration-300 ${
+          isSidebarCollapsed ? 'lg:pl-[76px]' : 'lg:pl-[260px]'
+        }`}
+      >
         {/* Fixed Top Header */}
-        <header className="fixed top-0 left-0 lg:left-[260px] right-0 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 z-40 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <header
+          className={`fixed top-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 z-40 flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-all duration-300 ${
+            isSidebarCollapsed ? 'lg:left-[76px]' : 'lg:left-[260px]'
+          }`}
+        >
           <div className="flex items-center gap-2">
+            {/* Mobile Hamburger Button */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1.5 rounded-lg hover:bg-slate-100 text-[#4c4354] cursor-pointer mr-1"
+              className="lg:hidden p-1.5 rounded-lg hover:bg-slate-100 text-slate-700 cursor-pointer mr-1"
+              aria-label="Open sidebar"
             >
               <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
-            <span className="text-[13px] text-slate-500">Smart Crime</span>
-            <span className="material-symbols-outlined text-slate-400 text-[16px]">chevron_right</span>
-            <span className="text-[15px] text-slate-900 font-semibold">Spatial Intelligence Console</span>
+
+            {/* Desktop Collapse / Expand Toggle Button in Header */}
+            <button
+              type="button"
+              onClick={toggleSidebarCollapse}
+              className="hidden lg:flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-purple-700 hover:bg-slate-100 border border-slate-200 transition-colors cursor-pointer mr-2 shadow-xs"
+              title={isSidebarCollapsed ? 'Expand sidebar ( [ )' : 'Collapse sidebar ( [ )'}
+              aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                {isSidebarCollapsed ? 'menu_open' : 'menu'}
+              </span>
+            </button>
+
+            {/* Current Section Tag */}
+            <div className="flex items-center gap-1.5 text-xs">
+              <span className="font-medium text-slate-500 hidden sm:inline">Smart Crime</span>
+              <span className="material-symbols-outlined text-slate-400 text-[14px] hidden sm:inline">chevron_right</span>
+              <span className="font-bold text-slate-900 capitalize px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-100">
+                {activeSubView === 'prediction'
+                  ? 'Spatial Intelligence Console'
+                  : activeSubView === 'crime-data'
+                  ? 'Crime Data'
+                  : activeSubView === 'hotspots'
+                  ? 'Hotspots Analysis'
+                  : activeSubView === 'analytics'
+                  ? 'Analytics'
+                  : 'Executive Dashboard'}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
@@ -221,32 +459,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               onClick={() => {
                 if (onOpenSearch) onOpenSearch();
               }}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
               type="button"
             >
               <span className="material-symbols-outlined text-[18px]">search</span>
-              <span className="text-[13px]">Search incidents, LGAs, states...</span>
-              <span className="text-[11px] bg-white px-1.5 py-0.5 rounded border border-slate-300 text-slate-600 ml-2 font-mono">
+              <span className="hidden sm:inline text-[13px]">Search incidents, LGAs, states...</span>
+              <span className="hidden sm:inline text-[11px] bg-white px-1.5 py-0.5 rounded border border-slate-300 text-slate-600 ml-2 font-mono">
                 ⌘K
               </span>
             </button>
-
-            {/* Notification Bell */}
-            <button
-              aria-label="Notifications"
-              className="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
-              type="button"
-              onClick={() => alert('Platform notice: Longitudinal baseline calibrated across all 37 jurisdictions.')}
-            >
-              <span className="material-symbols-outlined text-[20px]">notifications</span>
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-600 ring-2 ring-white"></span>
-            </button>
-
-            {/* Encrypted Session Pill */}
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-[11px] text-slate-700 font-medium">Encrypted Session (TLS 1.3)</span>
-            </div>
 
             <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
 
@@ -268,8 +489,44 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Scrollable Dashboard Body */}
         <main className="w-full pt-20 bg-white min-h-screen px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col w-full space-y-8 max-w-[1500px] mx-auto">
-            {/* Top Context Header & Welcome Banner */}
-            <section className="flex flex-col space-y-4">
+            {activeSubView === 'prediction' ? (
+              <PredictionView
+                onNavigateTab={onNavigateTab}
+                onSelectState={(st) => {
+                  handleStateClick(st);
+                  onNavigateTab('data-visualizations');
+                }}
+              />
+            ) : activeSubView === 'hotspots' ? (
+              <HotspotsView
+                onNavigateTab={onNavigateTab}
+                onSelectState={(st) => {
+                  handleStateClick(st);
+                  onNavigateTab('data-visualizations');
+                }}
+                onOpenCrimeData={() => setActiveSubView('crime-data')}
+              />
+            ) : activeSubView === 'analytics' ? (
+              <AnalyticsView
+                onNavigateTab={onNavigateTab}
+                onSelectState={(st) => {
+                  handleStateClick(st);
+                  onNavigateTab('data-visualizations');
+                }}
+                onOpenCrimeData={() => setActiveSubView('crime-data')}
+              />
+            ) : activeSubView === 'crime-data' ? (
+              <CrimeDataView
+                onNavigateTab={onNavigateTab}
+                onSelectState={(st) => {
+                  handleStateClick(st);
+                  onNavigateTab('data-visualizations');
+                }}
+              />
+            ) : (
+              <>
+                {/* Top Context Header & Welcome Banner */}
+                <section className="flex flex-col space-y-4">
               <div className="flex flex-col space-y-1">
                 <div className="flex items-center gap-1.5 text-slate-600 text-[13px]">
                   <span
@@ -294,7 +551,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                   <div className="flex items-center gap-2.5 shrink-0 self-start md:self-auto">
                     <button
-                      onClick={() => onNavigateTab('data-visualizations')}
+                      onClick={() => setActiveSubView('crime-data')}
                       className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[13px] font-medium transition-all cursor-pointer"
                       type="button"
                     >
@@ -1201,6 +1458,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </div>
             </section>
+              </>
+            )}
           </div>
         </main>
       </div>

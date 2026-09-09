@@ -49,6 +49,10 @@ export interface PredictionResult {
 export type ActiveTab = 
   | 'overview' 
   | 'dashboard'
+  | 'crime-data'
+  | 'analytics'
+  | 'hotspots'
+  | 'prediction'
   | 'foundation' 
   | 'components' 
   | 'data-visualizations' 

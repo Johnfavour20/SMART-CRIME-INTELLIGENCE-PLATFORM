@@ -87,10 +87,27 @@ export default function App() {
     setActiveTab('machine-learning-and-prediction');
   };
 
-  if (activeTab === 'dashboard') {
+  if (
+    activeTab === 'dashboard' ||
+    activeTab === 'crime-data' ||
+    activeTab === 'analytics' ||
+    activeTab === 'hotspots' ||
+    activeTab === 'prediction'
+  ) {
     return (
       <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
         <DashboardView
+          initialSubView={
+            activeTab === 'prediction'
+              ? 'prediction'
+              : activeTab === 'hotspots'
+              ? 'hotspots'
+              : activeTab === 'analytics'
+              ? 'analytics'
+              : activeTab === 'crime-data'
+              ? 'crime-data'
+              : 'dashboard'
+          }
           onNavigateTab={(tab) => {
             setActiveTab(tab);
             window.scrollTo({ top: 0, behavior: 'smooth' });
