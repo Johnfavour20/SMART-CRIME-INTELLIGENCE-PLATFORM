@@ -53,6 +53,8 @@ export type ActiveTab =
   | 'analytics'
   | 'hotspots'
   | 'prediction'
+  | 'models'
+  | 'reports'
   | 'foundation' 
   | 'components' 
   | 'data-visualizations' 

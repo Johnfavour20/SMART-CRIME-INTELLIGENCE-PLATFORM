@@ -84,7 +84,7 @@ export default function App() {
 
   const handleOpenPredictionForState = (stateName: string) => {
     setFocusedState(stateName);
-    setActiveTab('machine-learning-and-prediction');
+    setActiveTab('prediction');
   };
 
   if (
@@ -92,13 +92,16 @@ export default function App() {
     activeTab === 'crime-data' ||
     activeTab === 'analytics' ||
     activeTab === 'hotspots' ||
-    activeTab === 'prediction'
+    activeTab === 'prediction' ||
+    activeTab === 'models'
   ) {
     return (
       <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
         <DashboardView
           initialSubView={
-            activeTab === 'prediction'
+            activeTab === 'models'
+              ? 'models'
+              : activeTab === 'prediction'
               ? 'prediction'
               : activeTab === 'hotspots'
               ? 'hotspots'
@@ -219,7 +222,7 @@ export default function App() {
                 if (id === 'trends' || id === 'intelligence') {
                   setActiveTab('data-visualizations');
                 } else if (id === 'prediction') {
-                  setActiveTab('machine-learning-and-prediction');
+                  setActiveTab('prediction');
                 } else if (id === 'hotspots') {
                   handleSubNavNavigate('engines');
                 }

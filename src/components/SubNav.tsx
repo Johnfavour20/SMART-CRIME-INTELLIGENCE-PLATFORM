@@ -48,6 +48,9 @@ export const SubNav: React.FC<SubNavProps> = ({
     } else if (id === 'prediction') {
       onNavigateTab('prediction');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'models') {
+      onNavigateTab('models');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (id === 'ml-prediction') {
       onNavigateTab('machine-learning-and-prediction');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -65,6 +68,7 @@ export const SubNav: React.FC<SubNavProps> = ({
     { id: 'analytics', label: 'Analytics', isTab: activeTab === 'analytics' },
     { id: 'hotspots', label: 'Hotspots', isTab: activeTab === 'hotspots' },
     { id: 'prediction', label: 'Prediction', isTab: activeTab === 'prediction' },
+    { id: 'models', label: 'Models', isTab: activeTab === 'models' },
     { id: 'data-workbench', label: 'Workbench', isTab: activeTab === 'data-visualizations' },
     { id: 'how-it-works', label: 'How It Works', isTab: activeTab === 'overview' && activeSection === 'how-it-works' },
     { id: 'nigerian-data', label: 'Nigerian Data', isTab: activeTab === 'overview' && activeSection === 'nigerian-data' },

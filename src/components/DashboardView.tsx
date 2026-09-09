@@ -4,6 +4,7 @@ import { CrimeDataView } from './CrimeDataView';
 import { AnalyticsView } from './AnalyticsView';
 import { HotspotsView } from './HotspotsView';
 import { PredictionView } from './PredictionView';
+import { ModelPerformanceView } from './ModelPerformanceView';
 
 interface DashboardViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
@@ -12,7 +13,7 @@ interface DashboardViewProps {
   currentAnalyst?: string | null;
   onSignOut?: () => void;
   onBackToOverview: () => void;
-  initialSubView?: 'dashboard' | 'crime-data' | 'analytics' | 'hotspots' | 'prediction';
+  initialSubView?: 'dashboard' | 'crime-data' | 'analytics' | 'hotspots' | 'prediction' | 'models';
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -23,7 +24,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onBackToOverview,
   initialSubView = 'dashboard',
 }) => {
-  const [activeSubView, setActiveSubView] = useState<'dashboard' | 'crime-data' | 'analytics' | 'hotspots' | 'prediction'>(initialSubView);
+  const [activeSubView, setActiveSubView] = useState<'dashboard' | 'crime-data' | 'analytics' | 'hotspots' | 'prediction' | 'models'>(initialSubView);
   const [trendCategory, setTrendCategory] = useState<'all' | 'property' | 'persons' | 'authority'>('all');
   const [selectedState, setSelectedState] = useState<string>('Lagos');
   const [isExporting, setIsExporting] = useState<boolean>(false);
@@ -134,8 +135,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       id: 'models',
       label: 'Models',
       icon: 'account_tree',
-      onClick: () => onNavigateTab('overview'),
-      isActive: false,
+      onClick: () => setActiveSubView('models'),
+      isActive: activeSubView === 'models',
     },
     {
       id: 'reports',
@@ -440,7 +441,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span className="font-medium text-slate-500 hidden sm:inline">Smart Crime</span>
               <span className="material-symbols-outlined text-slate-400 text-[14px] hidden sm:inline">chevron_right</span>
               <span className="font-bold text-slate-900 capitalize px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-100">
-                {activeSubView === 'prediction'
+                {activeSubView === 'models'
+                  ? 'Model Performance'
+                  : activeSubView === 'prediction'
                   ? 'Spatial Intelligence Console'
                   : activeSubView === 'crime-data'
                   ? 'Crime Data'
@@ -489,7 +492,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Scrollable Dashboard Body */}
         <main className="w-full pt-20 bg-white min-h-screen px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col w-full space-y-8 max-w-[1500px] mx-auto">
-            {activeSubView === 'prediction' ? (
+            {activeSubView === 'models' ? (
+              <ModelPerformanceView
+                onNavigateTab={onNavigateTab}
+                onSelectState={(st) => {
+                  handleStateClick(st);
+                  onNavigateTab('data-visualizations');
+                }}
+              />
+            ) : activeSubView === 'prediction' ? (
               <PredictionView
                 onNavigateTab={onNavigateTab}
                 onSelectState={(st) => {
