@@ -436,27 +436,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 {isSidebarCollapsed ? 'menu_open' : 'menu'}
               </span>
             </button>
-
-            {/* Current Section Tag */}
-            <div className="flex items-center gap-1.5 text-xs">
-              <span className="font-medium text-slate-500 hidden sm:inline">Smart Crime</span>
-              <span className="material-symbols-outlined text-slate-400 text-[14px] hidden sm:inline">chevron_right</span>
-              <span className="font-bold text-slate-900 capitalize px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-100">
-                {activeSubView === 'datasets'
-                  ? 'Dataset Management'
-                  : activeSubView === 'models'
-                  ? 'Model Performance'
-                  : activeSubView === 'prediction'
-                  ? 'Spatial Intelligence Console'
-                  : activeSubView === 'crime-data'
-                  ? 'Crime Data'
-                  : activeSubView === 'hotspots'
-                  ? 'Hotspots Analysis'
-                  : activeSubView === 'analytics'
-                  ? 'Analytics'
-                  : 'Executive Dashboard'}
-              </span>
-            </div>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">

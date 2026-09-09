@@ -67,11 +67,6 @@ export const SubNav: React.FC<SubNavProps> = ({
 
   const navLinks = [
     { id: 'overview', label: 'Home', isTab: activeTab === 'overview' && activeSection === 'overview' },
-    { id: 'crime-data', label: 'Crime Data', isTab: activeTab === 'crime-data' || activeTab === 'datasets' },
-    { id: 'analytics', label: 'Analytics', isTab: activeTab === 'analytics' },
-    { id: 'hotspots', label: 'Hotspots', isTab: activeTab === 'hotspots' },
-    { id: 'prediction', label: 'Prediction', isTab: activeTab === 'prediction' },
-    { id: 'models', label: 'Models', isTab: activeTab === 'models' },
     { id: 'data-workbench', label: 'Workbench', isTab: activeTab === 'data-visualizations' },
     { id: 'how-it-works', label: 'How It Works', isTab: activeTab === 'overview' && activeSection === 'how-it-works' },
     { id: 'nigerian-data', label: 'Nigerian Data', isTab: activeTab === 'overview' && activeSection === 'nigerian-data' },
