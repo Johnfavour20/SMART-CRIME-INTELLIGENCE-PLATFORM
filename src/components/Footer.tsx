@@ -33,64 +33,64 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDoc }) => {
             </div>
           </div>
 
-          {/* Col 3: Platform */}
+          {/* Col 3: Quick Navigation */}
           <div className="flex flex-col gap-3">
             <span className="text-[12px] uppercase font-bold text-slate-900 tracking-wider">
-              Platform
+              Quick Navigation
             </span>
-            <button onClick={() => onNavigate && onNavigate('auth')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
+            <button onClick={() => onNavigate && onNavigate('dashboard')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              Executive Dashboard
+            </button>
+            <button onClick={() => onNavigate && onNavigate('hotspots')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              Crime Hotspots Map
+            </button>
+            <button onClick={() => onNavigate && onNavigate('prediction')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              Crime Risk Predictor
+            </button>
+            <button onClick={() => onNavigate && onNavigate('crime-data')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              NBS Crime Records
+            </button>
+            <button onClick={() => onNavigate && onNavigate('auth')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
               Analyst Sign In
             </button>
-            <button onClick={() => onNavigate && onNavigate('dashboard')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Analytics Dashboard
+          </div>
+
+          {/* Col 4: Key Capabilities */}
+          <div className="flex flex-col gap-3">
+            <span className="text-[12px] uppercase font-bold text-slate-900 tracking-wider">
+              Capabilities
+            </span>
+            <button onClick={() => onNavigate && onNavigate('hotspots')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              High-Risk Hotspot Discovery
             </button>
-            <button onClick={() => onNavigate && onNavigate('how-it-works')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Clustering Hotspots
+            <button onClick={() => onNavigate && onNavigate('prediction')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              Offence Risk Forecasting
             </button>
-            <button onClick={() => onNavigate && onNavigate('engines')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Predictive Modeling
+            <button onClick={() => onNavigate && onNavigate('dashboard')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              Geopolitical State Analytics
             </button>
-            <button onClick={() => onNavigate && onNavigate('nigerian-data')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Geopolitical Matrix
+            <button onClick={() => onNavigate && onNavigate('crime-data')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              National Crime Data Tables
             </button>
           </div>
 
-          {/* Col 4: Reference Data */}
+          {/* Col 5: Data & Verification */}
           <div className="flex flex-col gap-3">
             <span className="text-[12px] uppercase font-bold text-slate-900 tracking-wider">
-              Reference Data
+              Data Governance
             </span>
-            <button onClick={() => onNavigate && onNavigate('nigerian-data')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              NBS 2017 Dataset
-            </button>
-            <button onClick={() => onNavigate && onNavigate('engines')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              K-Means Parameters
-            </button>
-            <button onClick={() => onNavigate && onNavigate('engines')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Decision Tree Schema
-            </button>
-            <button onClick={() => onNavigate && onNavigate('engines')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Random Forest ROC-AUC
-            </button>
-          </div>
-
-          {/* Col 5: Ethics & Policy */}
-          <div className="flex flex-col gap-3">
-            <span className="text-[12px] uppercase font-bold text-slate-900 tracking-wider">
-              Ethics & Policy
-            </span>
-            <button onClick={() => onOpenDoc && onOpenDoc('Responsible AI Framing')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Responsible AI Framing
-            </button>
-            <button onClick={() => onOpenDoc && onOpenDoc('Zero-Surveillance Charter')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Zero-Surveillance Charter
-            </button>
-            <button onClick={() => onOpenDoc && onOpenDoc('Data Privacy Guarantee')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Data Privacy Guarantee
-            </button>
-            <button onClick={() => onOpenDoc && onOpenDoc('Academic Citation Guide')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors">
-              Academic Citation Guide
-            </button>
+            <div className="text-[13px] text-slate-600">
+              National Bureau of Statistics (NBS)
+            </div>
+            <div className="text-[13px] text-slate-600">
+              Reported Offences: 134,663 Cases
+            </div>
+            <div className="text-[13px] text-slate-600">
+              Coverage: 36 States + FCT Abuja
+            </div>
+            <div className="text-[13px] text-purple-700 font-semibold">
+              Proactive Security Intelligence
+            </div>
           </div>
 
         </div>

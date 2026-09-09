@@ -54,7 +54,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900 selection:bg-purple-100 selection:text-purple-900 antialiased font-sans">
-      {/* Top Micro Notice / Back Navigation bar */}
+      {/* Top Notice / Back Navigation bar */}
       <header className="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md px-6 lg:px-12 py-3.5 flex items-center justify-between text-xs text-slate-600 z-30">
         <button
           onClick={onBackToOverview}
@@ -69,17 +69,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          <span>Back to Public Overview</span>
+          <span>Back to Home</span>
         </button>
         <div className="flex items-center gap-4">
-          <span className="text-slate-400 font-mono text-[11px]">AUTHORIZED ANALYSTS ONLY</span>
+          <span className="text-purple-700 font-semibold text-xs">Official NBS 2017 Dataset</span>
         </div>
       </header>
 
       {/* Main Split-Screen Container */}
       <main className="flex-1 flex flex-col lg:flex-row w-full max-w-[1600px] mx-auto overflow-hidden relative">
         {/* ============================================================ */}
-        {/* LEFT PANEL: Brand Intelligence & Abstract Data Art (46% Desktop) */}
+        {/* LEFT PANEL: Platform Intro & Overview (46% Desktop) */}
         {/* ============================================================ */}
         <section className="lg:w-[46%] w-full bg-slate-50 p-6 lg:p-12 xl:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-slate-200 relative overflow-hidden">
           {/* Ambient background decorative light halos */}
@@ -90,40 +90,24 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           <div className="relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-700 p-0.5 flex items-center justify-center shadow-xs">
-                  <div className="w-full h-full bg-purple-700 rounded-[10px] flex items-center justify-center">
-                    <svg
-                      className="w-5 h-5 text-white"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="12" r="3"></circle>
-                      <path d="M12 3v3m0 12v3M3 12h3m12 0h3"></path>
-                      <path d="m5.6 5.6 2.1 2.1m8.6 8.6 2.1 2.1M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1"></path>
-                    </svg>
-                  </div>
+                <div className="w-10 h-10 rounded-xl bg-purple-700 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-white text-[20px]">security</span>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-extrabold tracking-tight text-xl text-slate-900">SMART CRIME</span>
                     <span className="px-2 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold tracking-wider rounded-md border border-purple-200">
-                      DATA SUITE
+                      NIGERIA
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500 font-medium tracking-wide">
-                    Predictive Analytics & Spatial Intelligence
+                    Crime Intelligence & Risk Forecasting
                   </p>
                 </div>
               </div>
               <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 rounded-full text-[11px] font-semibold text-purple-700 shadow-xs">
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                <span>Verified NBS Baseline</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span>NBS Certified Data</span>
               </div>
             </div>
 
@@ -131,17 +115,16 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             <div className="mt-8 lg:mt-12 max-w-lg">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-200 rounded-full text-xs font-semibold text-purple-700 mb-4">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-700"></span>
-                <span>Empirical Intelligence Architecture</span>
+                <span>Security Decision Support</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 tracking-tight leading-[1.18]">
-                Crime Intelligence <br />
+                Proactive Security <br />
                 <span className="text-purple-700">
-                  Starts Here.
+                  Through Data.
                 </span>
               </h1>
               <p className="mt-4 text-[15px] leading-relaxed text-slate-600">
-                Access calibrated machine learning models, longitudinal trend indices, K-Means clustering, and
-                geospatial incident envelopes across 36 Nigerian states and the FCT.
+                Identify high-risk crime hotspots, predict potential security threats across Nigerian states, and support strategic patrol deployments.
               </p>
             </div>
           </div>
@@ -308,13 +291,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             <div className="mb-7">
               <div className="text-xs font-bold uppercase tracking-wider text-purple-700 mb-1.5 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-700"></span>
-                <span>Welcome back</span>
+                <span>Portal Sign In</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-                Sign in to Smart Crime
+                Sign In to Smart Crime
               </h2>
               <p className="text-sm text-slate-600 mt-2">
-                Access your crime intelligence dashboard and analytical tools.
+                Enter your credentials to access the intelligence dashboard and predictive models.
               </p>
             </div>
 
@@ -324,19 +307,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <label htmlFor="auth-email" className="block text-[13px] font-semibold text-slate-900">
-                    Work Email Address
+                    Email Address
                   </label>
                   <span className="text-[11px] text-slate-400">e.g. analyst@gov.ng</span>
                 </div>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-                      />
-                    </svg>
+                    <span className="material-symbols-outlined text-[18px]">mail</span>
                   </div>
                   <input
                     type="email"
@@ -349,18 +326,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       if (emailError) setEmailError(null);
                     }}
                     required
-                    className="w-full h-[50px] pl-10 pr-4 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                    className="w-full h-[48px] pl-10 pr-4 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
                   />
                 </div>
                 {emailError && (
                   <p className="text-xs font-medium text-rose-600 flex items-center gap-1 mt-1">
-                    <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
                     <span>{emailError}</span>
                   </p>
                 )}
@@ -372,17 +342,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   <label htmlFor="auth-password" className="block text-[13px] font-semibold text-slate-900">
                     Password
                   </label>
-                  <span className="text-[11px] text-slate-400">Min. 8 characters</span>
                 </div>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-                      />
-                    </svg>
+                    <span className="material-symbols-outlined text-[18px]">lock</span>
                   </div>
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -392,7 +355,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full h-[50px] pl-10 pr-11 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                    className="w-full h-[48px] pl-10 pr-11 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
                   />
                   <button
                     type="button"
@@ -400,24 +363,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     title="Toggle password visibility"
                     className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-purple-700 transition-colors focus:outline-none cursor-pointer"
                   >
-                    {showPassword ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
-                        />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                        />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    )}
+                    <span className="material-symbols-outlined text-[18px]">
+                      {showPassword ? 'visibility_off' : 'visibility'}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -431,7 +379,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="w-4 h-4 rounded border-slate-200 text-purple-700 focus:ring-purple-700 focus:ring-offset-0 focus:ring-2 transition-all cursor-pointer accent-purple-700"
                   />
-                  <span className="text-xs font-medium text-slate-600">Remember my workstation</span>
+                  <span className="text-xs font-medium text-slate-600">Remember me</span>
                 </label>
                 <button
                   type="button"
@@ -447,32 +395,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-[50px] bg-purple-700 hover:bg-purple-800 text-white font-semibold text-sm rounded-xl transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-85 shadow-xs"
+                  className="w-full h-[48px] bg-purple-700 hover:bg-purple-800 text-white font-semibold text-sm rounded-xl transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-85 shadow-xs"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
-                      <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                        />
-                      </svg>
-                      <span>{statusMessage || 'Signing in...'}</span>
+                      <span className="material-symbols-outlined animate-spin text-[18px]">sync</span>
+                      <span>Signing in...</span>
                     </div>
                   ) : (
                     <>
-                      <span>Sign In</span>
-                      <svg
-                        className="w-4 h-4 text-purple-200"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
+                      <span>Sign In to Dashboard</span>
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                     </>
                   )}
                 </button>

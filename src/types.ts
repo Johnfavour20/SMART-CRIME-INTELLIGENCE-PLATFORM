@@ -50,15 +50,9 @@ export type ActiveTab =
   | 'overview' 
   | 'dashboard'
   | 'crime-data'
-  | 'datasets'
   | 'analytics'
   | 'hotspots'
   | 'prediction'
   | 'models'
-  | 'reports'
-  | 'foundation' 
-  | 'components' 
-  | 'data-visualizations' 
-  | 'machine-learning-and-prediction' 
-  | 'patterns'
   | 'auth';
+

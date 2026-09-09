@@ -6,23 +6,13 @@ import { StatStrip } from './components/StatStrip';
 import { ExecutiveDashboard } from './components/ExecutiveDashboard';
 import { CapabilitiesGrid } from './components/CapabilitiesGrid';
 import { HowItWorksWorkflow } from './components/HowItWorksWorkflow';
-import { MiningEngines } from './components/MiningEngines';
 import { NigerianDataSection } from './components/NigerianDataSection';
 import { CTASection } from './components/CTASection';
 import { Footer } from './components/Footer';
 
-import { InteractiveWorkbench } from './components/InteractiveWorkbench';
-import { PredictionSimulator } from './components/PredictionSimulator';
-import { FoundationView } from './components/FoundationView';
-import { ComponentsView } from './components/ComponentsView';
-import { PatternsView } from './components/PatternsView';
 import { AuthPage } from './components/AuthPage';
 import { DashboardView } from './components/DashboardView';
-import { CrimeDataView } from './components/CrimeDataView';
-
-import { ExportTokensModal } from './components/ExportTokensModal';
 import { SearchModal } from './components/SearchModal';
-import { SignInModal } from './components/SignInModal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
@@ -30,12 +20,10 @@ export default function App() {
   const [focusedState, setFocusedState] = useState<string>('Lagos');
   const [currentAnalyst, setCurrentAnalyst] = useState<string | null>(null);
 
-  // Modal States
-  const [isExportTokensOpen, setIsExportTokensOpen] = useState<boolean>(false);
+  // Search Modal State (⌘K / Ctrl+K)
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
-  const [isSignInOpen, setIsSignInOpen] = useState<boolean>(false);
 
-  // Keyboard shortcut for Search (⌘K / Ctrl+K)
+  // Keyboard shortcut for Search
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -48,8 +36,8 @@ export default function App() {
   }, []);
 
   const handleSubNavNavigate = (sectionId: string) => {
-    if (sectionId === 'dashboard') {
-      setActiveTab('dashboard');
+    if (sectionId === 'dashboard' || sectionId === 'hotspots' || sectionId === 'prediction' || sectionId === 'crime-data') {
+      setActiveTab(sectionId as ActiveTab);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -57,7 +45,6 @@ export default function App() {
     if (activeTab !== 'overview') {
       setActiveTab('overview');
     }
-    // Smooth scroll to section after short delay
     setTimeout(() => {
       const el = document.getElementById(sectionId);
       if (el) {
@@ -69,29 +56,30 @@ export default function App() {
   const handleSelectSearchResult = (type: 'state' | 'zone' | 'tab' | 'section', value: string) => {
     if (type === 'state') {
       setFocusedState(value);
-      setActiveTab('data-visualizations');
+      setActiveTab('hotspots');
     } else if (type === 'tab') {
       setActiveTab(value as ActiveTab);
-    } else if (type === 'section') {
-      handleSubNavNavigate(value);
     } else {
-      setActiveTab('data-visualizations');
+      setActiveTab('dashboard');
     }
   };
 
   const handleSelectStateFromMap = (stateName: string) => {
     setFocusedState(stateName);
+    setActiveTab('hotspots');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleOpenPredictionForState = (stateName: string) => {
     setFocusedState(stateName);
     setActiveTab('prediction');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // If user is inside any operational dashboard tab
   if (
     activeTab === 'dashboard' ||
     activeTab === 'crime-data' ||
-    activeTab === 'datasets' ||
     activeTab === 'analytics' ||
     activeTab === 'hotspots' ||
     activeTab === 'prediction' ||
@@ -100,33 +88,21 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
         <DashboardView
-          initialSubView={
-            activeTab === 'datasets'
-              ? 'datasets'
-              : activeTab === 'models'
-              ? 'models'
-              : activeTab === 'prediction'
-              ? 'prediction'
-              : activeTab === 'hotspots'
-              ? 'hotspots'
-              : activeTab === 'analytics'
-              ? 'analytics'
-              : activeTab === 'crime-data'
-              ? 'crime-data'
-              : 'dashboard'
-          }
+          initialSubView={activeTab}
           onNavigateTab={(tab) => {
             setActiveTab(tab);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onSelectState={(stateName) => {
             setFocusedState(stateName);
-            setActiveTab('data-visualizations');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onOpenSearch={() => setIsSearchOpen(true)}
-          currentAnalyst={currentAnalyst}
-          onSignOut={() => setCurrentAnalyst(null)}
+          currentAnalyst={currentAnalyst || 'Authorized Analyst'}
+          onSignOut={() => {
+            setCurrentAnalyst(null);
+            setActiveTab('overview');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
           onBackToOverview={() => {
             setActiveTab('overview');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -142,30 +118,7 @@ export default function App() {
     );
   }
 
-  if (activeTab === 'crime-data') {
-    return (
-      <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
-        <CrimeDataView
-          onNavigateTab={(tab) => {
-            setActiveTab(tab);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          onOpenSearch={() => setIsSearchOpen(true)}
-          currentAnalyst={currentAnalyst}
-          onBackToOverview={() => {
-            setActiveTab('dashboard');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-        />
-        <SearchModal
-          isOpen={isSearchOpen}
-          onClose={() => setIsSearchOpen(false)}
-          onSelectResult={handleSelectSearchResult}
-        />
-      </div>
-    );
-  }
-
+  // If user is on the Login page
   if (activeTab === 'auth') {
     return (
       <div className="min-h-screen bg-white text-[#17121F] font-sans antialiased">
@@ -180,12 +133,11 @@ export default function App() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           onOpenDocs={() => {
-            setActiveTab('patterns');
+            setActiveTab('overview');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         />
 
-        {/* Search Modal can still be triggered via hotkey */}
         <SearchModal
           isOpen={isSearchOpen}
           onClose={() => setIsSearchOpen(false)}
@@ -195,9 +147,10 @@ export default function App() {
     );
   }
 
+  // Public Landing Page (Clear, Streamlined, High-Impact)
   return (
     <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased selection:bg-[#6200a9] selection:text-white">
-      {/* Primary Navigation Bar */}
+      {/* Navigation Bar */}
       <SubNav
         activeTab={activeTab}
         activeSection={activeSubSection}
@@ -218,155 +171,90 @@ export default function App() {
         onSignOut={() => setCurrentAnalyst(null)}
       />
 
-      {/* Main View Container */}
+      {/* Main Landing Sections */}
       <main>
-        {/* Conditional View Rendering Based on Active Tab */}
-        {activeTab === 'overview' && (
-          <>
-            {/* Hero Section with interactive Nigeria map and hotspot envelopes */}
-            <HeroSection
-              onExploreAnalytics={() => {
-                setActiveTab('data-visualizations');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onSeeHowItWorks={() => handleSubNavNavigate('how-it-works')}
-              onSelectState={handleSelectStateFromMap}
-            />
+        {/* 1. Hero Section: Direct value proposition and interactive Nigeria map */}
+        <HeroSection
+          onExploreAnalytics={() => {
+            setActiveTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onSeeHowItWorks={() => {
+            const el = document.getElementById('how-it-works');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onSelectState={handleSelectStateFromMap}
+        />
 
-            {/* Stat Strip: 134,663 offences, 36+FCT, 3 classes, 3 engines */}
-            <StatStrip />
+        {/* 2. Key National Statistics */}
+        <StatStrip />
 
-            {/* Executive Dashboard Preview with Area Chart, KPI Cards & Category Bars */}
-            <ExecutiveDashboard
-              onExploreDeep={() => {
-                setActiveTab('data-visualizations');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
+        {/* 3. Executive Dashboard Preview */}
+        <ExecutiveDashboard
+          onExploreDeep={() => {
+            setActiveTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
 
-            {/* Core Capabilities 4-Card Grid */}
-            <CapabilitiesGrid
-              onSelectCapability={(id) => {
-                if (id === 'trends' || id === 'intelligence') {
-                  setActiveTab('data-visualizations');
-                } else if (id === 'prediction') {
-                  setActiveTab('prediction');
-                } else if (id === 'hotspots') {
-                  handleSubNavNavigate('engines');
-                }
-              }}
-            />
+        {/* 4. Core Features (Hotspots, Prediction, Crime Records, Analytics) */}
+        <CapabilitiesGrid
+          onSelectCapability={(id) => {
+            if (id === 'hotspots') {
+              setActiveTab('hotspots');
+            } else if (id === 'prediction') {
+              setActiveTab('prediction');
+            } else if (id === 'trends' || id === 'intelligence') {
+              setActiveTab('dashboard');
+            } else {
+              setActiveTab('crime-data');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
 
-            {/* Algorithmic Workflow: 01 Collect, 02 Prepare, 03 Analyze, 04 Understand */}
-            <HowItWorksWorkflow />
+        {/* 5. 3-Step Simple How It Works */}
+        <div id="how-it-works">
+          <HowItWorksWorkflow />
+        </div>
 
-            {/* Mining Engines: K-Means, Decision Tree, Random Forest */}
-            <MiningEngines
-              onOpenModelSimulator={(model) => {
-                setActiveTab('machine-learning-and-prediction');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
+        {/* 6. State-by-State Nigerian Crime Explorer */}
+        <NigerianDataSection
+          onSelectState={handleOpenPredictionForState}
+        />
 
-            {/* Built Around Nigerian Crime Data: Geopolitical Regional Matrix + NBS Spec */}
-            <NigerianDataSection
-              onSelectState={handleOpenPredictionForState}
-            />
-
-            {/* Call To Action Banner */}
-            <CTASection
-              onLaunch={() => {
-                setActiveTab('data-visualizations');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onReadDocs={() => {
-                setActiveTab('patterns');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-          </>
-        )}
-
-        {/* Foundation: Light Mode Constitution & Design Tokens */}
-        {activeTab === 'foundation' && (
-          <FoundationView
-            onBackToOverview={() => setActiveTab('overview')}
-            onOpenExportTokens={() => setIsExportTokensOpen(true)}
-          />
-        )}
-
-        {/* Components: Design System Component Primitives */}
-        {activeTab === 'components' && (
-          <ComponentsView
-            onBackToOverview={() => setActiveTab('overview')}
-          />
-        )}
-
-        {/* Data Visualizations: Granular State Analytics & Workbench */}
-        {activeTab === 'data-visualizations' && (
-          <InteractiveWorkbench
-            initialState={focusedState}
-            onClose={() => setActiveTab('overview')}
-            onOpenPrediction={handleOpenPredictionForState}
-          />
-        )}
-
-        {/* Machine Learning & Prediction: Risk Classifier Simulator */}
-        {activeTab === 'machine-learning-and-prediction' && (
-          <PredictionSimulator
-            initialState={focusedState}
-            onBackToOverview={() => setActiveTab('overview')}
-          />
-        )}
-
-        {/* Patterns: Methodological & Governance Architecture */}
-        {activeTab === 'patterns' && (
-          <PatternsView
-            onBackToOverview={() => setActiveTab('overview')}
-          />
-        )}
+        {/* 7. Call To Action to Launch Dashboard */}
+        <CTASection
+          onLaunch={() => {
+            setActiveTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onReadDocs={() => {
+            setActiveTab('crime-data');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
       </main>
 
-      {/* Global SaaS Footer */}
+      {/* Footer */}
       <Footer
         onNavigate={(target) => {
           if (target === 'auth') {
             setActiveTab('auth');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          } else if (target === 'dashboard') {
-            setActiveTab('dashboard');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          } else if (target === 'nigerian-data') {
-            setActiveTab('data-visualizations');
+          } else if (target === 'dashboard' || target === 'hotspots' || target === 'prediction' || target === 'crime-data') {
+            setActiveTab(target as ActiveTab);
           } else {
             handleSubNavNavigate(target);
           }
-        }}
-        onOpenDoc={(doc) => {
-          setActiveTab('patterns');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
 
-      {/* Modals */}
-      <ExportTokensModal
-        isOpen={isExportTokensOpen}
-        onClose={() => setIsExportTokensOpen(false)}
-      />
-
+      {/* Quick Search Shortcut Modal */}
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
         onSelectResult={handleSelectSearchResult}
-      />
-
-      <SignInModal
-        isOpen={isSignInOpen}
-        onClose={() => setIsSignInOpen(false)}
-        onSignedIn={(analystName) => {
-          setCurrentAnalyst(analystName);
-          setActiveTab('data-visualizations');
-        }}
       />
     </div>
   );
