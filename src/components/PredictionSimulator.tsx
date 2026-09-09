@@ -78,17 +78,17 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 py-8 flex flex-col gap-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#e9dff2]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <div className="flex items-center gap-2 text-[12px] font-semibold text-[#6200a9]">
+          <div className="flex items-center gap-2 text-[12px] font-semibold text-purple-700">
             <span>MACHINE LEARNING ENGINE</span>
             <span>•</span>
-            <span className="text-[#4c4354]">Explainable Predictive Risk Modeling</span>
+            <span className="text-slate-500">Explainable Predictive Risk Modeling</span>
           </div>
-          <h1 className="text-[26px] sm:text-[32px] font-bold text-[#1e1926] tracking-tight mt-1">
+          <h1 className="text-[26px] sm:text-[32px] font-bold text-slate-900 tracking-tight mt-1">
             Predictive Crime Risk Classifier
           </h1>
-          <p className="text-[13px] text-[#4c4354]">
+          <p className="text-[13px] text-slate-600">
             Ensemble classification evaluating historical NBS incident distributions against spatial and seasonal parameters.
           </p>
         </div>
@@ -96,9 +96,9 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
         {onBackToOverview && (
           <button
             onClick={onBackToOverview}
-            className="self-start sm:self-auto flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#ffffff] border border-[#cfc2d6] hover:bg-[#faf0ff] text-[#1e1926] text-[13px] font-semibold transition-all shadow-xs"
+            className="self-start sm:self-auto flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 text-[13px] font-semibold transition-all shadow-xs"
           >
-            <span className="material-symbols-outlined text-[16px] text-[#6200a9]">arrow_back</span>
+            <span className="material-symbols-outlined text-[16px] text-purple-700">arrow_back</span>
             <span>Back to Main Page</span>
           </button>
         )}
@@ -108,23 +108,23 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Parameter Controls */}
-        <div className="lg:col-span-5 rounded-3xl bg-[#ffffff] border border-[#e9dff2] p-6 sm:p-8 shadow-md flex flex-col gap-5">
+        <div className="lg:col-span-5 rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 shadow-xs flex flex-col gap-5">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#6200a9] text-[22px]">tune</span>
-            <h3 className="text-[18px] font-bold text-[#1e1926]">
+            <span className="material-symbols-outlined text-purple-700 text-[22px]">tune</span>
+            <h3 className="text-[18px] font-bold text-slate-900">
               Simulation Parameters
             </h3>
           </div>
 
           {/* State selector */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-bold text-[#4c4354] uppercase tracking-wider">
+            <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">
               Jurisdiction (State / Command)
             </label>
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#faf0ff] border border-[#cfc2d6] text-[#1e1926] text-[13px] font-semibold focus:outline-none focus:border-[#7e22ce]"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-[13px] font-semibold focus:outline-none focus:border-purple-600"
             >
               {NIGERIAN_STATES_DATA.map((s) => (
                 <option key={s.state} value={s.state}>
@@ -136,7 +136,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
 
           {/* Offence Category */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-bold text-[#4c4354] uppercase tracking-wider">
+            <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">
               Offence Classification
             </label>
             <div className="space-y-2">
@@ -150,13 +150,13 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                   onClick={() => setCategory(cat as any)}
                   className={`w-full p-2.5 rounded-xl border text-left text-[12px] font-semibold transition-all flex items-center justify-between ${
                     category === cat
-                      ? 'bg-[#f0dbff] border-[#7e22ce] text-[#1e1926]'
-                      : 'bg-[#faf0ff] border-[#e9dff2] text-[#4c4354] hover:bg-[#efe4f8]'
+                      ? 'bg-purple-50 border-purple-600 text-purple-900'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   <span>{cat}</span>
                   {category === cat && (
-                    <span className="material-symbols-outlined text-[#6200a9] text-[16px]">check_circle</span>
+                    <span className="material-symbols-outlined text-purple-700 text-[16px]">check_circle</span>
                   )}
                 </button>
               ))}
@@ -165,7 +165,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
 
           {/* Quarter / Seasonal Window */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-bold text-[#4c4354] uppercase tracking-wider">
+            <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">
               Temporal Cycle
             </label>
             <div className="grid grid-cols-4 gap-2">
@@ -175,8 +175,8 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                   onClick={() => setQuarter(q)}
                   className={`py-2 rounded-xl text-[12px] font-bold transition-all ${
                     quarter === q
-                      ? 'bg-[#7e22ce] text-white shadow-xs'
-                      : 'bg-[#faf0ff] border border-[#e9dff2] text-[#4c4354] hover:bg-[#efe4f8]'
+                      ? 'bg-purple-700 text-white shadow-xs'
+                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   {q}
@@ -187,7 +187,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
 
           {/* Urban Density */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[12px] font-bold text-[#4c4354] uppercase tracking-wider">
+            <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">
               Urban Corridor Density
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -201,8 +201,8 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                   onClick={() => setUrbanDensity(d.id as any)}
                   className={`py-2 rounded-xl text-[12px] font-bold transition-all ${
                     urbanDensity === d.id
-                      ? 'bg-[#7e22ce] text-white shadow-xs'
-                      : 'bg-[#faf0ff] border border-[#e9dff2] text-[#4c4354] hover:bg-[#efe4f8]'
+                      ? 'bg-purple-700 text-white shadow-xs'
+                      : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
                   {d.label}
@@ -215,7 +215,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
           <button
             onClick={handlePredict}
             disabled={isCalculating}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-[#6200a9] to-[#7e22ce] hover:from-[#6e3aca] hover:to-[#6200a9] text-white font-bold text-[14px] shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 mt-2"
+            className="w-full py-3 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-[14px] shadow-xs transition-all active:scale-98 flex items-center justify-center gap-2 mt-2"
           >
             <span className="material-symbols-outlined text-[18px]">
               {isCalculating ? 'progress_activity' : 'account_tree'}
@@ -229,19 +229,19 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
           {result && (
             <>
               {/* Primary Risk Prediction Card */}
-              <div className="rounded-3xl bg-[#ffffff] border border-[#e9dff2] p-6 sm:p-8 shadow-md flex flex-col gap-6">
+              <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 shadow-xs flex flex-col gap-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#6200a9] bg-[#f0dbff] px-2.5 py-0.5 rounded-full">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full">
                       Model Forecast Result
                     </span>
-                    <h3 className="text-[22px] font-bold text-[#1e1926] mt-1">
+                    <h3 className="text-[22px] font-bold text-slate-900 mt-1">
                       {selectedState} • {quarter} Projected Outlook
                     </h3>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-[12px] text-[#4c4354]">ROC-AUC Confidence:</span>
+                    <span className="text-[12px] text-slate-500">ROC-AUC Confidence:</span>
                     <span className="text-[13px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
                       {result.confidence}%
                     </span>
@@ -249,21 +249,21 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                 </div>
 
                 {/* Score Big Meter */}
-                <div className="p-6 rounded-2xl bg-[#faf0ff] border border-[#e9dff2] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div className="flex flex-col">
-                    <span className="text-[12px] text-[#4c4354] uppercase font-bold">
+                    <span className="text-[12px] text-slate-500 uppercase font-bold">
                       Calculated Empirical Risk Index
                     </span>
                     <div className="flex items-baseline gap-2 mt-1">
-                      <span className="text-[44px] font-extrabold text-[#1e1926] tracking-tight tabular-nums">
+                      <span className="text-[44px] font-extrabold text-slate-900 tracking-tight tabular-nums">
                         {result.riskScore}
                       </span>
-                      <span className="text-[16px] text-[#4c4354]">/ 100</span>
+                      <span className="text-[16px] text-slate-500">/ 100</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:items-end">
-                    <span className="text-[12px] text-[#4c4354] uppercase font-bold mb-1">
+                    <span className="text-[12px] text-slate-500 uppercase font-bold mb-1">
                       Risk Classification
                     </span>
                     <span className={`px-4 py-1.5 rounded-xl text-[14px] font-extrabold ${
@@ -274,7 +274,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                     }`}>
                       {result.level} Intensity
                     </span>
-                    <span className="text-[11px] text-[#4c4354] mt-1">
+                    <span className="text-[11px] text-slate-500 mt-1">
                       Assigned to Spatial Cluster #{result.clusterId}
                     </span>
                   </div>
@@ -283,8 +283,8 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                 {/* Explainable Decision Path (Tree Steps) */}
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#6200a9] text-[20px]">schema</span>
-                    <h4 className="text-[15px] font-bold text-[#1e1926]">
+                    <span className="material-symbols-outlined text-purple-700 text-[20px]">schema</span>
+                    <h4 className="text-[15px] font-bold text-slate-900">
                       Explainable Decision Tree Trace (Audit Trail)
                     </h4>
                   </div>
@@ -293,29 +293,29 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                     {result.decisionPath.map((step, idx) => (
                       <div
                         key={idx}
-                        className="p-3 rounded-xl bg-[#ffffff] border border-[#e9dff2] text-[12px] flex items-start gap-2.5 shadow-xs"
+                        className="p-3 rounded-xl bg-white border border-slate-200 text-[12px] flex items-start gap-2.5 shadow-xs"
                       >
-                        <span className="w-5 h-5 rounded-full bg-[#efe4f8] text-[#6200a9] font-bold flex items-center justify-center shrink-0 text-[10px]">
+                        <span className="w-5 h-5 rounded-full bg-slate-100 text-purple-700 font-bold flex items-center justify-center shrink-0 text-[10px]">
                           {idx + 1}
                         </span>
-                        <span className="text-[#1e1926] font-mono leading-relaxed">{step}</span>
+                        <span className="text-slate-800 font-mono leading-relaxed">{step}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Civil Action Recommendations */}
-                <div className="p-5 rounded-2xl bg-[#faf0ff] border border-[#e9dff2] flex flex-col gap-3">
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[#6200a9] text-[20px]">policy</span>
-                    <h4 className="text-[14px] font-bold text-[#1e1926]">
+                    <span className="material-symbols-outlined text-purple-700 text-[20px]">policy</span>
+                    <h4 className="text-[14px] font-bold text-slate-900">
                       Objective Civil Policy & Resource Recommendations
                     </h4>
                   </div>
-                  <ul className="space-y-1.5 text-[13px] text-[#4c4354]">
+                  <ul className="space-y-1.5 text-[13px] text-slate-600">
                     {result.recommendations.map((rec, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <span className="text-[#6200a9] font-bold">•</span>
+                        <span className="text-purple-700 font-bold">•</span>
                         <span>{rec}</span>
                       </li>
                     ))}

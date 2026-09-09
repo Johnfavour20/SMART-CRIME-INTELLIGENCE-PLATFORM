@@ -57,7 +57,7 @@ export const SubNav: React.FC<SubNavProps> = ({
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-[#ffffff]/95 backdrop-blur-md border-b border-[#e9dff2] transition-all">
+    <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all">
       <div className="w-full px-4 sm:px-8 lg:px-10 py-3 flex items-center justify-between gap-4">
         {/* Brand */}
         <button
@@ -67,19 +67,19 @@ export const SubNav: React.FC<SubNavProps> = ({
           }}
           className="flex items-center gap-2.5 text-left focus:outline-none group cursor-pointer"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#6200a9] to-[#7e22ce] flex items-center justify-center group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-xl bg-purple-700 flex items-center justify-center group-hover:scale-105 transition-transform">
             <span className="material-symbols-outlined text-white text-[19px]">security</span>
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-[17px] text-[#1e1926] font-bold tracking-tight">
+              <span className="text-[17px] text-slate-900 font-bold tracking-tight">
                 SMART CRIME
               </span>
-              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-[#efe4f8] text-[#6200a9] text-[10px] font-bold">
+              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[10px] font-bold border border-purple-200">
                 NBS 2017
               </span>
             </div>
-            <span className="text-[11px] text-[#4c4354] font-medium hidden md:inline">
+            <span className="text-[11px] text-slate-500 font-medium hidden md:inline">
               Geospatial Intelligence Platform
             </span>
           </div>
@@ -95,8 +95,8 @@ export const SubNav: React.FC<SubNavProps> = ({
                 onClick={() => handleLinkClick(link.id)}
                 className={`text-[13.5px] transition-colors relative py-1 cursor-pointer ${
                   isActive
-                    ? 'text-[#6200a9] font-bold after:content-[""] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-[#6200a9]'
-                    : 'text-[#4c4354] font-medium hover:text-[#1e1926]'
+                    ? 'text-purple-700 font-bold after:content-[""] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-purple-700'
+                    : 'text-slate-600 font-medium hover:text-slate-900'
                 }`}
               >
                 {link.label}
@@ -109,7 +109,7 @@ export const SubNav: React.FC<SubNavProps> = ({
         <div className="flex items-center gap-2 sm:gap-3">
           {currentAnalyst ? (
             <div className="flex items-center gap-2">
-              <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FAF7FF] border border-[#E9DFF2] text-xs font-semibold text-[#7E22CE]">
+              <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-purple-700">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span className="truncate max-w-[140px]">{currentAnalyst}</span>
               </div>
@@ -117,7 +117,7 @@ export const SubNav: React.FC<SubNavProps> = ({
                 <button
                   onClick={onSignOut}
                   title="Sign Out"
-                  className="p-1.5 rounded-lg text-[#6B6472] hover:text-[#7E22CE] hover:bg-[#FAF7FF] transition-colors cursor-pointer text-xs font-medium"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-purple-700 hover:bg-slate-100 transition-colors cursor-pointer text-xs font-medium"
                 >
                   <span className="material-symbols-outlined text-[18px]">logout</span>
                 </button>
@@ -126,14 +126,14 @@ export const SubNav: React.FC<SubNavProps> = ({
           ) : (
             <button
               onClick={onSignIn}
-              className="px-3 py-1.5 text-[13.5px] font-semibold text-[#1e1926] hover:text-[#6200a9] transition-colors cursor-pointer"
+              className="px-3 py-1.5 text-[13.5px] font-semibold text-slate-800 hover:text-purple-700 transition-colors cursor-pointer"
             >
               Sign In
             </button>
           )}
           <button
             onClick={onLaunchDashboard}
-            className="px-4 py-2 rounded-xl bg-[#7e22ce] hover:bg-[#6200a9] text-white text-[13.5px] font-semibold transition-all active:scale-98 flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-[13.5px] font-semibold transition-all active:scale-98 flex items-center gap-1.5 cursor-pointer shadow-xs"
           >
             <span>Launch Dashboard</span>
             <span className="material-symbols-outlined text-[16px]">open_in_new</span>
@@ -142,7 +142,7 @@ export const SubNav: React.FC<SubNavProps> = ({
           {/* Mobile menu hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-[#4c4354] hover:text-[#1e1926] hover:bg-[#faf0ff] transition-colors"
+            className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             aria-label="Toggle navigation menu"
           >
             <span className="material-symbols-outlined text-[22px]">
@@ -154,15 +154,15 @@ export const SubNav: React.FC<SubNavProps> = ({
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#e9dff2] bg-white px-4 py-3 flex flex-col gap-2">
+        <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-3 flex flex-col gap-2">
           {navLinks.map((link) => (
             <button
               key={link.id}
               onClick={() => handleLinkClick(link.id)}
               className={`text-left px-3 py-2 rounded-lg text-[14px] font-medium transition-colors ${
                 link.isTab
-                  ? 'bg-[#efe4f8] text-[#6200a9] font-bold'
-                  : 'text-[#4c4354] hover:bg-[#faf0ff]'
+                  ? 'bg-purple-50 text-purple-700 font-bold'
+                  : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
               {link.label}

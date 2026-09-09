@@ -34,22 +34,22 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
   ].filter(t => t.title.toLowerCase().includes(query.toLowerCase()));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/35 backdrop-blur-xs animate-fadeIn">
-      <div className="w-full max-w-xl rounded-3xl bg-white border border-[#e9dff2] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/40 backdrop-blur-xs animate-fadeIn">
+      <div className="w-full max-w-xl rounded-2xl bg-white border border-slate-200 overflow-hidden flex flex-col shadow-xl">
         {/* Search Input Bar */}
-        <div className="flex items-center gap-3 p-4 border-b border-[#e9dff2]">
-          <span className="material-symbols-outlined text-[#6200a9] text-[22px]">search</span>
+        <div className="flex items-center gap-3 p-4 border-b border-slate-200">
+          <span className="material-symbols-outlined text-purple-700 text-[22px]">search</span>
           <input
             type="text"
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search states, zones, tokens, or ML algorithms..."
-            className="w-full bg-transparent border-none outline-none text-[15px] text-[#1e1926] placeholder:text-[#7e7385]"
+            className="w-full bg-transparent border-none outline-none text-[15px] text-slate-900 placeholder:text-slate-400"
           />
           <button
             onClick={onClose}
-            className="px-2 py-1 text-[12px] font-semibold text-[#4c4354] hover:text-[#1e1926] bg-[#faf0ff] rounded-lg border border-[#e9dff2]"
+            className="px-2 py-1 text-[12px] font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-200 transition-colors"
           >
             ESC
           </button>
@@ -60,7 +60,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
           {/* States */}
           {filteredStates.length > 0 && (
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#7e7385] px-2 mb-1 block">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2 mb-1 block">
                 Nigerian State Commands
               </span>
               <div className="space-y-1">
@@ -71,13 +71,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
                       onSelectResult('state', s.state);
                       onClose();
                     }}
-                    className="w-full p-2.5 rounded-xl hover:bg-[#faf0ff] text-left flex items-center justify-between transition-colors"
+                    className="w-full p-2.5 rounded-xl hover:bg-slate-50 text-left flex items-center justify-between transition-colors"
                   >
                     <div>
-                      <span className="font-bold text-[13px] text-[#1e1926]">{s.state} State</span>
-                      <span className="text-[11px] text-[#4c4354] block">Capital: {s.capital} • {s.zone}</span>
+                      <span className="font-bold text-[13px] text-slate-900">{s.state} State</span>
+                      <span className="text-[11px] text-slate-500 block">Capital: {s.capital} • {s.zone}</span>
                     </div>
-                    <span className="text-[12px] font-bold text-[#6200a9]">{s.totalCases.toLocaleString()} cases</span>
+                    <span className="text-[12px] font-bold text-purple-700">{s.totalCases.toLocaleString()} cases</span>
                   </button>
                 ))}
               </div>
@@ -87,7 +87,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
           {/* Zones */}
           {filteredZones.length > 0 && (
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#7e7385] px-2 mb-1 block">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2 mb-1 block">
                 Geopolitical Zones
               </span>
               <div className="space-y-1">
@@ -98,10 +98,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
                       onSelectResult('zone', z.name);
                       onClose();
                     }}
-                    className="w-full p-2.5 rounded-xl hover:bg-[#faf0ff] text-left flex items-center justify-between transition-colors"
+                    className="w-full p-2.5 rounded-xl hover:bg-slate-50 text-left flex items-center justify-between transition-colors"
                   >
-                    <span className="font-bold text-[13px] text-[#1e1926]">{z.name} Zone</span>
-                    <span className="text-[12px] font-bold text-[#6e3aca]">{z.total.toLocaleString()} total</span>
+                    <span className="font-bold text-[13px] text-slate-900">{z.name} Zone</span>
+                    <span className="text-[12px] font-bold text-purple-700">{z.total.toLocaleString()} total</span>
                   </button>
                 ))}
               </div>
@@ -111,7 +111,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
           {/* Topics */}
           {topics.length > 0 && (
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#7e7385] px-2 mb-1 block">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2 mb-1 block">
                 Platform Intelligence & Models
               </span>
               <div className="space-y-1">
@@ -122,10 +122,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
                       onSelectResult(t.type, t.value);
                       onClose();
                     }}
-                    className="w-full p-2.5 rounded-xl hover:bg-[#faf0ff] text-left flex items-center justify-between transition-colors"
+                    className="w-full p-2.5 rounded-xl hover:bg-slate-50 text-left flex items-center justify-between transition-colors"
                   >
-                    <span className="font-semibold text-[13px] text-[#1e1926]">{t.title}</span>
-                    <span className="material-symbols-outlined text-[16px] text-[#7e7385]">arrow_forward</span>
+                    <span className="font-semibold text-[13px] text-slate-900">{t.title}</span>
+                    <span className="material-symbols-outlined text-[16px] text-slate-400">arrow_forward</span>
                   </button>
                 ))}
               </div>
@@ -133,7 +133,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
           )}
 
           {filteredStates.length === 0 && filteredZones.length === 0 && topics.length === 0 && (
-            <div className="py-8 text-center text-[#4c4354] text-[13px]">
+            <div className="py-8 text-center text-slate-500 text-[13px]">
               No results found for "{query}". Try "Lagos", "K-Means", or "Tokens".
             </div>
           )}

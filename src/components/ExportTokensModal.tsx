@@ -70,17 +70,17 @@ export const ExportTokensModal: React.FC<ExportTokensModalProps> = ({ isOpen, on
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-fadeIn">
-      <div className="w-full max-w-2xl rounded-3xl bg-white border border-[#e9dff2] shadow-2xl p-6 sm:p-8 flex flex-col gap-5">
+      <div className="w-full max-w-2xl rounded-2xl bg-white border border-slate-200 shadow-2xl p-6 sm:p-8 flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#f0dbff] flex items-center justify-center text-[#6200a9]">
+            <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700">
               <span className="material-symbols-outlined text-[20px]">file_download</span>
             </div>
             <div>
-              <h3 className="text-[18px] font-bold text-[#1e1926]">
+              <h3 className="text-[18px] font-bold text-slate-900">
                 Export Design Tokens
               </h3>
-              <span className="text-[12px] text-[#4c4354]">
+              <span className="text-[12px] text-slate-500">
                 Light Mode Constitution tokens for Figma, Tailwind v4, & Style Dictionary
               </span>
             </div>
@@ -88,7 +88,7 @@ export const ExportTokensModal: React.FC<ExportTokensModalProps> = ({ isOpen, on
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#faf0ff] hover:bg-[#efe4f8] flex items-center justify-center text-[#4c4354] transition-colors"
+            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
           >
             ✕
           </button>
@@ -96,11 +96,11 @@ export const ExportTokensModal: React.FC<ExportTokensModalProps> = ({ isOpen, on
 
         {/* Format Selector */}
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 p-1 rounded-xl bg-[#faf0ff] border border-[#e9dff2]">
+          <div className="flex items-center gap-2 p-1 rounded-xl bg-slate-50 border border-slate-200">
             <button
               onClick={() => setFormat('yaml')}
               className={`px-3 py-1 rounded-lg text-[12px] font-bold transition-colors ${
-                format === 'yaml' ? 'bg-[#7e22ce] text-white' : 'text-[#4c4354] hover:text-[#1e1926]'
+                format === 'yaml' ? 'bg-purple-700 text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               YAML Tokens
@@ -108,7 +108,7 @@ export const ExportTokensModal: React.FC<ExportTokensModalProps> = ({ isOpen, on
             <button
               onClick={() => setFormat('json')}
               className={`px-3 py-1 rounded-lg text-[12px] font-bold transition-colors ${
-                format === 'json' ? 'bg-[#7e22ce] text-white' : 'text-[#4c4354] hover:text-[#1e1926]'
+                format === 'json' ? 'bg-purple-700 text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               JSON Schema
@@ -118,14 +118,14 @@ export const ExportTokensModal: React.FC<ExportTokensModalProps> = ({ isOpen, on
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownload}
-              className="px-3 py-1.5 rounded-xl border border-[#cfc2d6] hover:bg-[#faf0ff] text-[12px] font-semibold text-[#1e1926] flex items-center gap-1.5 transition-colors"
+              className="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-[12px] font-semibold text-slate-800 flex items-center gap-1.5 transition-colors"
             >
               <span className="material-symbols-outlined text-[16px]">download</span>
               <span>Download .{format}</span>
             </button>
             <button
               onClick={handleCopy}
-              className="px-4 py-1.5 rounded-xl bg-[#6200a9] hover:bg-[#7e22ce] text-white text-[12px] font-bold flex items-center gap-1.5 shadow-xs transition-colors"
+              className="px-4 py-1.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-[12px] font-bold flex items-center gap-1.5 shadow-xs transition-colors"
             >
               <span className="material-symbols-outlined text-[16px]">
                 {copied ? 'check' : 'content_copy'}
@@ -136,7 +136,7 @@ export const ExportTokensModal: React.FC<ExportTokensModalProps> = ({ isOpen, on
         </div>
 
         {/* Code View */}
-        <div className="w-full h-80 rounded-2xl bg-[#faf0ff] border border-[#e9dff2] p-4 font-mono text-[11px] text-[#1e1926] overflow-y-auto whitespace-pre leading-relaxed">
+        <div className="w-full h-80 rounded-2xl bg-slate-50 border border-slate-200 p-4 font-mono text-[11px] text-slate-800 overflow-y-auto whitespace-pre leading-relaxed">
           {textToCopy}
         </div>
       </div>

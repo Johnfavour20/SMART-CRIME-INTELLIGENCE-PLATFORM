@@ -89,7 +89,7 @@ export default function App() {
 
   if (activeTab === 'dashboard') {
     return (
-      <div className="min-h-screen bg-[#fef7ff] text-[#1e1926] font-sans antialiased">
+      <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
         <DashboardView
           onNavigateTab={(tab) => {
             setActiveTab(tab);
@@ -120,7 +120,7 @@ export default function App() {
 
   if (activeTab === 'auth') {
     return (
-      <div className="min-h-screen bg-[#FAF7FF] text-[#17121F] font-sans antialiased">
+      <div className="min-h-screen bg-white text-[#17121F] font-sans antialiased">
         <AuthPage
           onBackToOverview={() => {
             setActiveTab('overview');
@@ -148,7 +148,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf0ff]/60 text-[#1e1926] font-sans antialiased selection:bg-[#6200a9] selection:text-white">
+    <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased selection:bg-[#6200a9] selection:text-white">
       {/* Primary Navigation Bar */}
       <SubNav
         activeTab={activeTab}

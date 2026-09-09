@@ -37,15 +37,15 @@ export const HowItWorksWorkflow: React.FC = () => {
   ];
 
   return (
-    <section className="w-full px-4 sm:px-8 lg:px-10 py-16 bg-[#faf0ff]/50 border-y border-[#e9dff2]/80 flex flex-col items-center gap-10" id="how-it-works">
+    <section className="w-full px-4 sm:px-8 lg:px-10 py-16 bg-slate-50 border-y border-slate-200 flex flex-col items-center gap-10" id="how-it-works">
       <div className="text-center max-w-2xl flex flex-col items-center gap-2">
-        <span className="px-3.5 py-1 rounded-full bg-[#f5eafd] text-[#6200a9] text-[11px] font-bold uppercase tracking-wider">
+        <span className="px-3.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[11px] font-bold uppercase tracking-wider">
           Algorithmic Workflow
         </span>
-        <h2 className="text-[28px] sm:text-[34px] font-bold text-[#1e1926] tracking-tight">
+        <h2 className="text-[28px] sm:text-[34px] font-bold text-slate-900 tracking-tight">
           How Smart Crime Works
         </h2>
-        <p className="text-[14px] text-[#4c4354] leading-relaxed">
+        <p className="text-[14px] text-slate-600 leading-relaxed">
           A strictly verified four-step pipeline transitioning from raw administrative police reports into explainable statistical models.
         </p>
       </div>
@@ -55,20 +55,20 @@ export const HowItWorksWorkflow: React.FC = () => {
         {steps.map((step) => (
           <div
             key={step.num}
-            className="p-6 rounded-2xl bg-[#ffffff] border border-[#e9dff2] flex flex-col gap-3 relative hover:border-[#6200a9]/40 transition-colors"
+            className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col gap-3 relative hover:border-purple-300 transition-colors"
           >
             <div className="flex items-center justify-between">
-              <span className="text-[44px] font-extrabold text-[#cfc2d6] leading-none select-none tracking-tight">
+              <span className="text-[44px] font-extrabold text-slate-200 leading-none select-none tracking-tight">
                 {step.num}
               </span>
               <div className={`w-10 h-10 rounded-full ${step.bgIcon} flex items-center justify-center ${step.textIcon}`}>
                 <span className="material-symbols-outlined text-[20px]">{step.icon}</span>
               </div>
             </div>
-            <h4 className="text-[18px] font-bold text-[#1e1926]">
+            <h4 className="text-[18px] font-bold text-slate-900">
               {step.title}
             </h4>
-            <p className="text-[13px] text-[#4c4354] leading-relaxed">
+            <p className="text-[13px] text-slate-600 leading-relaxed">
               {step.description}
             </p>
           </div>

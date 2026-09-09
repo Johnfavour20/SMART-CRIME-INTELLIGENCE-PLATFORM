@@ -24,36 +24,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const currentHub = hubs.find(h => h.name === selectedHub) || hubs[0];
 
   return (
-    <section className="w-full px-4 sm:px-8 lg:px-10 py-10 lg:py-16 flex flex-col lg:flex-row items-center gap-12 relative overflow-hidden" id="overview">
+    <section className="w-full px-4 sm:px-8 lg:px-10 py-10 lg:py-16 flex flex-col lg:flex-row items-center gap-12 relative overflow-hidden bg-white" id="overview">
       {/* Background ambient blurs */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-[#f0dbff]/40 blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-40 right-0 w-[500px] h-[500px] rounded-full bg-[#ebddff]/30 blur-3xl pointer-events-none"></div>
+      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-purple-100/30 blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-40 right-0 w-[500px] h-[500px] rounded-full bg-purple-50/40 blur-3xl pointer-events-none"></div>
 
       {/* Left Column: Value Prop */}
       <div className="flex-1 flex flex-col items-start gap-5 relative z-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#faf0ff] border border-[#e9dff2]">
-          <span className="w-2 h-2 rounded-full bg-[#6200a9] animate-pulse"></span>
-          <span className="text-[11px] text-[#6200a9] font-bold tracking-wide">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-50 border border-purple-200">
+          <span className="w-2 h-2 rounded-full bg-purple-700 animate-pulse"></span>
+          <span className="text-[11px] text-purple-700 font-bold tracking-wide">
             SMART CRIME INTELLIGENCE PLATFORM • 2026 EDITION
           </span>
         </div>
 
-        <h1 className="text-[36px] sm:text-[44px] lg:text-[48px] font-bold text-[#1e1926] tracking-tight leading-[1.15]">
+        <h1 className="text-[36px] sm:text-[44px] lg:text-[48px] font-bold text-slate-900 tracking-tight leading-[1.15]">
           Understand Crime Patterns.{' '}
-          <span className="bg-gradient-to-r from-[#6200a9] via-[#6e3aca] to-[#7e22ce] bg-clip-text text-transparent">
+          <span className="text-purple-700">
             Predict Risk.
           </span>{' '}
           Make Smarter Decisions.
         </h1>
 
-        <p className="text-[16px] text-[#4c4354] leading-relaxed max-w-xl">
+        <p className="text-[16px] text-slate-600 leading-relaxed max-w-xl">
           Turn historical crime data into meaningful insights. Explore crime patterns, identify potential spatial hotspots, and generate data-driven predictions through an objective analytical framework.
         </p>
 
         <div className="flex flex-wrap items-center gap-3.5 pt-2">
           <button
             onClick={onExploreAnalytics}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#7e22ce] hover:bg-[#6200a9] text-white font-semibold text-[15px] transition-all transform active:scale-95 cursor-pointer"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-semibold text-[15px] transition-all transform active:scale-95 cursor-pointer shadow-sm"
           >
             <span>Explore Analytics</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -61,15 +61,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           <button
             onClick={onSeeHowItWorks}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#ffffff] hover:bg-[#faf0ff] text-[#1e1926] font-semibold text-[15px] border border-[#cfc2d6]/60 transition-all transform active:scale-95 cursor-pointer"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-[15px] border border-slate-200 transition-all transform active:scale-95 cursor-pointer shadow-xs"
           >
-            <span className="material-symbols-outlined text-[#6200a9] text-[20px]">play_circle</span>
+            <span className="material-symbols-outlined text-purple-700 text-[20px]">play_circle</span>
             <span>See How It Works</span>
           </button>
         </div>
 
-        <div className="flex items-center gap-2 text-[#4c4354] pt-2">
-          <span className="material-symbols-outlined text-[#6200a9] text-[18px]">verified_user</span>
+        <div className="flex items-center gap-2 text-slate-600 pt-2">
+          <span className="material-symbols-outlined text-purple-700 text-[18px]">verified_user</span>
           <span className="text-[13px] font-medium">
             Verified against certified National Bureau of Statistics (NBS) historical datasets
           </span>

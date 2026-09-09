@@ -14,7 +14,7 @@ export const CTASection: React.FC<CTASectionProps> = ({ onLaunch, onReadDocs }) 
         <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#f0dbff]/20 blur-2xl pointer-events-none"></div>
 
         <div className="relative z-10 max-w-2xl flex flex-col items-center gap-3">
-          <span className="px-3.5 py-1 rounded-full bg-white/15 text-[#e4c5ff] text-[11px] font-bold uppercase tracking-wider">
+          <span className="px-3.5 py-1 rounded-full bg-white/15 text-purple-200 text-[11px] font-bold uppercase tracking-wider">
             Start Analyzing Now
           </span>
           <h2 className="text-[32px] sm:text-[42px] font-bold tracking-tight text-white leading-tight">
@@ -28,7 +28,7 @@ export const CTASection: React.FC<CTASectionProps> = ({ onLaunch, onReadDocs }) 
         <div className="relative z-10 flex flex-wrap items-center justify-center gap-4 pt-2">
           <button
             onClick={onLaunch}
-            className="px-6 py-3 rounded-xl bg-[#ffffff] text-[#6200a9] text-[15px] font-bold hover:bg-[#faf0ff] transition-all transform active:scale-95 flex items-center gap-2 cursor-pointer"
+            className="px-6 py-3 rounded-xl bg-white text-purple-700 text-[15px] font-bold hover:bg-slate-100 transition-all transform active:scale-95 flex items-center gap-2 cursor-pointer shadow-sm"
           >
             <span>Launch Smart Crime</span>
             <span className="material-symbols-outlined text-[18px]">rocket_launch</span>

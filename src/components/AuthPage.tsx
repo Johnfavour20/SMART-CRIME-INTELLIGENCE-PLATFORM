@@ -53,15 +53,15 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7FF] text-[#17121F] selection:bg-purple-100 selection:text-purple-900 antialiased font-sans">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 selection:bg-purple-100 selection:text-purple-900 antialiased font-sans">
       {/* Top Micro Notice / Back Navigation bar */}
-      <header className="w-full border-b border-[#E9DFF2] bg-white/80 backdrop-blur-md px-6 lg:px-12 py-3.5 flex items-center justify-between text-xs text-[#6B6472] z-30">
+      <header className="w-full border-b border-slate-200 bg-white/80 backdrop-blur-md px-6 lg:px-12 py-3.5 flex items-center justify-between text-xs text-slate-600 z-30">
         <button
           onClick={onBackToOverview}
-          className="inline-flex items-center gap-2 font-medium hover:text-[#7E22CE] transition-colors group cursor-pointer"
+          className="inline-flex items-center gap-2 font-medium hover:text-purple-700 transition-colors group cursor-pointer"
         >
           <svg
-            className="w-4 h-4 text-[#7E22CE] transition-transform group-hover:-translate-x-0.5"
+            className="w-4 h-4 text-purple-700 transition-transform group-hover:-translate-x-0.5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -72,7 +72,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           <span>Back to Public Overview</span>
         </button>
         <div className="flex items-center gap-4">
-          <span className="text-[#928A9B] font-mono text-[11px]">AUTHORIZED ANALYSTS ONLY</span>
+          <span className="text-slate-400 font-mono text-[11px]">AUTHORIZED ANALYSTS ONLY</span>
         </div>
       </header>
 
@@ -81,18 +81,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         {/* ============================================================ */}
         {/* LEFT PANEL: Brand Intelligence & Abstract Data Art (46% Desktop) */}
         {/* ============================================================ */}
-        <section className="lg:w-[46%] w-full bg-gradient-to-br from-[#FAF7FF] via-[#F3E8FF]/60 to-[#EAE0F5] p-6 lg:p-12 xl:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#E9DFF2] relative overflow-hidden">
+        <section className="lg:w-[46%] w-full bg-slate-50 p-6 lg:p-12 xl:p-16 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-slate-200 relative overflow-hidden">
           {/* Ambient background decorative light halos */}
-          <div className="absolute -top-32 -left-32 w-96 h-96 bg-purple-300/30 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-400/20 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(#7E22CE_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.035] pointer-events-none"></div>
+          <div className="absolute -top-32 -left-32 w-96 h-96 bg-purple-100/40 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-slate-200/40 rounded-full blur-3xl pointer-events-none"></div>
 
           {/* Top Brand Mark & Pill */}
           <div className="relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5B21B6] via-[#7E22CE] to-[#9333EA] p-0.5 flex items-center justify-center shadow-xs">
-                  <div className="w-full h-full bg-[#5B21B6] rounded-[10px] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-purple-700 p-0.5 flex items-center justify-center shadow-xs">
+                  <div className="w-full h-full bg-purple-700 rounded-[10px] flex items-center justify-center">
                     <svg
                       className="w-5 h-5 text-white"
                       viewBox="0 0 24 24"
@@ -110,17 +109,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-extrabold tracking-tight text-xl text-[#17121F]">SMART CRIME</span>
-                    <span className="px-2 py-0.5 bg-purple-100 text-[#7E22CE] text-[10px] font-bold tracking-wider rounded-md border border-purple-200">
+                    <span className="font-extrabold tracking-tight text-xl text-slate-900">SMART CRIME</span>
+                    <span className="px-2 py-0.5 bg-purple-50 text-purple-700 text-[10px] font-bold tracking-wider rounded-md border border-purple-200">
                       DATA SUITE
                     </span>
                   </div>
-                  <p className="text-[11px] text-[#6B6472] font-medium tracking-wide">
+                  <p className="text-[11px] text-slate-500 font-medium tracking-wide">
                     Predictive Analytics & Spatial Intelligence
                   </p>
                 </div>
               </div>
-              <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-white/90 border border-[#E9DFF2] rounded-full text-[11px] font-semibold text-[#7E22CE]">
+              <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 rounded-full text-[11px] font-semibold text-purple-700 shadow-xs">
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
@@ -130,17 +129,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
             {/* Headline & Editorial Intro */}
             <div className="mt-8 lg:mt-12 max-w-lg">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#F3E8FF] border border-purple-200 rounded-full text-xs font-semibold text-[#7E22CE] mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#7E22CE]"></span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-200 rounded-full text-xs font-semibold text-purple-700 mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-700"></span>
                 <span>Empirical Intelligence Architecture</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#17121F] tracking-tight leading-[1.18]">
+              <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 tracking-tight leading-[1.18]">
                 Crime Intelligence <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5B21B6] via-[#7E22CE] to-[#9333EA]">
+                <span className="text-purple-700">
                   Starts Here.
                 </span>
               </h1>
-              <p className="mt-4 text-[15px] leading-relaxed text-[#6B6472]">
+              <p className="mt-4 text-[15px] leading-relaxed text-slate-600">
                 Access calibrated machine learning models, longitudinal trend indices, K-Means clustering, and
                 geospatial incident envelopes across 36 Nigerian states and the FCT.
               </p>
@@ -149,41 +148,41 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
           {/* Centerpiece: Abstract Nigerian Geospatial & Analytics Visualization */}
           <div className="my-8 lg:my-10 relative z-10 w-full flex items-center justify-center">
-            <div className="w-full max-w-[480px] bg-white/90 backdrop-blur-md rounded-2xl border border-[#E9DFF2] p-5 relative overflow-hidden">
+            <div className="w-full max-w-[480px] bg-white rounded-2xl border border-slate-200 p-5 relative overflow-hidden shadow-sm">
               {/* Card Header inside preview */}
-              <div className="flex items-center justify-between pb-3.5 mb-3 border-b border-[#E9DFF2]">
+              <div className="flex items-center justify-between pb-3.5 mb-3 border-b border-slate-200">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#7E22CE]"></div>
-                  <span className="text-xs font-bold text-[#17121F]">
+                  <div className="w-2.5 h-2.5 rounded-full bg-purple-700"></div>
+                  <span className="text-xs font-bold text-slate-900">
                     National Spatial Matrix & Incident Envelopes
                   </span>
                 </div>
-                <span className="text-[11px] font-mono text-[#7E22CE] bg-purple-50 px-2 py-0.5 rounded border border-purple-200 font-semibold">
+                <span className="text-[11px] font-mono text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200 font-semibold">
                   Zone VI ACTIVE
                 </span>
               </div>
 
               {/* Stylized Map Canvas & Cluster Graph */}
-              <div className="relative w-full h-[220px] bg-gradient-to-b from-[#FAF7FF] to-[#F3E8FF]/40 rounded-xl border border-purple-100/80 flex items-center justify-center overflow-hidden">
+              <div className="relative w-full h-[220px] bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden">
                 {/* Grid lines inside map area */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#E9DFF2_1px,transparent_1px),linear-gradient(to_bottom,#E9DFF2_1px,transparent_1px)] bg-[size:28px_28px] opacity-40"></div>
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:28px_28px] opacity-60"></div>
 
                 {/* Stylized SVG of Nigeria Map Contour with Nodes & Connectors */}
                 <svg className="w-full h-full p-2 relative z-0" viewBox="0 0 460 210" fill="none">
                   {/* Stylized Regional Polygon (Abstract Nigeria Contour) */}
                   <path
                     d="M 60 70 Q 120 40 210 50 Q 310 30 380 75 Q 430 110 390 160 Q 320 195 240 170 Q 170 190 95 160 Q 40 135 60 70 Z"
-                    fill="#F3E8FF"
-                    stroke="#D8B4FE"
+                    fill="#f8fafc"
+                    stroke="#cbd5e1"
                     strokeWidth="1.8"
                     strokeDasharray="4 3"
-                    opacity="0.85"
+                    opacity="0.9"
                   />
 
                   {/* Sub-zonal partitions / Delaunay Voronoi edges */}
                   <path
                     d="M 95 160 L 175 125 L 210 50 L 265 110 L 320 195 M 175 125 L 265 110 L 390 160 M 175 125 L 240 170"
-                    stroke="#C084FC"
+                    stroke="#a855f7"
                     strokeWidth="1"
                     strokeLinecap="round"
                     opacity="0.6"
@@ -227,59 +226,59 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   />
 
                   {/* Tiny state dots */}
-                  <circle cx="140" cy="100" r="2" fill="#6B6472" />
-                  <circle cx="280" cy="90" r="2.5" fill="#6B6472" />
-                  <circle cx="340" cy="110" r="2" fill="#6B6472" />
-                  <circle cx="160" cy="165" r="2" fill="#6B6472" />
-                  <circle cx="310" cy="150" r="2" fill="#6B6472" />
+                  <circle cx="140" cy="100" r="2" fill="#64748b" />
+                  <circle cx="280" cy="90" r="2.5" fill="#64748b" />
+                  <circle cx="340" cy="110" r="2" fill="#64748b" />
+                  <circle cx="160" cy="165" r="2" fill="#64748b" />
+                  <circle cx="310" cy="150" r="2" fill="#64748b" />
                 </svg>
 
                 {/* Floating Micro Card 1: Cluster Confidence Badge */}
-                <div className="absolute top-2.5 left-3 bg-white/95 backdrop-blur-sm border border-purple-200 rounded-lg p-2 text-left">
-                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#7E22CE]">
+                <div className="absolute top-2.5 left-3 bg-white border border-slate-200 rounded-lg p-2 text-left shadow-xs">
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-purple-700">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     <span>K-Means Model #3</span>
                   </div>
-                  <p className="text-[9px] text-[#6B6472] mt-0.5">
-                    Silhouette: <span className="font-bold text-[#17121F]">0.84</span> (Strong)
+                  <p className="text-[9px] text-slate-500 mt-0.5">
+                    Silhouette: <span className="font-bold text-slate-900">0.84</span> (Strong)
                   </p>
                 </div>
 
                 {/* Floating Micro Card 2: Hotspot Warning Indicator */}
-                <div className="absolute bottom-2.5 right-3 bg-white/95 backdrop-blur-sm border border-amber-200 rounded-lg p-2 text-left">
+                <div className="absolute bottom-2.5 right-3 bg-white border border-amber-200 rounded-lg p-2 text-left shadow-xs">
                   <div className="flex items-center gap-1.5 text-[10px] font-bold text-amber-700">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                     <span>Lagos Mainland</span>
                   </div>
-                  <p className="text-[9px] text-[#6B6472] mt-0.5">
+                  <p className="text-[9px] text-slate-500 mt-0.5">
                     Risk Rating: <span className="font-bold text-amber-700">Moderate (38.4)</span>
                   </p>
                 </div>
               </div>
 
               {/* Bottom mini metrics ticker */}
-              <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-[#E9DFF2] text-center">
-                <div className="bg-[#FAF7FF] rounded-lg p-1.5 border border-purple-100">
-                  <div className="text-[10px] text-[#6B6472] uppercase font-semibold">Normalized Cases</div>
-                  <div className="text-xs font-bold text-[#17121F]">134,663</div>
+              <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 text-center">
+                <div className="bg-slate-50 rounded-lg p-1.5 border border-slate-200">
+                  <div className="text-[10px] text-slate-500 uppercase font-semibold">Normalized Cases</div>
+                  <div className="text-xs font-bold text-slate-900">134,663</div>
                 </div>
-                <div className="bg-[#FAF7FF] rounded-lg p-1.5 border border-purple-100">
-                  <div className="text-[10px] text-[#6B6472] uppercase font-semibold">Jurisdictions</div>
-                  <div className="text-xs font-bold text-[#17121F]">36 + FCT</div>
+                <div className="bg-slate-50 rounded-lg p-1.5 border border-slate-200">
+                  <div className="text-[10px] text-slate-500 uppercase font-semibold">Jurisdictions</div>
+                  <div className="text-xs font-bold text-slate-900">36 + FCT</div>
                 </div>
-                <div className="bg-[#FAF7FF] rounded-lg p-1.5 border border-purple-100">
-                  <div className="text-[10px] text-[#6B6472] uppercase font-semibold">Model F1-Score</div>
-                  <div className="text-xs font-bold text-[#7E22CE]">0.94 ROC</div>
+                <div className="bg-slate-50 rounded-lg p-1.5 border border-slate-200">
+                  <div className="text-[10px] text-slate-500 uppercase font-semibold">Model F1-Score</div>
+                  <div className="text-xs font-bold text-purple-700">0.94 ROC</div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Trust Statement at Bottom of Brand Column */}
-          <div className="pt-4 border-t border-purple-200/70 relative z-10 flex items-center justify-between text-xs text-[#6B6472]">
+          <div className="pt-4 border-t border-slate-200 relative z-10 flex items-center justify-between text-xs text-slate-600">
             <div className="flex items-center gap-2">
               <svg
-                className="w-4 h-4 text-[#7E22CE] flex-shrink-0"
+                className="w-4 h-4 text-purple-700 flex-shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -291,11 +290,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span className="font-medium text-[#17121F]">
+              <span className="font-medium text-slate-900">
                 Data-driven insights from historical Nigerian crime records.
               </span>
             </div>
-            <span className="hidden sm:inline-block font-mono text-[11px] text-[#928A9B]">SEC-AUTH-2026</span>
+            <span className="hidden sm:inline-block font-mono text-[11px] text-slate-400">SEC-AUTH-2026</span>
           </div>
         </section>
 
@@ -307,14 +306,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           <div className="w-full max-w-[440px] mx-auto my-auto py-4">
             {/* Form Intro Heading */}
             <div className="mb-7">
-              <div className="text-xs font-bold uppercase tracking-wider text-[#7E22CE] mb-1.5 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#7E22CE]"></span>
+              <div className="text-xs font-bold uppercase tracking-wider text-purple-700 mb-1.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-700"></span>
                 <span>Welcome back</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#17121F] tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
                 Sign in to Smart Crime
               </h2>
-              <p className="text-sm text-[#6B6472] mt-2">
+              <p className="text-sm text-slate-600 mt-2">
                 Access your crime intelligence dashboard and analytical tools.
               </p>
             </div>
@@ -324,13 +323,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               {/* Field 1: Email */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="auth-email" className="block text-[13px] font-semibold text-[#17121F]">
+                  <label htmlFor="auth-email" className="block text-[13px] font-semibold text-slate-900">
                     Work Email Address
                   </label>
-                  <span className="text-[11px] text-[#928A9B]">e.g. analyst@gov.ng</span>
+                  <span className="text-[11px] text-slate-400">e.g. analyst@gov.ng</span>
                 </div>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#928A9B]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path
                         strokeLinecap="round"
@@ -350,7 +349,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       if (emailError) setEmailError(null);
                     }}
                     required
-                    className="w-full h-[50px] pl-10 pr-4 text-sm bg-white border border-[#E9DFF2] rounded-xl text-[#17121F] placeholder:text-[#928A9B] focus:border-[#7E22CE] focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                    className="w-full h-[50px] pl-10 pr-4 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
                   />
                 </div>
                 {emailError && (
@@ -370,13 +369,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               {/* Field 2: Password with Show/Hide toggle */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="auth-password" className="block text-[13px] font-semibold text-[#17121F]">
+                  <label htmlFor="auth-password" className="block text-[13px] font-semibold text-slate-900">
                     Password
                   </label>
-                  <span className="text-[11px] text-[#928A9B]">Min. 8 characters</span>
+                  <span className="text-[11px] text-slate-400">Min. 8 characters</span>
                 </div>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#928A9B]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path
                         strokeLinecap="round"
@@ -393,13 +392,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full h-[50px] pl-10 pr-11 text-sm bg-white border border-[#E9DFF2] rounded-xl text-[#17121F] placeholder:text-[#928A9B] focus:border-[#7E22CE] focus:ring-2 focus:ring-purple-200 outline-none transition-all"
+                    className="w-full h-[50px] pl-10 pr-11 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:border-purple-700 focus:ring-2 focus:ring-purple-200 outline-none transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     title="Toggle password visibility"
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#928A9B] hover:text-[#7E22CE] transition-colors focus:outline-none cursor-pointer"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-purple-700 transition-colors focus:outline-none cursor-pointer"
                   >
                     {showPassword ? (
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -430,14 +429,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-[#E9DFF2] text-[#7E22CE] focus:ring-[#7E22CE] focus:ring-offset-0 focus:ring-2 transition-all cursor-pointer accent-[#7E22CE]"
+                    className="w-4 h-4 rounded border-slate-200 text-purple-700 focus:ring-purple-700 focus:ring-offset-0 focus:ring-2 transition-all cursor-pointer accent-purple-700"
                   />
-                  <span className="text-xs font-medium text-[#6B6472]">Remember my workstation</span>
+                  <span className="text-xs font-medium text-slate-600">Remember my workstation</span>
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowForgotPasswordModal(true)}
-                  className="text-xs font-semibold text-[#7E22CE] hover:text-[#5B21B6] transition-colors cursor-pointer"
+                  className="text-xs font-semibold text-purple-700 hover:text-purple-900 transition-colors cursor-pointer"
                 >
                   Forgot password?
                 </button>
@@ -448,7 +447,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-[50px] bg-gradient-to-r from-[#7E22CE] to-[#9333EA] hover:from-[#6B21A8] hover:to-[#7E22CE] text-white font-semibold text-sm rounded-xl transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-85"
+                  className="w-full h-[50px] bg-purple-700 hover:bg-purple-800 text-white font-semibold text-sm rounded-xl transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-85 shadow-xs"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
@@ -483,10 +482,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             {/* Subtle Divider: OR */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#E9DFF2]"></div>
+                <div className="w-full border-t border-slate-200"></div>
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-3 bg-white text-[#928A9B] font-semibold tracking-wider">OR</span>
+                <span className="px-3 bg-white text-slate-400 font-semibold tracking-wider">OR</span>
               </div>
             </div>
 
@@ -496,10 +495,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={isGoogleLoading}
-                className="w-full h-[48px] bg-white hover:bg-[#FAF7FF] border border-[#E9DFF2] hover:border-purple-300 text-[#17121F] font-medium text-xs rounded-xl transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
+                className="w-full h-[48px] bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-900 font-medium text-xs rounded-xl transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
               >
                 {isGoogleLoading ? (
-                  <div className="flex items-center gap-2 text-[#7E22CE]">
+                  <div className="flex items-center gap-2 text-purple-700">
                     <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
@@ -526,7 +525,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                         d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
                       />
                     </svg>
-                    <span className="group-hover:text-[#7E22CE] transition-colors font-medium">
+                    <span className="group-hover:text-purple-700 transition-colors font-medium">
                       Continue with Google Workspace
                     </span>
                   </>
@@ -535,12 +534,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             </div>
 
             {/* Registration & Access Request Note */}
-            <div className="mt-7 pt-5 border-t border-[#E9DFF2] text-center text-xs text-[#6B6472]">
+            <div className="mt-7 pt-5 border-t border-slate-200 text-center text-xs text-slate-600">
               <span>Don't have an analyst account?</span>
               <button
                 type="button"
                 onClick={() => setShowAccessModal(true)}
-                className="font-bold text-[#7E22CE] hover:text-[#5B21B6] transition-colors ml-1 inline-flex items-center gap-1 cursor-pointer"
+                className="font-bold text-purple-700 hover:text-purple-900 transition-colors ml-1 inline-flex items-center gap-1 cursor-pointer"
               >
                 <span>Request verified access</span>
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -551,9 +550,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({
           </div>
 
           {/* Understated Security Assurance Footer in Auth Panel */}
-          <div className="pt-6 border-t border-[#E9DFF2] w-full max-w-[460px] mx-auto flex items-center justify-between text-xs text-[#928A9B]">
-            <div className="flex items-center gap-1.5 text-[#6B6472]">
-              <svg className="w-4 h-4 text-[#7E22CE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <div className="pt-6 border-t border-slate-200 w-full max-w-[460px] mx-auto flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center gap-1.5 text-slate-600">
+              <svg className="w-4 h-4 text-purple-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -568,12 +567,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 onClick={() => {
                   if (onOpenDocs) onOpenDocs();
                 }}
-                className="hover:text-[#7E22CE] transition-colors cursor-pointer"
+                className="hover:text-purple-700 transition-colors cursor-pointer"
               >
                 Privacy Charter
               </button>
               <span>•</span>
-              <span className="font-mono text-[11px] text-[#928A9B]">Audit Logging</span>
+              <span className="font-mono text-[11px] text-slate-400">Audit Logging</span>
             </div>
           </div>
         </section>
@@ -582,20 +581,20 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       {/* Access Request Modal */}
       {showAccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl bg-white border border-[#E9DFF2] p-6 flex flex-col gap-4">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200 p-6 flex flex-col gap-4 shadow-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#F3E8FF] text-[#7E22CE] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center border border-purple-200">
                   <span className="material-symbols-outlined text-[18px]">badge</span>
                 </div>
-                <h3 className="font-bold text-[#17121F] text-[16px]">Request Analyst Access</h3>
+                <h3 className="font-bold text-slate-900 text-[16px]">Request Analyst Access</h3>
               </div>
               <button
                 onClick={() => {
                   setShowAccessModal(false);
                   setAccessRequestSent(false);
                 }}
-                className="text-[#6B6472] hover:text-[#17121F] cursor-pointer"
+                className="text-slate-500 hover:text-slate-900 cursor-pointer"
               >
                 ✕
               </button>
@@ -610,30 +609,30 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               </div>
             ) : (
               <>
-                <p className="text-xs text-[#6B6472] leading-relaxed">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   Verified analyst credentials are provisioned for personnel from civil oversight agencies, state
                   statistical bureaus, and academic security researchers.
                 </p>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-[#17121F]">Official Institution Email</label>
+                  <label className="text-xs font-semibold text-slate-900">Official Institution Email</label>
                   <input
                     type="email"
                     value={accessRequestEmail}
                     onChange={(e) => setAccessRequestEmail(e.target.value)}
                     placeholder="e.g. officer@police.gov.ng"
-                    className="w-full h-10 px-3 text-xs bg-white border border-[#E9DFF2] rounded-lg outline-none focus:border-[#7E22CE]"
+                    className="w-full h-10 px-3 text-xs bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-purple-700 text-slate-900"
                   />
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-2">
                   <button
                     onClick={() => setShowAccessModal(false)}
-                    className="px-3 py-1.5 text-xs text-[#6B6472] hover:text-[#17121F] cursor-pointer"
+                    className="px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={() => setAccessRequestSent(true)}
-                    className="px-4 py-1.5 bg-[#7E22CE] text-white text-xs font-bold rounded-lg hover:bg-[#6B21A8] cursor-pointer"
+                    className="px-4 py-1.5 bg-purple-700 text-white text-xs font-bold rounded-lg hover:bg-purple-800 cursor-pointer shadow-xs"
                   >
                     Submit Request
                   </button>
@@ -647,37 +646,37 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       {/* Forgot Password Modal */}
       {showForgotPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="w-full max-w-md rounded-2xl bg-white border border-[#E9DFF2] p-6 flex flex-col gap-4">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-slate-200 p-6 flex flex-col gap-4 shadow-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#F3E8FF] text-[#7E22CE] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center border border-purple-200">
                   <span className="material-symbols-outlined text-[18px]">lock_reset</span>
                 </div>
-                <h3 className="font-bold text-[#17121F] text-[16px]">Reset Workstation Password</h3>
+                <h3 className="font-bold text-slate-900 text-[16px]">Reset Workstation Password</h3>
               </div>
               <button
                 onClick={() => setShowForgotPasswordModal(false)}
-                className="text-[#6B6472] hover:text-[#17121F] cursor-pointer"
+                className="text-slate-500 hover:text-slate-900 cursor-pointer"
               >
                 ✕
               </button>
             </div>
-            <p className="text-xs text-[#6B6472] leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Enter your assigned work email. A temporary security token will be dispatched to your registered security
               officer.
             </p>
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-[#17121F]">Work Email</label>
+              <label className="text-xs font-semibold text-slate-900">Work Email</label>
               <input
                 type="email"
                 defaultValue="researcher@smartcrime.org.ng"
-                className="w-full h-10 px-3 text-xs bg-white border border-[#E9DFF2] rounded-lg outline-none focus:border-[#7E22CE]"
+                className="w-full h-10 px-3 text-xs bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-purple-700 text-slate-900"
               />
             </div>
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setShowForgotPasswordModal(false)}
-                className="px-4 py-1.5 bg-[#7E22CE] text-white text-xs font-bold rounded-lg hover:bg-[#6B21A8] cursor-pointer"
+                className="px-4 py-1.5 bg-purple-700 text-white text-xs font-bold rounded-lg hover:bg-purple-800 cursor-pointer shadow-xs"
               >
                 Send Reset Link
               </button>
