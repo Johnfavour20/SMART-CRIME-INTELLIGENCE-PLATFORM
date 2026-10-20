@@ -38,17 +38,17 @@ export const ComponentsView: React.FC<ComponentsViewProps> = ({ onBackToOverview
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* Section 1: KPI Cards */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
+        <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
           <span className="text-[12px] font-bold text-purple-700 uppercase tracking-wider">
             Operational KPI Cards
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[11px] text-slate-500 uppercase font-bold">Total Cases</span>
               <div className="text-[24px] font-bold text-slate-900 mt-1 tabular-nums">134,663</div>
               <span className="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full inline-block mt-1">100% NBS</span>
             </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[11px] text-slate-500 uppercase font-bold">Top Jurisdiction</span>
               <div className="text-[24px] font-bold text-slate-900 mt-1">Lagos (17.9%)</div>
               <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full inline-block mt-1">24,190 Incidents</span>
@@ -57,7 +57,7 @@ export const ComponentsView: React.FC<ComponentsViewProps> = ({ onBackToOverview
         </div>
 
         {/* Section 2: Semantic Risk Pills */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
+        <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
           <span className="text-[12px] font-bold text-purple-700 uppercase tracking-wider">
             Risk Classification Badges
           </span>
@@ -78,7 +78,7 @@ export const ComponentsView: React.FC<ComponentsViewProps> = ({ onBackToOverview
         </div>
 
         {/* Section 3: Buttons */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
+        <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
           <span className="text-[12px] font-bold text-purple-700 uppercase tracking-wider">
             Button Hierarchy
           </span>
@@ -96,13 +96,13 @@ export const ComponentsView: React.FC<ComponentsViewProps> = ({ onBackToOverview
         </div>
 
         {/* Section 4: Hotspot Node Badges */}
-        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
+        <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-4">
           <span className="text-[12px] font-bold text-purple-700 uppercase tracking-wider">
             Spatial Centroid Envelopes
           </span>
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <span className="w-3 h-3 rounded-full bg-purple-700 animate-ping"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-purple-700"></span>
               <span className="font-bold text-slate-900 text-[13px]">Spatial Hotspot Cluster #2</span>
             </div>
             <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[11px] font-bold">
@@ -110,7 +110,6 @@ export const ComponentsView: React.FC<ComponentsViewProps> = ({ onBackToOverview
             </span>
           </div>
         </div>
-
       </div>
     </div>
   );

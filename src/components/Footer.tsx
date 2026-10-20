@@ -27,9 +27,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDoc }) => {
               Data-driven crime analysis and predictive geospatial intelligence built for evidence-based resource planning, academic research, and policy insight in Nigeria.
             </p>
 
-            <div className="flex items-center gap-2 text-slate-500 text-[12px] font-medium pt-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>System Status: Fully Operational (NBS v1.0)</span>
+            <div className="text-slate-500 text-xs font-normal pt-1">
+              <span>Status: Operational · Certified NBS Baseline</span>
             </div>
           </div>
 

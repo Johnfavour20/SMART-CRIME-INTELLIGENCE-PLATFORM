@@ -58,9 +58,35 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     background-color: var(--color-surface);
     color: var(--color-on-surface);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Purposeful cubic-bezier transitions */
+.transition-smooth {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 200ms;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.animate-skeleton {
+  animation: skeletonShimmer 1.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }

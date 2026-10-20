@@ -131,7 +131,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* ====================================================
            2. FILTER BAR ("Analysis Filters")
       ==================================================== */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-purple-700 text-base">tune</span>
@@ -279,7 +279,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       ==================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* CARD 1: Total Reported Cases */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">Total Reported Cases</span>
             <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
@@ -293,11 +293,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <span className="text-purple-700 font-semibold">100%</span>
             <span>Across the available dataset</span>
           </p>
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-800 to-purple-600"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-purple-700"></div>
         </div>
 
         {/* CARD 2: Offences Against Persons */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">Offences Against Persons</span>
             <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center border border-indigo-100">
@@ -315,7 +315,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* CARD 3: Offences Against Property */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">Offences Against Property</span>
             <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
@@ -333,7 +333,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* CARD 4: Lawful Authority Offences */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs relative overflow-hidden group hover:border-purple-300 transition">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">Lawful Authority Offences</span>
             <div className="w-9 h-9 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center border border-slate-200">
@@ -357,7 +357,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       ==================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: MAIN TREND CHART CARD (approx 68% = 8 cols) */}
-        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-6">
+        <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-6">
           {/* Header & Segmented Switcher */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -421,7 +421,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             {/* Chart Header context */}
             <div className="flex items-center justify-between text-xs text-slate-500 mb-4 pb-2 border-b border-slate-200">
               <span className="font-bold text-slate-900">Statutory Class Volume (Benchmark 2017)</span>
-              <span className="text-slate-400">Scale: 0 – 80,000 Verified Cases</span>
+              <span className="text-slate-400">Scale: 0 - 80,000 Verified Cases</span>
             </div>
 
             {/* Bar Chart Graphics container */}
@@ -442,12 +442,12 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       </span>
                     </div>
                   </div>
-                  <div className="w-full bg-white h-9 rounded-xl overflow-hidden p-1 border border-slate-200 shadow-inner flex items-center relative group">
+                  <div className="w-full bg-slate-100 h-9 rounded-lg overflow-hidden p-1 border border-slate-200 flex items-center relative group">
                     <div
-                      className="h-full rounded-lg bg-gradient-to-r from-purple-800 to-purple-600 transition-all duration-700 flex items-center justify-end pr-3"
+                      className="h-full rounded-md bg-purple-700 transition-all duration-500 flex items-center justify-end pr-3"
                       style={{ width: '85.7%' }}
                     >
-                      <span className="text-[11px] font-bold text-white tracking-wider">68,579</span>
+                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">68,579</span>
                     </div>
                   </div>
                 </div>
@@ -463,18 +463,18 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       <span className="text-[11px] text-slate-400">(Assault, bodily harm, homicide)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-indigo-700 text-sm">53,641</span>
+                      <span className="font-mono font-bold text-indigo-700 text-sm tabular-nums">53,641</span>
                       <span className="text-[11px] text-indigo-700 font-semibold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">
                         39.8%
                       </span>
                     </div>
                   </div>
-                  <div className="w-full bg-white h-9 rounded-xl overflow-hidden p-1 border border-slate-200 shadow-inner flex items-center relative group">
+                  <div className="w-full bg-slate-100 h-9 rounded-lg overflow-hidden p-1 border border-slate-200 flex items-center relative group">
                     <div
-                      className="h-full rounded-lg bg-gradient-to-r from-indigo-700 to-indigo-500 transition-all duration-700 flex items-center justify-end pr-3"
+                      className="h-full rounded-md bg-indigo-600 transition-all duration-500 flex items-center justify-end pr-3"
                       style={{ width: '67.0%' }}
                     >
-                      <span className="text-[11px] font-bold text-white tracking-wider">53,641</span>
+                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">53,641</span>
                     </div>
                   </div>
                 </div>
@@ -490,18 +490,18 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       <span className="text-[11px] text-slate-400">(Perjury, breach of peace, contempt)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-slate-900 text-sm">12,443</span>
+                      <span className="font-mono font-bold text-slate-900 text-sm tabular-nums">12,443</span>
                       <span className="text-[11px] text-slate-700 font-semibold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
                         9.3%
                       </span>
                     </div>
                   </div>
-                  <div className="w-full bg-white h-9 rounded-xl overflow-hidden p-1 border border-slate-200 shadow-inner flex items-center relative group">
+                  <div className="w-full bg-slate-100 h-9 rounded-lg overflow-hidden p-1 border border-slate-200 flex items-center relative group">
                     <div
-                      className="h-full rounded-lg bg-gradient-to-r from-slate-600 to-slate-800 transition-all duration-700 flex items-center justify-end pr-3"
+                      className="h-full rounded-md bg-slate-700 transition-all duration-500 flex items-center justify-end pr-3"
                       style={{ width: '15.5%' }}
                     >
-                      <span className="text-[11px] font-bold text-white tracking-wider">12,443</span>
+                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">12,443</span>
                     </div>
                   </div>
                 </div>
@@ -531,7 +531,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* RIGHT: KEY INSIGHTS PANEL (approx 32% = 4 cols) */}
-        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-5">
+        <div className="lg:col-span-4 bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-5">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
@@ -608,7 +608,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* ====================================================
            5. HISTORICAL TREND ANALYSIS CARD
       ==================================================== */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-5">
+      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div>
             <div className="flex items-center gap-2">
@@ -746,7 +746,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* ====================================================
            6. STATE-LEVEL COMPARISON (Full-Width Card)
       ==================================================== */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-6">
+      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <h3 className="text-base font-bold text-slate-900">State-Level Comparison</h3>
@@ -805,7 +805,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                 className="appearance-none bg-slate-50 border border-slate-200 rounded-xl pl-3 pr-8 py-1.5 text-xs text-slate-900 font-medium focus:outline-none focus:border-purple-700 cursor-pointer"
               >
                 <option value="volume">Sort: Highest Documented Volume</option>
-                <option value="alpha">Sort: Alphabetical (A–Z)</option>
+                <option value="alpha">Sort: Alphabetical (A-Z)</option>
                 <option value="zone">Sort: Geopolitical Sequence</option>
               </select>
               <span className="material-symbols-outlined absolute right-2.5 top-2 text-slate-400 text-xs pointer-events-none">
@@ -910,7 +910,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </span>
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-slate-400">
-                Showing 1–{displayedStates.length} of {filteredStates.length} jurisdictions
+                Showing 1-{displayedStates.length} of {filteredStates.length} jurisdictions
               </span>
               <button
                 onClick={() => setShowAllStates(!showAllStates)}
@@ -937,7 +937,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* CARD 1: K-Means Clustering */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition group">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition group">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
@@ -963,7 +963,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
           </div>
 
           {/* CARD 2: Decision Tree */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition group">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition group">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center border border-indigo-100">
@@ -989,7 +989,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
           </div>
 
           {/* CARD 3: Random Forest */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition group">
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition group">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center">
@@ -1019,7 +1019,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* ====================================================
            8. ANALYTICS SUMMARY (Polished Horizontal Card)
       ==================================================== */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-purple-700 text-white flex items-center justify-center shadow-xs">
@@ -1067,7 +1067,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* ====================================================
            9. RESPONSIBLE ANALYTICS NOTICE
       ==================================================== */}
-      <div className="bg-purple-50/60 border border-purple-200 rounded-2xl p-4 flex items-start gap-3.5 text-xs text-slate-900">
+      <div className="bg-purple-50/60 border border-purple-200 rounded-xl p-4 flex items-start gap-3.5 text-xs text-slate-900">
         <div className="w-7 h-7 rounded-lg bg-purple-700 text-white flex items-center justify-center shrink-0 mt-0.5">
           <span className="material-symbols-outlined text-base">info</span>
         </div>
@@ -1084,7 +1084,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       ==================================================== */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
         {/* Action 1: Explore Crime Data */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-purple-300 transition flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:border-purple-300 transition flex flex-col justify-between">
           <div>
             <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-3">
               <span className="material-symbols-outlined text-lg">database</span>
@@ -1108,7 +1108,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* Action 2: Analyze Hotspots */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-purple-300 transition flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:border-purple-300 transition flex flex-col justify-between">
           <div>
             <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center mb-3 border border-indigo-100">
               <span className="material-symbols-outlined text-lg">location_on</span>
@@ -1129,7 +1129,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* Action 3: Run Prediction */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:border-purple-300 transition flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:border-purple-300 transition flex flex-col justify-between">
           <div>
             <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-3">
               <span className="material-symbols-outlined text-lg">trending_up</span>

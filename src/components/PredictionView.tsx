@@ -233,7 +233,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
       {/* INSPECT LOG MODAL */}
       {selectedLogForInspect && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-purple-700 text-[22px]">psychology</span>
@@ -303,7 +303,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
       {/* ETHICS & LIMITATIONS CHARTER MODAL */}
       {showEthicsModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center">
@@ -387,7 +387,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
         {/* LEFT COLUMN: Parameter Configuration & Model Engine (7 cols) */}
         <div className="lg:col-span-7 flex flex-col space-y-6">
           {/* Primary Configuration Card */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-6">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-6">
             {/* Header & Simulation View Switcher */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
               <div>
@@ -679,9 +679,9 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
             {/* Dynamic Content Panel 2: Execution / Loading State View */}
             {simState === 'loading' && (
               <div className="flex flex-col items-center justify-center py-10 px-4 text-center space-y-6 animate-in fade-in">
-                <div className="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center relative border border-purple-100 shadow-sm">
+                <div className="w-16 h-16 rounded-xl bg-purple-50 flex items-center justify-center relative border border-purple-100 shadow-sm">
                   <span className="material-symbols-outlined text-purple-700 text-[36px] animate-pulse">psychology</span>
-                  <div className="absolute -inset-1 rounded-2xl bg-purple-200 opacity-40 blur animate-pulse"></div>
+                  <div className="absolute -inset-1 rounded-xl bg-purple-200 opacity-40 blur animate-pulse"></div>
                 </div>
                 <div className="flex flex-col space-y-1 max-w-md">
                   <h3 className="text-lg font-bold text-slate-900">Evaluating Feature Vectors...</h3>
@@ -728,7 +728,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
             {/* Dynamic Content Panel 3: Fallback / Boundary Condition */}
             {simState === 'error' && (
               <div className="flex flex-col items-center justify-center py-10 px-4 text-center space-y-4 animate-in fade-in">
-                <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center">
                   <span className="material-symbols-outlined text-[32px]">warning</span>
                 </div>
                 <div className="flex flex-col space-y-1 max-w-md">
@@ -754,22 +754,22 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
 
           {/* Dataset & Calibration Metric Ribbon (4 cards) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col">
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col">
               <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Baseline Records</span>
               <span className="text-2xl font-extrabold text-slate-900 mt-1 font-mono">134,663</span>
               <span className="text-[11px] text-purple-700 font-semibold mt-0.5">NBS Verified</span>
             </div>
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col">
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col">
               <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Jurisdictions</span>
               <span className="text-2xl font-extrabold text-slate-900 mt-1 font-mono">37 / 37</span>
               <span className="text-[11px] text-purple-700 font-semibold mt-0.5">100% Federation</span>
             </div>
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col">
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col">
               <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Mean F1 Accuracy</span>
               <span className="text-2xl font-extrabold text-slate-900 mt-1 font-mono">0.92</span>
               <span className="text-[11px] text-indigo-600 font-semibold mt-0.5">Cross-Validated</span>
             </div>
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col">
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col">
               <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Inference Latency</span>
               <span className="text-2xl font-extrabold text-slate-900 mt-1 font-mono">42 ms</span>
               <span className="text-[11px] text-purple-700 font-semibold mt-0.5">Optimal Serverless</span>
@@ -780,7 +780,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
         {/* RIGHT COLUMN: Prediction Result & Contextual Guides (5 cols) */}
         <div className="lg:col-span-5 flex flex-col space-y-6">
           {/* Prediction Result Card */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs flex flex-col">
             <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-bold text-slate-900">Prediction Result</h3>
@@ -923,7 +923,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
           </div>
 
           {/* How Prediction Works Connected Stepper */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-4">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-900">How Prediction Works</h3>
               <span className="text-[11px] text-slate-400 font-medium">Workflow Overview</span>
@@ -984,7 +984,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
           </div>
 
           {/* Dataset & Model Baseline Provenance Card */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-4">
+          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-900">Prediction Dataset & Baseline</h3>
               <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-bold">
@@ -1024,7 +1024,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
       {/* ====================================================
            3. RESPONSIBLE AI & ANALYTICAL GUIDANCE BANNER
       ==================================================== */}
-      <div className="w-full rounded-2xl bg-purple-50/80 p-6 border border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-xs">
+      <div className="w-full rounded-xl bg-purple-50/80 p-6 border border-purple-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-xs">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 rounded-xl bg-purple-700 text-white shrink-0 flex items-center justify-center shadow-xs">
             <span className="material-symbols-outlined text-[24px]">verified_user</span>
@@ -1059,7 +1059,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Card 1: Decision Tree */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
+          <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
             <div className="flex flex-col space-y-2">
               <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700 border border-purple-100">
                 <span className="material-symbols-outlined text-[22px]">account_tree</span>
@@ -1076,7 +1076,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
           </div>
 
           {/* Card 2: Random Forest */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
+          <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
             <div className="flex flex-col space-y-2">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-700 border border-indigo-100">
                 <span className="material-symbols-outlined text-[22px]">hub</span>
@@ -1093,7 +1093,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
           </div>
 
           {/* Card 3: K-Means Spatial Clusters */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
+          <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4 hover:border-purple-300 transition">
             <div className="flex flex-col space-y-2">
               <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-700 border border-slate-200">
                 <span className="material-symbols-outlined text-[22px]">bubble_chart</span>
@@ -1114,7 +1114,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
       {/* ====================================================
            5. RECENT PREDICTION INFERENCES TABLE
       ==================================================== */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-5">
+      <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs flex flex-col space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
           <div>
             <h3 className="text-base font-bold text-slate-900">Recent Prediction Inferences</h3>

@@ -99,54 +99,68 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const primaryNavItems = [
     {
       id: 'dashboard',
-      label: 'Executive Overview',
-      icon: 'dashboard',
+      label: 'Dashboard',
+      icon: 'grid_view',
       onClick: () => setActiveSubView('dashboard'),
       isActive: activeSubView === 'dashboard',
     },
     {
+      id: 'crime-data',
+      label: 'Crime Data',
+      icon: 'database',
+      onClick: () => setActiveSubView('crime-data'),
+      isActive: activeSubView === 'crime-data' || activeSubView === 'datasets',
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics',
+      icon: 'insights',
+      onClick: () => setActiveSubView('analytics'),
+      isActive: activeSubView === 'analytics',
+    },
+    {
       id: 'hotspots',
-      label: 'Hotspots Map',
+      label: 'Hotspots',
       icon: 'location_on',
       onClick: () => setActiveSubView('hotspots'),
       isActive: activeSubView === 'hotspots',
     },
     {
       id: 'prediction',
-      label: 'Risk Predictor',
+      label: 'Prediction',
       icon: 'query_stats',
       onClick: () => setActiveSubView('prediction'),
       isActive: activeSubView === 'prediction',
     },
     {
-      id: 'crime-data',
-      label: 'NBS Crime Records',
-      icon: 'table_chart',
-      onClick: () => setActiveSubView('crime-data'),
-      isActive: activeSubView === 'crime-data' || activeSubView === 'datasets',
-    },
-    {
-      id: 'analytics',
-      label: 'Crime Statistics',
-      icon: 'insights',
-      onClick: () => setActiveSubView('analytics'),
-      isActive: activeSubView === 'analytics',
-    },
-    {
       id: 'models',
-      label: 'Model Accuracy',
-      icon: 'verified',
+      label: 'Models',
+      icon: 'account_tree',
       onClick: () => setActiveSubView('models'),
       isActive: activeSubView === 'models',
+    },
+    {
+      id: 'reports',
+      label: 'Reports',
+      icon: 'description',
+      onClick: () => onNavigateTab('patterns'),
+      isActive: false,
     },
   ];
 
   const secondaryNavItems = [
     {
-      id: 'home',
-      label: 'Public Home Page',
-      icon: 'home',
-      onClick: onBackToOverview,
+      id: 'settings',
+      label: 'Settings',
+      icon: 'settings',
+      onClick: () => onNavigateTab('foundation'),
+      isActive: false,
+    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      icon: 'manage_accounts',
+      onClick: () => onNavigateTab('auth'),
       isActive: false,
     },
   ];
@@ -409,19 +423,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             >
               <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
-
-            {/* Desktop Collapse / Expand Toggle Button in Header */}
-            <button
-              type="button"
-              onClick={toggleSidebarCollapse}
-              className="hidden lg:flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-purple-700 hover:bg-slate-100 border border-slate-200 transition-colors cursor-pointer mr-2 shadow-xs"
-              title={isSidebarCollapsed ? 'Expand sidebar ( [ )' : 'Collapse sidebar ( [ )'}
-              aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                {isSidebarCollapsed ? 'menu_open' : 'menu'}
-              </span>
-            </button>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
@@ -567,7 +568,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* Welcome Card / Banner */}
-              <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-xs p-6 lg:p-8">
+              <div className="relative overflow-hidden rounded-xl bg-white border border-slate-200 shadow-xs p-6 lg:p-8">
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                   <div className="space-y-2 max-w-2xl">
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-50 text-[#6200a9] text-[11px] font-bold tracking-wide uppercase">
@@ -603,7 +604,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* KPI Metric Cards (4-column grid) */}
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {/* KPI 1 */}
-              <div className="group relative rounded-2xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
+              <div className="group relative rounded-xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex flex-col">
                     <span className="text-[12px] text-slate-500 font-semibold uppercase tracking-wider">
@@ -626,7 +627,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* KPI 2 */}
-              <div className="group relative rounded-2xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
+              <div className="group relative rounded-xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex flex-col">
                     <span className="text-[12px] text-slate-500 font-semibold uppercase tracking-wider">
@@ -649,7 +650,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* KPI 3 */}
-              <div className="group relative rounded-2xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
+              <div className="group relative rounded-xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex flex-col">
                     <span className="text-[12px] text-slate-500 font-semibold uppercase tracking-wider">
@@ -672,7 +673,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* KPI 4 */}
-              <div className="group relative rounded-2xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
+              <div className="group relative rounded-xl bg-white p-6 border border-slate-200 shadow-xs transition-all duration-300">
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex flex-col">
                     <span className="text-[12px] text-slate-500 font-semibold uppercase tracking-wider">
@@ -698,7 +699,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Primary Analytics Area (Two-column layout, 60/40 ratio) */}
             <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Crime Trends Area Chart (60%) */}
-              <div className="lg:col-span-7 flex flex-col rounded-2xl bg-white p-6 border border-slate-200 shadow-xs justify-between">
+              <div className="lg:col-span-7 flex flex-col rounded-xl bg-white p-6 border border-slate-200 shadow-xs justify-between">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                   <div>
                     <h3 className="text-[18px] font-bold text-slate-900">Crime Trends Analysis</h3>
@@ -872,7 +873,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* Crime Distribution Donut Card (40%) */}
-              <div className="lg:col-span-5 flex flex-col rounded-2xl bg-white p-6 border border-slate-200 justify-between">
+              <div className="lg:col-span-5 flex flex-col rounded-xl bg-white p-6 border border-slate-200 justify-between">
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <h3 className="text-[18px] font-bold text-[#1e1926]">Crime Distribution</h3>
@@ -983,7 +984,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* Geographic Intelligence & Cluster Hotspots Section */}
             <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left Map & Benchmark Spatial Distribution (70% -> col-span-8) */}
-              <div className="lg:col-span-8 flex flex-col rounded-2xl bg-white p-6 border border-slate-200 shadow-xs space-y-4">
+              <div className="lg:col-span-8 flex flex-col rounded-xl bg-white p-6 border border-slate-200 shadow-xs space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <h3 className="text-[18px] font-bold text-slate-900">Crime Distribution Across Nigeria</h3>
@@ -1138,7 +1139,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {/* Right Stacked Cards (30% -> col-span-4) */}
               <div className="lg:col-span-4 flex flex-col space-y-6">
                 {/* Card A: Hotspot Analysis (K-Means Clustering) */}
-                <div className="rounded-2xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+                <div className="rounded-xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold uppercase tracking-wider text-[#6200a9]">
@@ -1192,7 +1193,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
 
                 {/* Card B: Prediction Intelligence */}
-                <div className="rounded-2xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+                <div className="rounded-xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold uppercase tracking-wider text-[#6e3aca]">
@@ -1248,7 +1249,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Insight 01 */}
-                <div className="flex flex-col justify-between rounded-2xl bg-white p-6 border border-slate-200 shadow-xs transition-all">
+                <div className="flex flex-col justify-between rounded-xl bg-white p-6 border border-slate-200 shadow-xs transition-all">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold text-[#6200a9] tracking-wider uppercase">
@@ -1272,7 +1273,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
 
                 {/* Insight 02 */}
-                <div className="flex flex-col justify-between rounded-2xl bg-white p-6 border border-slate-200 shadow-xs transition-all">
+                <div className="flex flex-col justify-between rounded-xl bg-white p-6 border border-slate-200 shadow-xs transition-all">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold text-[#6e3aca] tracking-wider uppercase">
@@ -1295,7 +1296,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
 
                 {/* Insight 03 */}
-                <div className="flex flex-col justify-between rounded-2xl bg-white p-6 border border-slate-200 shadow-xs transition-all">
+                <div className="flex flex-col justify-between rounded-xl bg-white p-6 border border-slate-200 shadow-xs transition-all">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold text-[#6100a8] tracking-wider uppercase">
@@ -1392,7 +1393,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </section>
 
             {/* Dataset Information Footer Card */}
-            <section className="rounded-2xl bg-white p-6 sm:p-8 border border-slate-200 shadow-xs">
+            <section className="rounded-xl bg-white p-6 sm:p-8 border border-slate-200 shadow-xs">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center shrink-0">
@@ -1417,7 +1418,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               {/* Metadata Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-200">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6 pt-5 border-t border-slate-200">
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Source</span>
                   <span className="text-[14px] font-bold text-slate-900">National Bureau of Statistics (NBS)</span>
@@ -1433,6 +1434,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Total Reported</span>
                   <span className="text-[14px] font-bold text-slate-900">134,663 Cases</span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Validation Level</span>
+                  <span className="text-[14px] font-bold text-emerald-700 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                    <span>Academic Verified</span>
+                  </span>
                 </div>
               </div>
             </section>

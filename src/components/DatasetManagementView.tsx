@@ -240,7 +240,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
           <div className="flex items-center gap-2.5 flex-wrap">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Dataset Management</h1>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 "></span>
               <span className="text-xs font-semibold">Active Baseline: {activeBaselineVersion}</span>
             </div>
             <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-[#6200a9] text-white shadow-xs">
@@ -287,7 +287,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* ACTIVE DATASET MASTER CARD + HEALTH METRICS */}
       <div className="flex flex-col space-y-6">
         {/* Primary Active Card */}
-        <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs">
+        <div className="relative overflow-hidden rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs">
           <div className="absolute -right-24 -top-24 w-80 h-80 rounded-full bg-purple-50 pointer-events-none blur-3xl opacity-70"></div>
 
           <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -297,7 +297,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                   Active Baseline Dataset
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 "></span>
                   Active · In Production
                 </span>
               </div>
@@ -425,7 +425,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
         {/* 4 Analytical KPI Health Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* KPI 1 */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Records</span>
               <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-[#6200a9]">
@@ -442,7 +442,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
           </div>
 
           {/* KPI 2 */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Geographic Coverage</span>
               <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-[#6200a9]">
@@ -459,7 +459,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
           </div>
 
           {/* KPI 3 */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Statutory Classes</span>
               <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-[#6200a9]">
@@ -476,7 +476,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
           </div>
 
           {/* KPI 4 */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Data Quality</span>
               <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
@@ -497,7 +497,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* UPLOAD NEW DATASET & VALIDATION WORKFLOW */}
       <div className="flex flex-col space-y-6" id="upload-pipeline-section">
         {/* Section Title & 4-Step Pipeline Bar */}
-        <div className="rounded-2xl bg-white border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="rounded-xl bg-white border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h3 className="text-base sm:text-lg font-bold text-slate-900">Dataset Ingestion & Validation Workflow</h3>
             <p className="text-xs text-slate-600">
@@ -522,7 +522,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
 
             {/* Step 2 Active */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-600 text-white text-xs font-bold animate-pulse">
+              <div className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-600 text-white text-xs font-bold ">
                 02
               </div>
               <div className="flex flex-col">
@@ -577,7 +577,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                   showToast(`Selected ${file.name}. Initializing schema pipeline...`, 'info');
                 }
               }}
-              className="group relative rounded-2xl bg-white border-2 border-dashed border-purple-200 hover:border-[#6200a9] p-7 shadow-xs hover:shadow-md transition-all flex flex-col items-center justify-center text-center cursor-pointer min-h-[220px]"
+              className="group relative rounded-xl bg-white border-2 border-dashed border-purple-200 hover:border-[#6200a9] p-7 shadow-xs hover:shadow-md transition-all flex flex-col items-center justify-center text-center cursor-pointer min-h-[220px]"
             >
               <input
                 ref={fileInputRef}
@@ -587,7 +587,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                 type="file"
               />
 
-              <div className="w-13 h-13 rounded-2xl bg-purple-50 flex items-center justify-center text-[#6200a9] group-hover:scale-110 transition-transform">
+              <div className="w-13 h-13 rounded-xl bg-purple-50 flex items-center justify-center text-[#6200a9] group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-[32px]">upload_file</span>
               </div>
 
@@ -605,7 +605,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
 
             {/* Staged File Card */}
             {stagedFileName ? (
-              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col space-y-3">
+              <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                     Staged Ingestion Candidate
@@ -658,14 +658,14 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="p-6 rounded-2xl bg-white border border-slate-200 text-center text-slate-500 text-xs">
+              <div className="p-6 rounded-xl bg-white border border-slate-200 text-center text-slate-500 text-xs">
                 No file currently staged. Upload or drop a CSV dataset above to initiate schema validation.
               </div>
             )}
           </div>
 
           {/* Right Column: Dataset Validation Engine Panel (6 Cols) */}
-          <div className="lg:col-span-6 rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="lg:col-span-6 rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -780,7 +780,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       </div>
 
       {/* REQUIRED DATA STRUCTURE (SCHEMA CONTRACT) */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col space-y-4">
+      <div className="rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="material-symbols-outlined text-[#6200a9] text-[22px]">schema</span>
@@ -855,7 +855,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                   <span className="px-2 py-0.5 rounded bg-slate-200 font-mono text-slate-700 font-medium">Integer (Year)</span>
                 </td>
                 <td className="px-4 py-3 text-slate-700">Four-digit Gregorian calendar year (e.g., 2017)</td>
-                <td className="px-4 py-3 text-slate-500">Historical baseline calibration timeframe; range 1999–Current Year</td>
+                <td className="px-4 py-3 text-slate-500">Historical baseline calibration timeframe; range 1999-2026 Year</td>
                 <td className="px-4 py-3 text-right">
                   <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[11px] font-bold">Required</span>
                 </td>
@@ -876,7 +876,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* DATASET PREVIEW & QUALITY CHECKLIST */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6" id="preview-section">
         {/* Left: Dataset Preview Table (8 Cols) */}
-        <div className="lg:col-span-8 rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-8 rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
@@ -884,7 +884,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                 <h4 className="text-base font-bold text-slate-900">Dataset Preview ({stagedFileName || 'active_baseline.csv'})</h4>
               </div>
               <span className="text-[11px] text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md font-medium">
-                Showing rows {(previewPage - 1) * rowsPerPage + 1}–{Math.min(previewPage * rowsPerPage, previewRows.length)} of 111 preview records
+                Showing rows {(previewPage - 1) * rowsPerPage + 1}-{Math.min(previewPage * rowsPerPage, previewRows.length)} of 111 preview records
               </span>
             </div>
 
@@ -952,7 +952,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
         </div>
 
         {/* Right: Data Quality Checklist (4 Cols) */}
-        <div className="lg:col-span-4 rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-4 rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-emerald-600 text-[22px]">checklist</span>
@@ -1020,7 +1020,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       </div>
 
       {/* DATASET HISTORY & VERSION AUDIT TABLE */}
-      <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col space-y-4">
+      <div className="rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="material-symbols-outlined text-[#6200a9] text-[22px]">history_edu</span>
@@ -1143,7 +1143,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* RESPONSIBLE GOVERNANCE & MODEL IMPACT NOTICES */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Banner 1: Historical Dataset Governance (6 Cols) */}
-        <div className="lg:col-span-6 rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-6 rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[#6200a9] text-[22px]">policy</span>
@@ -1189,7 +1189,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
         </div>
 
         {/* Banner 2: Dataset Changes Affect Model Calibration (6 Cols) */}
-        <div className="lg:col-span-6 rounded-2xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-6 rounded-xl bg-white border border-slate-200 p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-amber-700">
               <span className="material-symbols-outlined text-[22px] text-red-600">warning_amber</span>
@@ -1241,7 +1241,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* Modal 1: Activate Dataset Confirmation */}
       {isActivateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 sm:p-7 shadow-xl border border-slate-200 flex flex-col space-y-4">
+          <div className="w-full max-w-lg rounded-xl bg-white p-6 sm:p-7 shadow-xl border border-slate-200 flex flex-col space-y-4">
             <div className="flex items-center gap-3 text-[#6200a9]">
               <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center border border-purple-100">
                 <span className="material-symbols-outlined text-[24px]">publish</span>
@@ -1290,7 +1290,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* Modal 2: Replace Dataset Dialog */}
       {isReplaceModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 sm:p-7 shadow-xl border border-slate-200 flex flex-col space-y-4">
+          <div className="w-full max-w-lg rounded-xl bg-white p-6 sm:p-7 shadow-xl border border-slate-200 flex flex-col space-y-4">
             <div className="flex items-center gap-3 text-[#6200a9]">
               <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center border border-purple-100">
                 <span className="material-symbols-outlined text-[24px]">swap_horizontal_circle</span>
@@ -1347,7 +1347,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* Modal 3: Delete Staged Candidate */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 sm:p-7 shadow-xl border border-slate-200 flex flex-col space-y-4">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 sm:p-7 shadow-xl border border-slate-200 flex flex-col space-y-4">
             <div className="flex items-center gap-3 text-red-600">
               <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center border border-red-200">
                 <span className="material-symbols-outlined text-[24px]">delete</span>
@@ -1385,7 +1385,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
       {/* Modal 4: Full Ingestion Log (JSON) */}
       {isJsonLogModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl border border-slate-200 flex flex-col space-y-3">
+          <div className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl border border-slate-200 flex flex-col space-y-3">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2 text-[#6200a9]">
                 <span className="material-symbols-outlined text-[22px]">data_object</span>

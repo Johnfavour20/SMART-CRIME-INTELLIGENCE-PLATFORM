@@ -27,7 +27,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({ onExplor
       </div>
 
       {/* The Big Elevated Dashboard Preview Container */}
-      <div className="w-full max-w-7xl rounded-3xl bg-white border border-slate-200 shadow-sm p-6 md:p-8 lg:p-10 flex flex-col gap-8">
+      <div className="w-full max-w-7xl rounded-xl bg-white border border-slate-200 shadow-sm p-6 md:p-8 lg:p-10 flex flex-col gap-8">
         
         {/* Top Operational KPI Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

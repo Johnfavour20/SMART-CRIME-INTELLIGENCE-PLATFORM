@@ -47,14 +47,14 @@ export const CapabilitiesGrid: React.FC<CapabilitiesGridProps> = ({ onSelectCapa
   return (
     <section className="w-full px-4 sm:px-8 lg:px-10 py-16 flex flex-col items-center gap-10 bg-white">
       <div className="text-center max-w-2xl flex flex-col items-center gap-2">
-        <span className="px-3.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[11px] font-bold uppercase tracking-wider">
-          Core Capabilities
+        <span className="text-xs font-semibold text-purple-700 uppercase tracking-wider">
+          Core Analytical Capabilities
         </span>
-        <h2 className="text-[28px] sm:text-[34px] font-bold text-slate-900 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
           From Crime Data to Actionable Intelligence
         </h2>
-        <p className="text-[14px] text-slate-600 leading-relaxed">
-          Engineered specifically for security researchers, public policy analysts, and regional commands requiring objective statistical clarity.
+        <p className="text-sm text-slate-600 leading-relaxed">
+          Built for security researchers, public policy analysts, and regional commands requiring objective statistical clarity.
         </p>
       </div>
 
@@ -64,22 +64,22 @@ export const CapabilitiesGrid: React.FC<CapabilitiesGridProps> = ({ onSelectCapa
           <div
             key={cap.id}
             onClick={() => onSelectCapability && onSelectCapability(cap.id)}
-            className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-purple-300 hover:shadow-md transition-all duration-300 flex flex-col justify-between group cursor-pointer hover:-translate-y-1"
+            className="p-6 rounded-xl bg-white border border-slate-200 hover:border-slate-300 transition-all duration-150 flex flex-col justify-between group cursor-pointer hover:-translate-y-0.5"
           >
             <div className="flex flex-col gap-3.5">
-              <div className={`w-12 h-12 rounded-xl ${cap.bgIcon} flex items-center justify-center ${cap.textIcon} group-hover:scale-110 transition-transform`}>
-                <span className="material-symbols-outlined text-[26px]">{cap.icon}</span>
+              <div className={`w-10 h-10 rounded-lg ${cap.bgIcon} flex items-center justify-center ${cap.textIcon}`}>
+                <span className="material-symbols-outlined text-[20px]">{cap.icon}</span>
               </div>
-              <h3 className="text-[18px] font-bold text-slate-900">
+              <h3 className="text-base font-semibold text-slate-900">
                 {cap.title}
               </h3>
-              <p className="text-[13px] text-slate-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 {cap.description}
               </p>
             </div>
 
             <div className="pt-4 mt-4 border-t border-slate-100">
-              <span className="text-[12px] text-purple-700 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              <span className="text-xs text-purple-700 font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform duration-150">
                 {cap.action}
               </span>
             </div>

@@ -209,7 +209,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
       {/* INSPECT STATE MODAL */}
       {inspectStateModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-purple-700"></span>
@@ -317,7 +317,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
       {/* ====================================================
            2. FILTER PANEL (Clustering Configuration)
       ==================================================== */}
-      <section className="rounded-2xl bg-white p-5 border border-slate-200 shadow-xs">
+      <section className="rounded-xl bg-white p-5 border border-slate-200 shadow-xs">
         <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-700">
@@ -467,7 +467,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
       ==================================================== */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {/* Card 1 */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
+        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
           <div className="flex items-start justify-between">
             <div>
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Clusters Identified</span>
@@ -486,7 +486,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
         </div>
 
         {/* Card 2 */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
+        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
           <div className="flex items-start justify-between">
             <div>
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">States Analyzed</span>
@@ -505,7 +505,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
         </div>
 
         {/* Card 3 */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
+        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
           <div className="flex items-start justify-between">
             <div>
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Statutory Categories</span>
@@ -522,7 +522,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
         </div>
 
         {/* Card 4 */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
+        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
           <div className="flex items-start justify-between">
             <div>
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Analysis Status</span>
@@ -550,7 +550,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
       <section className="grid grid-cols-1 xl:grid-cols-10 gap-8">
         {/* LEFT COLUMN (70% = 7 cols on XL) */}
         <div className="xl:col-span-7 flex flex-col space-y-4">
-          <div className="rounded-2xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col relative overflow-hidden">
+          <div className="rounded-xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col relative overflow-hidden">
             {/* Card Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
               <div>
@@ -908,7 +908,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
 
         {/* RIGHT COLUMN: CLUSTER SUMMARY (30% = 3 cols on XL) */}
         <div className="xl:col-span-3 flex flex-col space-y-4">
-          <div className="rounded-2xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col h-full justify-between">
+          <div className="rounded-xl bg-white p-6 border border-slate-200 shadow-xs flex flex-col h-full justify-between">
             <div>
               <div className="flex items-center justify-between pb-2">
                 <h2 className="text-base font-bold text-slate-900">Cluster Summary</h2>
@@ -1072,7 +1072,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
         {/* COLUMN 1: Donut & Process Flow */}
         <div className="flex flex-col space-y-8">
           {/* Donut Chart Card */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between pb-2">
               <div>
                 <h2 className="text-base font-bold text-slate-900">Cluster Distribution</h2>
@@ -1199,7 +1199,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
           </div>
 
           {/* Educational Flow: How K-Means Identifies Concentrations */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between pb-2">
               <div>
                 <h2 className="text-base font-bold text-slate-900">How K-Means Identifies Concentrations</h2>
@@ -1279,7 +1279,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
         {/* COLUMN 2: Analytical Insights & Engine State */}
         <div className="flex flex-col space-y-8">
           {/* Analytical Insights Card */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between pb-2">
               <div>
                 <h2 className="text-base font-bold text-slate-900">Analytical Insights</h2>
@@ -1342,7 +1342,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
           </div>
 
           {/* Engine State Preview Card */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between pb-2">
               <div>
                 <h2 className="text-base font-bold text-slate-900">Engine State Preview</h2>
@@ -1389,7 +1389,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
             <div className="my-3 p-5 rounded-xl bg-slate-50 border border-slate-200 min-h-[160px] flex items-center justify-center transition-all">
               {engineState === 'active' && (
                 <div className="flex items-center gap-4 w-full">
-                  <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-700 shrink-0 border border-purple-100">
+                  <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700 shrink-0 border border-purple-100">
                     <span className="material-symbols-outlined text-[28px]">check_circle</span>
                   </div>
                   <div className="flex-1">
@@ -1422,7 +1422,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
 
               {engineState === 'empty' && (
                 <div className="flex flex-col items-center justify-center text-center space-y-2 w-full py-2">
-                  <div className="w-10 h-10 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-500">
+                  <div className="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center text-slate-500">
                     <span className="material-symbols-outlined text-[24px]">filter_alt_off</span>
                   </div>
                   <div>
@@ -1453,7 +1453,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
       {/* ====================================================
            6. STATE-LEVEL CLUSTER ANALYSIS TABLE
       ==================================================== */}
-      <section className="rounded-2xl bg-white p-6 border border-slate-200 shadow-xs">
+      <section className="rounded-xl bg-white p-6 border border-slate-200 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div>
             <div className="flex items-center gap-2">
@@ -1587,7 +1587,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
       {/* ====================================================
            7. RESPONSIBLE ANALYTICS & GOVERNANCE NOTICE
       ==================================================== */}
-      <section className="p-5 rounded-2xl bg-purple-50/50 border-l-4 border-purple-700 border border-purple-100 shadow-xs flex flex-col md:flex-row items-start gap-4">
+      <section className="p-5 rounded-xl bg-purple-50/50 border-l-4 border-purple-700 border border-purple-100 shadow-xs flex flex-col md:flex-row items-start gap-4">
         <div className="w-10 h-10 rounded-xl bg-white text-purple-700 flex items-center justify-center shrink-0 shadow-xs border border-purple-100">
           <span className="material-symbols-outlined text-[24px]">verified_user</span>
         </div>
@@ -1618,7 +1618,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
       ==================================================== */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Card 1 */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
+        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
           <div>
             <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700 mb-3 border border-purple-100">
               <span className="material-symbols-outlined text-[22px]">table_rows</span>
@@ -1644,7 +1644,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
         </div>
 
         {/* Card 2 */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
+        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
           <div>
             <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-700 mb-3 border border-indigo-100">
               <span className="material-symbols-outlined text-[22px]">show_chart</span>
@@ -1667,7 +1667,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
         </div>
 
         {/* Card 3 */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
+        <div className="p-5 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 transition">
           <div>
             <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700 mb-3 border border-purple-100">
               <span className="material-symbols-outlined text-[22px]">psychology</span>

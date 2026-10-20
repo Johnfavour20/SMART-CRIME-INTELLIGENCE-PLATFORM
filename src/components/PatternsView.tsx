@@ -35,7 +35,7 @@ export const PatternsView: React.FC<PatternsViewProps> = ({ onBackToOverview }) 
       </div>
 
       <div className="space-y-6">
-        <div className="p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col gap-3">
+        <div className="p-6 md:p-8 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700">
               <span className="material-symbols-outlined text-[20px]">dataset</span>
@@ -49,7 +49,7 @@ export const PatternsView: React.FC<PatternsViewProps> = ({ onBackToOverview }) 
           </p>
         </div>
 
-        <div className="p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col gap-3">
+        <div className="p-6 md:p-8 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700">
               <span className="material-symbols-outlined text-[20px]">hub</span>
@@ -63,7 +63,7 @@ export const PatternsView: React.FC<PatternsViewProps> = ({ onBackToOverview }) 
           </p>
         </div>
 
-        <div className="p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col gap-3">
+        <div className="p-6 md:p-8 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700">
               <span className="material-symbols-outlined text-[20px]">gavel</span>

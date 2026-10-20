@@ -13,82 +13,174 @@ interface SubNavProps {
 }
 
 export const SubNav: React.FC<SubNavProps> = ({
+  activeTab,
+  activeSection,
+  onNavigateSection,
   onNavigateTab,
+  onLaunchDashboard,
   onSignIn,
   currentAnalyst,
   onSignOut,
 }) => {
-  const handleLinkClick = (tab: ActiveTab) => {
-    onNavigateTab(tab);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLinkClick = (id: string) => {
+    setMobileMenuOpen(false);
+    if (id === 'overview') {
+      onNavigateTab('overview');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'dashboard') {
+      if (activeTab === 'overview') {
+        onNavigateSection('dashboard');
+      } else {
+        onNavigateTab('overview');
+        setTimeout(() => onNavigateSection('dashboard'), 50);
+      }
+    } else if (id === 'crime-data') {
+      onNavigateTab('crime-data');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'datasets') {
+      onNavigateTab('datasets');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'analytics') {
+      onNavigateTab('analytics');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'hotspots') {
+      onNavigateTab('hotspots');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'prediction') {
+      onNavigateTab('prediction');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'models') {
+      onNavigateTab('models');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'ml-prediction') {
+      onNavigateTab('machine-learning-and-prediction');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (id === 'data-workbench') {
+      onNavigateTab('data-visualizations');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      onNavigateSection(id);
+    }
   };
 
+  const navLinks = [
+    { id: 'overview', label: 'Home', isTab: activeTab === 'overview' && activeSection === 'overview' },
+    { id: 'crime-data', label: 'Crime Data', isTab: activeTab === 'crime-data' || activeTab === 'datasets' },
+    { id: 'analytics', label: 'Analytics', isTab: activeTab === 'analytics' },
+    { id: 'hotspots', label: 'Hotspots', isTab: activeTab === 'hotspots' },
+    { id: 'prediction', label: 'Prediction', isTab: activeTab === 'prediction' },
+    { id: 'models', label: 'Models', isTab: activeTab === 'models' },
+    { id: 'data-workbench', label: 'Workbench', isTab: activeTab === 'data-visualizations' },
+    { id: 'how-it-works', label: 'How It Works', isTab: activeTab === 'overview' && activeSection === 'how-it-works' },
+    { id: 'nigerian-data', label: 'Nigerian Data', isTab: activeTab === 'overview' && activeSection === 'nigerian-data' },
+    { id: 'engines', label: 'Methodology', isTab: activeTab === 'overview' && activeSection === 'engines' },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all">
-      <div className="w-full px-4 sm:px-8 lg:px-10 py-3.5 flex items-center justify-between gap-4">
+      <div className="w-full px-4 sm:px-8 lg:px-10 py-3 flex items-center justify-between gap-4">
         {/* Brand */}
         <button
-          onClick={() => handleLinkClick('overview')}
-          className="flex items-center gap-2.5 text-left focus:outline-none group cursor-pointer"
+          onClick={() => {
+            onNavigateTab('overview');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="flex items-center gap-2.5 text-left focus:outline-none cursor-pointer"
         >
-          <div className="w-9 h-9 rounded-xl bg-purple-700 flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
-            <span className="material-symbols-outlined text-white text-[19px]">security</span>
+          <div className="w-8 h-8 rounded-lg bg-purple-700 flex items-center justify-center text-white">
+            <span className="material-symbols-outlined text-[18px]">security</span>
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="text-[17px] text-slate-900 font-bold tracking-tight">
-                SMART CRIME
-              </span>
-              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[10px] font-bold border border-purple-200">
-                NBS 2017
-              </span>
-            </div>
-            <span className="text-[11px] text-slate-500 font-medium hidden md:inline">
-              Crime Intelligence & Risk Forecasting
-            </span>
-          </div>
+          <span className="text-base text-slate-900 font-bold tracking-tight">
+            SMART CRIME
+          </span>
         </button>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-3">
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center gap-6 xl:gap-7">
+          {navLinks.map((link) => {
+            const isActive = link.isTab;
+            return (
+              <button
+                key={link.id}
+                onClick={() => handleLinkClick(link.id)}
+                className={`text-[13.5px] transition-colors relative py-1 cursor-pointer ${
+                  isActive
+                    ? 'text-purple-700 font-bold after:content-[""] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-purple-700'
+                    : 'text-slate-600 font-medium hover:text-slate-900'
+                }`}
+              >
+                {link.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Action Controls & Mobile Toggle */}
+        <div className="flex items-center gap-2 sm:gap-3">
           {currentAnalyst ? (
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-50 border border-purple-200 text-xs font-semibold text-purple-700">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs font-semibold text-purple-700">
                 <span className="truncate max-w-[140px]">{currentAnalyst}</span>
               </div>
-              <button
-                onClick={() => handleLinkClick('dashboard')}
-                className="px-3.5 py-1.5 text-xs font-semibold text-white bg-purple-700 hover:bg-purple-800 rounded-lg transition-colors cursor-pointer flex items-center gap-1"
-              >
-                <span>Dashboard</span>
-                <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
-              </button>
               {onSignOut && (
                 <button
                   onClick={onSignOut}
                   title="Sign Out"
-                  className="px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-red-600 hover:bg-slate-100 transition-colors cursor-pointer text-xs font-semibold flex items-center gap-1"
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-purple-700 hover:bg-slate-100 transition-colors cursor-pointer text-xs font-medium"
                 >
-                  <span className="material-symbols-outlined text-[17px]">logout</span>
-                  <span className="hidden sm:inline">Sign Out</span>
+                  <span className="material-symbols-outlined text-[18px]">logout</span>
                 </button>
               )}
             </div>
           ) : (
-            <div className="flex items-center">
-              <button
-                onClick={onSignIn}
-                className="px-5 py-2 text-[13.5px] font-semibold text-white bg-purple-700 hover:bg-purple-800 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-[17px]">login</span>
-                <span>Sign In</span>
-              </button>
-            </div>
+            <button
+              onClick={onSignIn}
+              className="px-3 py-1.5 text-[13.5px] font-semibold text-slate-800 hover:text-purple-700 transition-colors cursor-pointer"
+            >
+              Sign In
+            </button>
           )}
+          <button
+            onClick={onLaunchDashboard}
+            className="px-4 py-2 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-[13.5px] font-semibold transition-all active:scale-98 flex items-center gap-1.5 cursor-pointer shadow-xs"
+          >
+            <span>Launch Dashboard</span>
+            <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+          </button>
+
+          {/* Mobile menu hamburger button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            <span className="material-symbols-outlined text-[22px]">
+              {mobileMenuOpen ? 'close' : 'menu'}
+            </span>
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-3 flex flex-col gap-2">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => handleLinkClick(link.id)}
+              className={`text-left px-3 py-2 rounded-lg text-[14px] font-medium transition-colors ${
+                link.isTab
+                  ? 'bg-purple-50 text-purple-700 font-bold'
+                  : 'text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+      )}
     </nav>
   );
 };

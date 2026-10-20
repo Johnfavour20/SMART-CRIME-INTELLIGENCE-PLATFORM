@@ -246,7 +246,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       {/* 1. Top KPI Strip (4 cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {/* Best Accuracy */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
+        <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Best Accuracy</span>
             <span className="px-2 py-0.5 rounded-md bg-purple-50 text-[#6200a9] text-[11px] font-semibold">
@@ -281,7 +281,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         </div>
 
         {/* Best Precision */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
+        <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Best Precision</span>
             <span className="px-2 py-0.5 rounded-md bg-purple-50 text-[#6200a9] text-[11px] font-semibold">
@@ -316,7 +316,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         </div>
 
         {/* Best Recall */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
+        <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Best Recall</span>
             <span className="px-2 py-0.5 rounded-md bg-purple-50 text-[#6200a9] text-[11px] font-semibold">
@@ -351,7 +351,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         </div>
 
         {/* Best F1-Score */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
+        <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between relative overflow-hidden group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Best F1-Score</span>
             <span className="px-2 py-0.5 rounded-md bg-purple-50 text-[#6200a9] text-[11px] font-semibold">
@@ -387,7 +387,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       </div>
 
       {/* 2. Evaluation Protocol Pipeline & State Stepper */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
+      <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-5">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#6200a9] text-[20px]">account_tree</span>
@@ -531,7 +531,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         {/* Left Column (60% / 7 cols) */}
         <div className="lg:col-span-7 flex flex-col space-y-6">
           {/* Model Comparison Table Card */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
+          <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-5">
               <div>
                 <h2 className="text-lg font-bold text-slate-900">Model Comparison</h2>
@@ -662,7 +662,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
           </div>
 
           {/* Performance Metrics Visual Chart Card */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between">
+          <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between">
             <div className="mb-4">
               <h2 className="text-lg font-bold text-slate-900">Performance Metrics</h2>
               <p className="text-xs text-slate-600">Comparison of evaluation metrics across the predictive models.</p>
@@ -671,7 +671,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
             {/* Bar Chart Visual */}
             <div className="relative w-full h-64 bg-slate-50 rounded-xl p-4 flex flex-col justify-between border border-slate-200 overflow-hidden">
               <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
-                <span>Score (0.00 – 1.00)</span>
+                <span>Score (0.00 - 1.00)</span>
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1.5">
                     <span className="w-3 h-3 rounded bg-purple-300"></span> CART Tree
@@ -829,7 +829,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         {/* Right Column (40% / 5 cols) */}
         <div className="lg:col-span-5 flex flex-col space-y-6">
           {/* Model Card A: Decision Tree */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
+          <div className="p-5 sm:p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center border border-purple-100">
@@ -887,7 +887,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
           </div>
 
           {/* Model Card B: Random Forest */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-purple-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.06)] relative overflow-hidden">
+          <div className="p-5 sm:p-6 rounded-xl bg-white border border-purple-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.06)] relative overflow-hidden">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-[#6200a9] text-white flex items-center justify-center shadow-sm">
@@ -945,7 +945,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
           </div>
 
           {/* Model Selection & Recommendation Insight Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-purple-50/60 border border-purple-100 flex flex-col justify-between">
+          <div className="p-5 sm:p-6 rounded-xl bg-purple-50/60 border border-purple-100 flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#6200a9] text-[20px]">recommend</span>
@@ -974,7 +974,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       {/* 4. Deep Inspection Grid: Confusion Matrix & Class Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Confusion Matrix Card (60% / 7 cols) */}
-        <div className="lg:col-span-7 p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
+        <div className="lg:col-span-7 p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-5">
             <div>
               <div className="flex items-center gap-2">
@@ -1062,7 +1062,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '49,886' : '47,680') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '49,886' : '47,680') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-200' : 'text-slate-400'}`}>
                     {isEvaluated ? '93.0% TP' : 'Awaiting'}
@@ -1088,7 +1088,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '3,120' : '4,820') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '3,120' : '4,820') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-700' : 'text-slate-400'}`}>
                     {isEvaluated ? '5.8% FN' : 'Awaiting'}
@@ -1114,7 +1114,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '635' : '1,141') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '635' : '1,141') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-600' : 'text-slate-400'}`}>
                     {isEvaluated ? '1.2% FN' : 'Awaiting'}
@@ -1144,7 +1144,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '3,410' : '5,120') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '3,410' : '5,120') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-700' : 'text-slate-400'}`}>
                     {isEvaluated ? '5.0% FN' : 'Awaiting'}
@@ -1170,7 +1170,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '63,205' : '60,810') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '63,205' : '60,810') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-200' : 'text-slate-400'}`}>
                     {isEvaluated ? '92.2% TP' : 'Awaiting'}
@@ -1196,7 +1196,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '1,964' : '2,649') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '1,964' : '2,649') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-600' : 'text-slate-400'}`}>
                     {isEvaluated ? '2.8% FN' : 'Awaiting'}
@@ -1226,7 +1226,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '820' : '1,380') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '820' : '1,380') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-600' : 'text-slate-400'}`}>
                     {isEvaluated ? '6.6% FN' : 'Awaiting'}
@@ -1252,7 +1252,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '1,142' : '1,620') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '1,142' : '1,620') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-700' : 'text-slate-400'}`}>
                     {isEvaluated ? '9.2% FN' : 'Awaiting'}
@@ -1278,7 +1278,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
                   }`}
                 >
                   <span className="text-base font-bold">
-                    {isEvaluated ? (activeMatrixModel === 'rf' ? '10,481' : '9,443') : '—'}
+                    {isEvaluated ? (activeMatrixModel === 'rf' ? '10,481' : '9,443') : '-'}
                   </span>
                   <span className={`text-[10px] ${isEvaluated ? 'text-purple-200' : 'text-slate-400'}`}>
                     {isEvaluated ? '84.2% TP' : 'Awaiting'}
@@ -1299,7 +1299,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         </div>
 
         {/* Classification Performance by Class (40% / 5 cols) */}
-        <div className="lg:col-span-5 p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between">
+        <div className="lg:col-span-5 p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between">
           <div>
             <div className="mb-5">
               <h2 className="text-lg font-bold text-slate-900">Classification Performance</h2>
@@ -1387,7 +1387,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       {/* 5. Evaluation Configuration & Understanding Metrics (Side-by-Side) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Evaluation Configuration Card (5 cols) */}
-        <div className="lg:col-span-5 p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between">
+        <div className="lg:col-span-5 p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="material-symbols-outlined text-[#6200a9] text-[22px]">tune</span>
@@ -1438,7 +1438,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         </div>
 
         {/* Understanding the Metrics Card (7 cols) */}
-        <div className="lg:col-span-7 p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
+        <div className="lg:col-span-7 p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
           <div className="flex items-center gap-2 mb-4">
             <span className="material-symbols-outlined text-[#6200a9] text-[22px]">menu_book</span>
             <h2 className="text-lg font-bold text-slate-900">Understanding the Metrics</h2>
@@ -1493,7 +1493,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       </div>
 
       {/* 6. Evaluation History Table Card */}
-      <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
+      <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
           <div className="flex items-center gap-2.5">
             <h2 className="text-lg font-bold text-slate-900">Evaluation History</h2>
@@ -1572,14 +1572,14 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       </div>
 
       {/* Responsible Modeling Advisory Banner */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-purple-50/50 border border-purple-200/80 flex items-start gap-4">
+      <div className="p-5 sm:p-6 rounded-xl bg-purple-50/50 border border-purple-200/80 flex items-start gap-4">
         <div className="w-9 h-9 rounded-xl bg-purple-100 text-[#6200a9] flex items-center justify-center shrink-0 border border-purple-200">
           <span className="material-symbols-outlined text-[20px]">policy</span>
         </div>
         <div className="space-y-1">
           <h3 className="text-sm font-bold text-slate-900">Responsible Modeling Advisory & Limitations</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Model performance has limitations — Evaluation metrics describe statistical classification behavior exclusively on the selected baseline dataset. They do not guarantee prediction accuracy on future, unseen real-world conditions or evolving socioeconomic phenomena.
+            Model performance has limitations: Evaluation metrics describe statistical classification behavior exclusively on the selected baseline dataset. They do not guarantee prediction accuracy on future, unseen real-world conditions or evolving socioeconomic phenomena.
           </p>
         </div>
       </div>
@@ -1587,7 +1587,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       {/* 8. Bottom Navigation CTA Cards (3 cards) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Crime Prediction */}
-        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between hover:border-[#6200a9]/40 transition-colors group">
+        <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between hover:border-[#6200a9]/40 transition-colors group">
           <div className="space-y-2">
             <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center border border-purple-100 group-hover:scale-105 transition-transform">
               <span className="material-symbols-outlined text-[22px]">query_stats</span>
@@ -1609,7 +1609,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         </div>
 
         {/* Crime Hotspots */}
-        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between hover:border-[#6200a9]/40 transition-colors group">
+        <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between hover:border-[#6200a9]/40 transition-colors group">
           <div className="space-y-2">
             <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center border border-purple-100 group-hover:scale-105 transition-transform">
               <span className="material-symbols-outlined text-[22px]">location_on</span>
@@ -1631,7 +1631,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
         </div>
 
         {/* Reports */}
-        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between hover:border-[#6200a9]/40 transition-colors group">
+        <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-[0_2px_8px_-2px_rgba(91,33,182,0.04)] flex flex-col justify-between hover:border-[#6200a9]/40 transition-colors group">
           <div className="space-y-2">
             <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center border border-purple-100 group-hover:scale-105 transition-transform">
               <span className="material-symbols-outlined text-[22px]">description</span>
@@ -1656,7 +1656,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       {/* Modal: Model Inspector (CART or Random Forest) */}
       {selectedModelInspect && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+          <div className="bg-white rounded-xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2.5">
                 <span className="material-symbols-outlined text-[#6200a9] text-[24px]">
@@ -1728,7 +1728,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       {/* Modal: Confusion Matrix Cell Drilldown */}
       {activeCellDetail && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#6200a9] text-[22px]">grid_4x4</span>
@@ -1784,7 +1784,7 @@ export const ModelPerformanceView: React.FC<ModelPerformanceViewProps> = ({
       {/* Modal: Export Evaluation */}
       {showExportModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#6200a9] text-[22px]">file_download</span>

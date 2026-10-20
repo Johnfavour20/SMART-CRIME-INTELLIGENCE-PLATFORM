@@ -8,37 +8,33 @@ interface CTASectionProps {
 export const CTASection: React.FC<CTASectionProps> = ({ onLaunch, onReadDocs }) => {
   return (
     <section className="w-full px-4 sm:px-8 lg:px-10 py-16">
-      <div className="w-full max-w-7xl mx-auto rounded-3xl bg-gradient-to-r from-[#6200a9] via-[#6e3aca] to-[#7e22ce] text-white p-8 md:p-14 relative overflow-hidden flex flex-col items-center text-center gap-6">
-        {/* Decorative light blurs */}
-        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#8856e5]/30 blur-2xl pointer-events-none"></div>
-        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#f0dbff]/20 blur-2xl pointer-events-none"></div>
-
-        <div className="relative z-10 max-w-2xl flex flex-col items-center gap-3">
-          <span className="px-3.5 py-1 rounded-full bg-white/15 text-purple-200 text-[11px] font-bold uppercase tracking-wider">
-            Start Analyzing Now
+      <div className="w-full max-w-7xl mx-auto rounded-xl bg-slate-900 border border-slate-800 text-white p-8 md:p-12 flex flex-col items-center text-center gap-6">
+        <div className="max-w-2xl flex flex-col items-center gap-3">
+          <span className="text-xs font-semibold text-purple-300 uppercase tracking-wider">
+            Operational Intelligence
           </span>
-          <h2 className="text-[32px] sm:text-[42px] font-bold tracking-tight text-white leading-tight">
-            Turn Crime Data Into Intelligence
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
+            Turn Historical Incident Data Into Decision Support
           </h2>
-          <p className="text-[16px] text-white/90 leading-relaxed max-w-xl">
-            Explore historical patterns, analyze spatial hotspots, and generate data-driven predictive insights across Nigerian jurisdictions today.
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
+            Explore state-level incident breakdowns, analyze verified spatial clusters, and evaluate explainable predictive risk projections across Nigerian states.
           </p>
         </div>
 
-        <div className="relative z-10 flex flex-wrap items-center justify-center gap-4 pt-2">
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             onClick={onLaunch}
-            className="px-6 py-3 rounded-xl bg-white text-purple-700 text-[15px] font-bold hover:bg-slate-100 transition-all transform active:scale-95 flex items-center gap-2 cursor-pointer shadow-sm"
+            className="px-5 py-2.5 rounded-lg bg-purple-700 hover:bg-purple-800 text-white text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer"
           >
-            <span>Launch Smart Crime</span>
-            <span className="material-symbols-outlined text-[18px]">rocket_launch</span>
+            <span>Open Crime Analytics Dashboard</span>
+            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
 
           <button
             onClick={onReadDocs}
-            className="px-6 py-3 rounded-xl bg-transparent hover:bg-white/10 text-white text-[15px] font-semibold transition-all border border-white/30"
+            className="px-5 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-colors border border-slate-700"
           >
-            Read Technical Documentation
+            Technical Documentation
           </button>
         </div>
       </div>

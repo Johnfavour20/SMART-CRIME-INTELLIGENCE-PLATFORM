@@ -93,6 +93,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
   const [emptyStatePreview, setEmptyStatePreview] = useState<boolean>(false);
   const [inspectRecord, setInspectRecord] = useState<CrimeRecord | null>(null);
   const [exportNotice, setExportNotice] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -203,48 +204,55 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
 
   // Export CSV
   const handleExportData = () => {
-    const headers = ['State', 'Geopolitical Zone', 'Crime Category', 'Reported Cases', 'Year', 'Status', 'Risk Score'];
-    const rows = filteredRecords.map((r) => [
-      `"${r.state}"`,
-      `"${r.zone}"`,
-      `"${r.categoryLabel}"`,
-      r.cases,
-      r.year,
-      `"${r.status}"`,
-      r.riskScore,
-    ]);
+    setIsExporting(true);
+    setTimeout(() => {
+      const headers = ['State', 'Geopolitical Zone', 'Crime Category', 'Reported Cases', 'Year', 'Status', 'Risk Score'];
+      const rows = filteredRecords.map((r) => [
+        `"${r.state}"`,
+        `"${r.zone}"`,
+        `"${r.categoryLabel}"`,
+        r.cases,
+        r.year,
+        `"${r.status}"`,
+        r.riskScore,
+      ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'NBS_2017_Nigeria_Crime_Data.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'NBS_2017_Nigeria_Crime_Data.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    setExportNotice('Export complete: NBS_2017_Nigeria_Crime_Data.csv downloaded');
-    setTimeout(() => setExportNotice(null), 3500);
+      setIsExporting(false);
+      setExportNotice('Export complete: NBS_2017_Nigeria_Crime_Data.csv downloaded');
+      setTimeout(() => setExportNotice(null), 3500);
+    }, 400);
   };
 
-  // Category Badge colors
+  // Category indicator styles
   const getCategoryBadge = (cat: 'property' | 'persons' | 'authority') => {
     switch (cat) {
       case 'property':
         return (
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-100 text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1.5 text-xs text-purple-700 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-700"></span>
             Offences Against Property
           </span>
         );
       case 'persons':
         return (
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1.5 text-xs text-indigo-700 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
             Offences Against Persons
           </span>
         );
       case 'authority':
         return (
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-100 text-[12px] font-medium">
+          <span className="inline-flex items-center gap-1.5 text-xs text-slate-700 font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
             Against Lawful Authority
           </span>
         );
@@ -308,11 +316,14 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
 
           <button
             onClick={handleExportData}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-purple-700 font-semibold text-sm border border-slate-200 shadow-xs hover:bg-slate-50 transition-all cursor-pointer"
+            disabled={isExporting}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white text-purple-700 font-semibold text-xs border border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer disabled:opacity-60"
             type="button"
           >
-            <span className="material-symbols-outlined text-[18px]">download</span>
-            <span>Export Data</span>
+            <span className={`material-symbols-outlined text-[16px] ${isExporting ? 'animate-spin' : ''}`}>
+              {isExporting ? 'progress_activity' : 'download'}
+            </span>
+            <span>{isExporting ? 'Exporting...' : 'Export Data'}</span>
           </button>
 
           <button
@@ -329,7 +340,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
       {/* DATASET SUMMARY STRIP (4 METRIC CARDS) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total Records */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Records</span>
             <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
@@ -347,7 +358,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
         </div>
 
         {/* Card 2: States Covered */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">States Covered</span>
             <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
@@ -365,7 +376,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
         </div>
 
         {/* Card 3: Crime Categories */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Crime Categories</span>
             <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
@@ -383,7 +394,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
         </div>
 
         {/* Card 4: Reporting Period */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Reporting Period</span>
             <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
@@ -402,7 +413,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
       </div>
 
       {/* DATASET INFORMATION BANNER */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
           <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-[26px]">storage</span>
@@ -441,7 +452,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
       </div>
 
       {/* FILTER & SEARCH CONTROLS SECTION */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-purple-700 text-[20px]">filter_list</span>
@@ -551,7 +562,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
       {/* SPLIT SECTION: DATA TABLE (~70%) + ANALYTICAL QUALITY STRIP (~30%) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN: CRIME RECORDS REPOSITORY TABLE (col-span-8) */}
-        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 shadow-xs p-5 flex flex-col space-y-4 overflow-hidden">
+        <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200 shadow-xs p-5 flex flex-col space-y-4 overflow-hidden">
           {/* Toolbar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 flex-wrap">
@@ -592,7 +603,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
           {emptyStatePreview || currentRows.length === 0 ? (
             /* EMPTY STATE PLACEHOLDER */
             <div className="flex flex-col items-center justify-center py-14 px-4 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
-              <div className="w-14 h-14 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center mb-3 shadow-xs">
+              <div className="w-14 h-14 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center mb-3 shadow-xs">
                 <span className="material-symbols-outlined text-[32px]">manage_search</span>
               </div>
               <h4 className="text-base font-bold text-slate-900">No crime records found</h4>
@@ -725,7 +736,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-100 text-slate-500">
               <div className="flex items-center gap-4 text-xs">
                 <span>
-                  Showing <strong className="text-slate-900">{startIndex + 1}–{endIndex}</strong> of{' '}
+                  Showing <strong className="text-slate-900">{startIndex + 1}-{endIndex}</strong> of{' '}
                   <strong className="text-slate-900">{totalEntries.toLocaleString()}</strong> entries
                 </span>
                 <div className="flex items-center gap-1.5">
@@ -811,7 +822,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
         {/* RIGHT COLUMN: ANALYTICAL QUALITY & AUDIT STRIP (col-span-4) */}
         <div className="lg:col-span-4 flex flex-col space-y-4">
           {/* Card 1: Category Proportions & Visual Donut Chart */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 space-y-4">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-purple-700 text-[20px]">pie_chart</span>
@@ -925,7 +936,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
           </div>
 
           {/* Card 2: Data Integrity & Audit */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 space-y-3.5">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-5 space-y-3.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-purple-700 text-[20px]">fact_check</span>
@@ -978,7 +989,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
           </div>
 
           {/* Card 3: Responsible AI & Policy Guidance Note */}
-          <div className="bg-slate-50 rounded-2xl p-5 space-y-2 border border-slate-200">
+          <div className="bg-slate-50 rounded-xl p-5 space-y-2 border border-slate-200">
             <div className="flex items-center gap-2 text-purple-700">
               <span className="material-symbols-outlined text-[20px]">info</span>
               <span className="text-sm font-bold">About This Dataset</span>
@@ -1002,7 +1013,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Action Card 1: Crime Trends */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
             <div className="space-y-2.5">
               <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center group-hover:scale-105 transition-transform">
                 <span className="material-symbols-outlined text-[22px]">insights</span>
@@ -1027,7 +1038,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
           </div>
 
           {/* Action Card 2: Hotspot Analysis */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
             <div className="space-y-2.5">
               <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center group-hover:scale-105 transition-transform">
                 <span className="material-symbols-outlined text-[22px]">location_on</span>
@@ -1052,7 +1063,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
           </div>
 
           {/* Action Card 3: Crime Prediction */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between hover:border-purple-300 hover:shadow-sm transition-all group">
             <div className="space-y-2.5">
               <div className="w-11 h-11 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center group-hover:scale-105 transition-transform">
                 <span className="material-symbols-outlined text-[22px]">query_stats</span>
@@ -1081,7 +1092,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
       {/* INSPECT RECORD MODAL */}
       {inspectRecord && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-lg rounded-2xl border border-slate-200 shadow-2xl p-6 relative flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white w-full max-w-lg rounded-xl border border-slate-200 shadow-2xl p-6 relative flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">Historical Audit Record</span>

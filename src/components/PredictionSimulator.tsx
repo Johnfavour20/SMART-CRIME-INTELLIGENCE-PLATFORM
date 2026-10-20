@@ -215,9 +215,9 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
           <button
             onClick={handlePredict}
             disabled={isCalculating}
-            className="w-full py-3 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-[14px] shadow-xs transition-all active:scale-98 flex items-center justify-center gap-2 mt-2"
+            className="w-full py-2.5 rounded-lg bg-purple-700 hover:bg-purple-800 text-white font-semibold text-xs shadow-xs transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-70 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">
+            <span className={`material-symbols-outlined text-[16px] ${isCalculating ? 'animate-spin' : ''}`}>
               {isCalculating ? 'progress_activity' : 'account_tree'}
             </span>
             <span>{isCalculating ? 'Executing Decision Forest...' : 'Compute Risk Prediction'}</span>
@@ -226,47 +226,63 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
 
         {/* Right Column: Prediction Outcomes & Explainability Output */}
         <div className="lg:col-span-7 flex flex-col gap-6">
-          {result && (
+          {isCalculating ? (
+            <div className="rounded-xl bg-white border border-slate-200 p-6 sm:p-8 flex flex-col gap-6 animate-pulse">
+              <div className="flex justify-between items-center">
+                <div className="space-y-2">
+                  <div className="h-3 bg-slate-200 rounded w-24"></div>
+                  <div className="h-6 bg-slate-200 rounded w-48"></div>
+                </div>
+                <div className="h-4 bg-slate-200 rounded w-28"></div>
+              </div>
+              <div className="h-28 bg-slate-100 rounded-lg"></div>
+              <div className="space-y-3">
+                <div className="h-4 bg-slate-200 rounded w-36"></div>
+                <div className="h-12 bg-slate-100 rounded-lg"></div>
+                <div className="h-12 bg-slate-100 rounded-lg"></div>
+              </div>
+            </div>
+          ) : result ? (
             <>
               {/* Primary Risk Prediction Card */}
-              <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 shadow-xs flex flex-col gap-6">
+              <div className="rounded-xl bg-white border border-slate-200 p-6 sm:p-8 shadow-xs flex flex-col gap-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full">
+                    <span className="text-xs font-semibold text-purple-700 uppercase tracking-wider">
                       Model Forecast Result
                     </span>
-                    <h3 className="text-[22px] font-bold text-slate-900 mt-1">
-                      {selectedState} • {quarter} Projected Outlook
+                    <h3 className="text-xl font-bold text-slate-900 mt-0.5">
+                      {selectedState} · {quarter} Projected Outlook
                     </h3>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="text-[12px] text-slate-500">ROC-AUC Confidence:</span>
-                    <span className="text-[13px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className="text-slate-500">ROC-AUC Confidence:</span>
+                    <span className="font-semibold text-emerald-800 tabular-nums">
                       {result.confidence}%
                     </span>
                   </div>
                 </div>
 
                 {/* Score Big Meter */}
-                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="p-6 rounded-lg bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                   <div className="flex flex-col">
-                    <span className="text-[12px] text-slate-500 uppercase font-bold">
+                    <span className="text-xs text-slate-500 uppercase font-semibold">
                       Calculated Empirical Risk Index
                     </span>
                     <div className="flex items-baseline gap-2 mt-1">
-                      <span className="text-[44px] font-extrabold text-slate-900 tracking-tight tabular-nums">
+                      <span className="text-4xl font-bold text-slate-900 tracking-tight tabular-nums">
                         {result.riskScore}
                       </span>
-                      <span className="text-[16px] text-slate-500">/ 100</span>
+                      <span className="text-sm text-slate-500">/ 100</span>
                     </div>
                   </div>
 
                   <div className="flex flex-col sm:items-end">
-                    <span className="text-[12px] text-slate-500 uppercase font-bold mb-1">
+                    <span className="text-xs text-slate-500 uppercase font-semibold mb-1">
                       Risk Classification
                     </span>
-                    <span className={`px-4 py-1.5 rounded-xl text-[14px] font-extrabold ${
+                    <span className={`px-3 py-1 rounded-md text-xs font-bold ${
                       result.level === 'Critical' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
                       result.level === 'High' ? 'bg-orange-100 text-orange-900 border border-orange-300' :
                       result.level === 'Moderate' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
@@ -274,7 +290,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                     }`}>
                       {result.level} Intensity
                     </span>
-                    <span className="text-[11px] text-slate-500 mt-1">
+                    <span className="text-xs text-slate-500 mt-1">
                       Assigned to Spatial Cluster #{result.clusterId}
                     </span>
                   </div>
@@ -324,7 +340,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
 
               </div>
             </>
-          )}
+          ) : null}
         </div>
 
       </div>
