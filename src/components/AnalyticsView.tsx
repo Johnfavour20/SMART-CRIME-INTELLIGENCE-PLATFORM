@@ -1,17 +1,24 @@
 import React, { useState, useMemo } from 'react';
 import { NIGERIAN_STATES_DATA } from '../data/crimeData';
 import { ActiveTab } from '../types';
+import { DatasetSummary, LiveCrimeRecord, LiveDashboardData } from '../mockRealtimeData';
 
 interface AnalyticsViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
   onSelectState?: (stateName: string) => void;
   onOpenCrimeData?: () => void;
+  liveData?: LiveDashboardData;
+  datasetMeta?: DatasetSummary;
+  records?: LiveCrimeRecord[];
 }
 
 export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   onNavigateTab,
   onSelectState,
   onOpenCrimeData,
+  liveData,
+  datasetMeta,
+  records,
 }) => {
   // Filter bar states
   const [selectedState, setSelectedState] = useState<string>('all');
@@ -31,10 +38,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   const [reportNotice, setReportNotice] = useState<string | null>(null);
 
   const handleGenerateReport = () => {
+    const datasetLabel = datasetMeta?.label || 'NBS 2017';
     setReportGenerating(true);
-    setReportNotice('Compiling NBS 2017 Longitudinal Analytics Report...');
+    setReportNotice(`Compiling ${datasetLabel} Longitudinal Analytics Report...`);
     setTimeout(() => {
-      setReportNotice('Analytics_Executive_Brief_2017.pdf generated successfully ✓');
+      setReportNotice(`Analytics_Executive_Brief_${datasetLabel.replace(/\s+/g, '_')}.pdf generated successfully ✓`);
       setTimeout(() => {
         setReportGenerating(false);
         setReportNotice(null);
@@ -78,6 +86,19 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   const maxVolume = useMemo(() => {
     return Math.max(...NIGERIAN_STATES_DATA.map((s) => s.totalCases), 1);
   }, []);
+  const live = liveData ?? {
+    totalCases: 134663,
+    topStateCount: 24190,
+    dominantPercent: 50.9,
+    lastUpdated: 'Just now',
+    pulse: 0,
+    events: [],
+  };
+  const personsPct = Number((100 - live.dominantPercent).toFixed(1));
+  const authorityPct = Number((100 - live.dominantPercent - personsPct).toFixed(1));
+  const propertyCases = Math.round((live.totalCases * live.dominantPercent) / 100);
+  const personsCases = Math.round((live.totalCases * personsPct) / 100);
+  const authorityCases = Math.round((live.totalCases * authorityPct) / 100);
 
   return (
     <div className="flex flex-col w-full space-y-8">
@@ -100,7 +121,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </h1>
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
               <span className="material-symbols-outlined text-purple-700 text-xs">verified</span>
-              Official NBS 2017 Baseline
+              {datasetMeta?.label || 'Official NBS 2017 Baseline'}
             </span>
           </div>
           <p className="text-sm text-slate-600 max-w-2xl">
@@ -112,7 +133,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         <div className="flex items-center gap-3">
           <div className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-600 shadow-xs">
             <span className="material-symbols-outlined text-purple-700 text-sm">calendar_today</span>
-            <span>Historical Data · 2017</span>
+            <span>{records && records.length ? `Historical Data · ${datasetMeta?.year || new Date().getFullYear()}` : 'Historical Data · 2017'}</span>
           </div>
           <button
             onClick={handleGenerateReport}
@@ -187,9 +208,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                 className="w-full appearance-none bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 font-medium focus:outline-none focus:border-purple-700 focus:ring-2 focus:ring-purple-100 cursor-pointer"
               >
                 <option value="all">All Categories (3 Statutory Classes)</option>
-                <option value="property">Offences Against Property (68,579)</option>
-                <option value="persons">Offences Against Persons (53,641)</option>
-                <option value="authority">Offences Against Lawful Authority (12,443)</option>
+                <option value="property">Offences Against Property ({propertyCases.toLocaleString()})</option>
+                <option value="persons">Offences Against Persons ({personsCases.toLocaleString()})</option>
+                <option value="authority">Offences Against Lawful Authority ({authorityCases.toLocaleString()})</option>
               </select>
               <span className="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 pointer-events-none text-xs">
                 expand_more
@@ -268,7 +289,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-purple-700 text-sm">info</span>
-            <span>Analysis is based on the historical NBS 2017 dataset.</span>
+            <span>Analysis is based on the historical {datasetMeta?.label || 'NBS 2017'} dataset.</span>
           </div>
           <span className="text-[11px] text-slate-400 font-mono">Source ID: NBS-CRIM-2017-V1</span>
         </div>
@@ -287,7 +308,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </div>
           </div>
           <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">134,663</span>
+            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">{live.totalCases.toLocaleString()}</span>
           </div>
           <p className="text-xs text-slate-500 flex items-center gap-1">
             <span className="text-purple-700 font-semibold">100%</span>
@@ -305,10 +326,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </div>
           </div>
           <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">53,641</span>
+            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">{personsCases.toLocaleString()}</span>
           </div>
           <p className="text-xs text-slate-500 flex items-center gap-1">
-            <span className="text-indigo-700 font-semibold">39.8%</span>
+            <span className="text-indigo-700 font-semibold">{personsPct.toFixed(1)}%</span>
             <span>Reported cases</span>
           </p>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-indigo-600"></div>
@@ -323,10 +344,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </div>
           </div>
           <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">68,579</span>
+            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">{propertyCases.toLocaleString()}</span>
           </div>
           <p className="text-xs text-slate-500 flex items-center gap-1">
-            <span className="text-purple-700 font-semibold">50.9%</span>
+            <span className="text-purple-700 font-semibold">{live.dominantPercent.toFixed(1)}%</span>
             <span>Reported cases (Dominant category)</span>
           </p>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-purple-700"></div>
@@ -341,10 +362,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </div>
           </div>
           <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">12,443</span>
+            <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-mono">{authorityCases.toLocaleString()}</span>
           </div>
           <p className="text-xs text-slate-500 flex items-center gap-1">
-            <span className="text-violet-600 font-semibold">9.3%</span>
+            <span className="text-violet-600 font-semibold">{authorityPct.toFixed(1)}%</span>
             <span>Reported cases</span>
           </p>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-violet-600"></div>
@@ -436,9 +457,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       <span className="text-[11px] text-slate-400">(Theft, burglary, arson, fraud)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-purple-700 text-sm">68,579</span>
+                      <span className="font-mono font-bold text-purple-700 text-sm">{propertyCases.toLocaleString()}</span>
                       <span className="text-[11px] text-purple-700 font-semibold bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100">
-                        50.9%
+                        {live.dominantPercent.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -447,7 +468,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       className="h-full rounded-md bg-purple-700 transition-all duration-500 flex items-center justify-end pr-3"
                       style={{ width: '85.7%' }}
                     >
-                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">68,579</span>
+                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">{propertyCases.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -463,9 +484,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       <span className="text-[11px] text-slate-400">(Assault, bodily harm, homicide)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-indigo-700 text-sm tabular-nums">53,641</span>
+                      <span className="font-mono font-bold text-indigo-700 text-sm tabular-nums">{personsCases.toLocaleString()}</span>
                       <span className="text-[11px] text-indigo-700 font-semibold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100">
-                        39.8%
+                        {personsPct.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -474,7 +495,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       className="h-full rounded-md bg-indigo-600 transition-all duration-500 flex items-center justify-end pr-3"
                       style={{ width: '67.0%' }}
                     >
-                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">53,641</span>
+                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">{personsCases.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -490,9 +511,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       <span className="text-[11px] text-slate-400">(Perjury, breach of peace, contempt)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-slate-900 text-sm tabular-nums">12,443</span>
+                      <span className="font-mono font-bold text-slate-900 text-sm tabular-nums">{authorityCases.toLocaleString()}</span>
                       <span className="text-[11px] text-slate-700 font-semibold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
-                        9.3%
+                        {authorityPct.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -501,7 +522,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                       className="h-full rounded-md bg-slate-700 transition-all duration-500 flex items-center justify-end pr-3"
                       style={{ width: '15.5%' }}
                     >
-                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">12,443</span>
+                      <span className="text-[11px] font-bold text-white tracking-wider tabular-nums">{authorityCases.toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -523,7 +544,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <span className="flex items-center gap-1.5">
               <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
               <span>
-                Total verified baseline across all 3 classes: <strong className="text-slate-900 font-mono">134,663</strong> cases
+                Total verified baseline across all 3 classes: <strong className="text-slate-900 font-mono">{live.totalCases.toLocaleString()}</strong> cases
               </span>
             </span>
             <span className="text-slate-400">Standard NBS statutory grouping</span>
@@ -556,7 +577,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                     Property offences represent the largest category in the available dataset.
                   </h4>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                    68,579 reported cases are recorded under offences against property, making up more than half (50.9%) of all recorded filings.
+                    {propertyCases.toLocaleString()} reported cases are recorded under offences against property, making up more than half ({live.dominantPercent.toFixed(1)}%) of all recorded filings.
                   </p>
                 </div>
               </div>
@@ -570,10 +591,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-900 leading-snug">
-                    Offences against persons account for 53,641 reported cases.
+                    Offences against persons account for {personsCases.toLocaleString()} reported cases.
                   </h4>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                    This category represents a substantial portion of the historical dataset (39.8%), highlighting critical personal safety vectors.
+                    This category represents a substantial portion of the historical dataset ({personsPct.toFixed(1)}%), highlighting critical personal safety vectors.
                   </p>
                 </div>
               </div>
@@ -587,10 +608,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-900 leading-snug">
-                    Lawful authority offences account for 12,443 reported cases.
+                    Lawful authority offences account for {authorityCases.toLocaleString()} reported cases.
                   </h4>
                   <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                    These records form the third major category in the dataset (9.3%), reflecting institutional and regulatory compliance reports.
+                    These records form the third major category in the dataset ({authorityPct.toFixed(1)}%), reflecting institutional and regulatory compliance reports.
                   </p>
                 </div>
               </div>
@@ -979,7 +1000,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
               </p>
             </div>
             <button
-              onClick={() => onNavigateTab('machine-learning-and-prediction')}
+              onClick={() => onNavigateTab('prediction')}
               className="w-full py-2.5 px-3 bg-slate-50 hover:bg-purple-50 text-purple-700 hover:text-purple-900 border border-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
               type="button"
             >
@@ -1005,7 +1026,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
               </p>
             </div>
             <button
-              onClick={() => onNavigateTab('machine-learning-and-prediction')}
+              onClick={() => onNavigateTab('prediction')}
               className="w-full py-2.5 px-3 bg-slate-50 hover:bg-purple-50 text-purple-700 hover:text-purple-900 border border-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
               type="button"
             >
@@ -1043,7 +1064,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </div>
             <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
               <span className="block text-[10px] text-slate-500 uppercase font-bold">Records</span>
-              <span className="font-bold text-purple-700 font-mono text-xs">134,663</span>
+              <span className="font-bold text-purple-700 font-mono text-xs">{live.totalCases.toLocaleString()}</span>
             </div>
             <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
               <span className="block text-[10px] text-slate-500 uppercase font-bold">States</span>
@@ -1140,7 +1161,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             </p>
           </div>
           <button
-            onClick={() => onNavigateTab('machine-learning-and-prediction')}
+            onClick={() => onNavigateTab('prediction')}
             className="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1 shadow-xs cursor-pointer"
             type="button"
           >

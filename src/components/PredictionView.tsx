@@ -1,10 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { NIGERIAN_STATES_DATA } from '../data/crimeData';
 import { ActiveTab } from '../types';
+import { DatasetSummary, LiveCrimeRecord } from '../mockRealtimeData';
 
 interface PredictionViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
   onSelectState?: (stateName: string) => void;
+  datasetMeta?: DatasetSummary;
+  records?: LiveCrimeRecord[];
 }
 
 type ModelType = 'dt' | 'rf';
@@ -72,12 +75,50 @@ const INITIAL_LOGS: PredictionLogItem[] = [
 export const PredictionView: React.FC<PredictionViewProps> = ({
   onNavigateTab,
   onSelectState,
+  datasetMeta,
+  records,
 }) => {
-  // Form Parameters
+  const activeTotalCases = datasetMeta?.totalCases ?? 134663;
+
+  const recordStates = useMemo(() => {
+    if (records && records.length) {
+      return [...new Set(records.map((record) => record.state).filter(Boolean))];
+    }
+    return NIGERIAN_STATES_DATA.map((state) => state.state);
+  }, [records]);
+
+  const recordCategories = useMemo(() => {
+    if (records && records.length) {
+      return [...new Set(records.map((record) => record.category).filter(Boolean))].map((category) => {
+        if (category === 'property') return 'Offences Against Property';
+        if (category === 'persons') return 'Offences Against Persons';
+        if (category === 'authority') return 'Offences Against Lawful Authority';
+        return category;
+      });
+    }
+    return ['Offences Against Property', 'Offences Against Persons', 'Offences Against Lawful Authority'];
+  }, [records]);
+
   const [selectedState, setSelectedState] = useState<string>('Lagos State');
   const [selectedCategory, setSelectedCategory] = useState<string>('Offences Against Property');
   const [frequency, setFrequency] = useState<string>('34,210');
   const [selectedModel, setSelectedModel] = useState<ModelType>('dt');
+
+  const datasetFrequencyHint = useMemo(() => {
+    if (!records || records.length === 0) return 34210;
+    const filtered = records.filter((record) => {
+      const stateMatch = record.state === selectedState || record.state.replace(/\s+State$/i, '') === selectedState.replace(/\s+State$/i, '');
+      const categoryMatch =
+        (selectedCategory.includes('Property') && (record.category === 'property' || record.category.includes('property'))) ||
+        (selectedCategory.includes('Persons') && (record.category === 'persons' || record.category.includes('person'))) ||
+        (selectedCategory.includes('Authority') && (record.category === 'authority' || record.category.includes('authority')));
+      return stateMatch && categoryMatch;
+    });
+    if (!filtered.length) {
+      return Math.max(...records.map((record) => record.cases), 1000);
+    }
+    return Math.max(...filtered.map((record) => record.cases), 1000);
+  }, [records, selectedCategory, selectedState]);
 
   // Simulation View States: 'idle', 'loading', 'error', 'success'
   const [simState, setSimState] = useState<SimState>('idle');
@@ -94,6 +135,21 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
   } | null>(null);
 
   // Session Logs & Modal
+  useEffect(() => {
+    if (recordStates.length && !recordStates.includes(selectedState)) {
+      setSelectedState(recordStates[0]);
+    }
+    if (recordCategories.length && !recordCategories.includes(selectedCategory)) {
+      setSelectedCategory(recordCategories[0]);
+    }
+  }, [recordStates, recordCategories, selectedState, selectedCategory]);
+
+  useEffect(() => {
+    if (records && records.length) {
+      setFrequency(datasetFrequencyHint.toLocaleString());
+    }
+  }, [datasetFrequencyHint, records]);
+
   const [logs, setLogs] = useState<PredictionLogItem[]>(INITIAL_LOGS);
   const [selectedLogForInspect, setSelectedLogForInspect] = useState<PredictionLogItem | null>(null);
   const [showEthicsModal, setShowEthicsModal] = useState<boolean>(false);
@@ -128,29 +184,53 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
 
     setTimeout(() => {
       const isDT = selectedModel === 'dt';
-      const baseConfidence = isDT ? 89.2 : 93.8;
-      const variation = (numericFreq % 50) * 0.1;
-      const finalConfidence = Math.min(96.4, Number((baseConfidence + variation).toFixed(1)));
+      const categoryWeight = (() => {
+        if (!records || records.length === 0) return 0.42;
+        const relevant = records.filter((record) => {
+          const categoryMatch =
+            (selectedCategory.includes('Property') && (record.category === 'property' || record.category.includes('property'))) ||
+            (selectedCategory.includes('Persons') && (record.category === 'persons' || record.category.includes('person'))) ||
+            (selectedCategory.includes('Authority') && (record.category === 'authority' || record.category.includes('authority')));
+          return categoryMatch;
+        });
+        const matchingTotal = relevant.reduce((sum, record) => sum + record.cases, 0);
+        return activeTotalCases > 0 ? Math.min(0.9, matchingTotal / activeTotalCases) : 0.42;
+      })();
+      const stateWeight = (() => {
+        if (!records || records.length === 0) return 0.36;
+        const matching = records.filter((record) => record.state === selectedState || record.state.replace(/\s+State$/i, '') === selectedState.replace(/\s+State$/i, ''));
+        const matchingTotal = matching.reduce((sum, record) => sum + record.cases, 0);
+        return activeTotalCases > 0 ? Math.min(0.75, matchingTotal / activeTotalCases) : 0.36;
+      })();
+      const baseConfidence = isDT ? 68 + categoryWeight * 24 + stateWeight * 12 : 72 + categoryWeight * 21 + stateWeight * 10;
+      const variation = (numericFreq % 50) * 0.12;
+      const finalConfidence = Math.min(97.4, Number((baseConfidence + variation).toFixed(1)));
 
       let predictedCat = selectedCategory;
       if (selectedCategory === 'Offences Against Local Acts') {
         predictedCat = 'Offences Against Lawful Authority';
       }
 
+      const probabilityBase = {
+        property: selectedCategory.includes('Property') ? finalConfidence : Math.max(12, 100 - finalConfidence - 12.5),
+        persons: selectedCategory.includes('Persons') ? finalConfidence : 18.2,
+        authority: selectedCategory.includes('Authority') ? finalConfidence : 12.4,
+      };
+
       const calculatedResult = {
         predictedCategory: predictedCat,
         confidence: finalConfidence,
         riskBand: finalConfidence > 90 ? 'High Confidence Classification' : 'Validated Classification',
         probabilities: [
-          { label: 'Offences Against Property', prob: selectedCategory.includes('Property') ? finalConfidence : 100 - finalConfidence - 4.5 },
-          { label: 'Offences Against Persons', prob: selectedCategory.includes('Persons') ? finalConfidence : 18.2 },
-          { label: 'Offences Against Lawful Authority', prob: selectedCategory.includes('Authority') ? finalConfidence : 12.4 },
+          { label: 'Offences Against Property', prob: probabilityBase.property },
+          { label: 'Offences Against Persons', prob: probabilityBase.persons },
+          { label: 'Offences Against Lawful Authority', prob: probabilityBase.authority },
         ],
         featureWeights: [
-          { feature: 'Jurisdiction Baseline Tensor', weight: '0.42' },
-          { feature: 'Statutory Volume Coefficient', weight: '0.31' },
-          { feature: 'Regional Transit Proximity', weight: '0.18' },
-          { feature: 'Seasonal Harmattan Drift', weight: '0.09' },
+          { feature: 'Jurisdiction Baseline Tensor', weight: `${(stateWeight * 0.8 + 0.14).toFixed(2)}` },
+          { feature: 'Statutory Volume Coefficient', weight: `${(categoryWeight * 0.9 + 0.12).toFixed(2)}` },
+          { feature: 'Regional Transit Proximity', weight: `${(stateWeight * 0.4 + 0.12).toFixed(2)}` },
+          { feature: 'Dataset Drift Index', weight: `${(Math.min(0.7, (activeTotalCases / 200000) * 0.5 + 0.08)).toFixed(2)}` },
         ],
         executionTimeMs: isDT ? 34 : 58,
       };
@@ -363,7 +443,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 shadow-xs text-slate-700 text-xs font-medium">
             <span className="material-symbols-outlined text-[16px] text-purple-700">calendar_month</span>
-            <span>Baseline · NBS 2017</span>
+            <span>Baseline · {datasetMeta?.label || 'NBS 2017'}</span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 shadow-xs text-slate-700 text-xs font-medium">
             <span className="material-symbols-outlined text-[16px] text-indigo-600">memory</span>
@@ -632,8 +712,8 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
                         Combines multiple randomized decision trees to produce a consolidated prediction, reducing variance and noise.
                       </p>
                       <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px] text-slate-500">
-                        <span>Accuracy: <strong className="text-slate-900">93.4%</strong></span>
-                        <span>F1-Score: <strong className="text-slate-900">0.94</strong></span>
+                        <span>Accuracy: <strong className="text-slate-900">{predictionOutput ? `${predictionOutput.confidence.toFixed(1)}%` : selectedModel === 'rf' ? '93.4%' : '89.2%'}</strong></span>
+                        <span>F1-Score: <strong className="text-slate-900">{predictionOutput ? (predictionOutput.confidence / 100).toFixed(2) : '0.94'}</strong></span>
                       </div>
                     </div>
                   </div>
@@ -649,7 +729,7 @@ export const PredictionView: React.FC<PredictionViewProps> = ({
                     <span className="text-slate-900 font-bold">Engine Status: Ready for Inferencing</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-500 text-[11px]">
-                    <span>NBS 2017 Dataset: <strong>134,663</strong> entries</span>
+                    <span>{datasetMeta?.label || 'NBS 2017'} Dataset: <strong>{datasetMeta?.totalCases ?? 134663}</strong> entries</span>
                     <span>•</span>
                     <span>Memory Overhead: <strong>18.4 MB</strong></span>
                   </div>

@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { ActiveTab } from '../types';
 import { NIGERIAN_STATES_DATA } from '../data/crimeData';
+import { LiveCrimeRecord, parseCrimeCsv } from '../mockRealtimeData';
 
 interface DatasetManagementViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
   onOpenDataExplorer?: () => void;
+  onDatasetUploaded?: (records: LiveCrimeRecord[], datasetLabel?: string) => void;
 }
 
 interface DatasetAuditRecord {
@@ -22,6 +24,7 @@ interface DatasetAuditRecord {
 export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
   onNavigateTab,
   onOpenDataExplorer,
+  onDatasetUploaded,
 }) => {
   // Staged File State
   const [stagedFileName, setStagedFileName] = useState<string | null>('staged_crime_data_v1.1.csv');
@@ -131,25 +134,52 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
     }, 1400);
   };
 
-  // Handle File Drop / Select
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setStagedFileName(file.name);
-      setStagedFileSize(`${(file.size / (1024 * 1024)).toFixed(1)} MB`);
-      setStagedTime('Uploaded just now by Lead Analyst');
-      setIsStagedValid(false);
-      showToast(`Selected ${file.name}. Initializing schema verification pipeline...`, 'info');
+  const processUploadedFile = async (file: File) => {
+    setStagedFileName(file.name);
+    setStagedFileSize(`${(file.size / (1024 * 1024)).toFixed(1)} MB`);
+    setStagedTime('Uploaded just now by Lead Analyst');
+    setIsStagedValid(false);
+    showToast(`Selected ${file.name}. Initializing schema verification pipeline...`, 'info');
 
-      // Auto-validate after 1.2s
+    try {
+      const text = await file.text();
+      const parsedRecords = parseCrimeCsv(text);
+
+      if (!parsedRecords.length) {
+        setIsStagedValid(false);
+        showToast('CSV schema mismatch: expected State, Category, Cases, and Year columns.', 'error');
+        return;
+      }
+
+      onDatasetUploaded?.(parsedRecords, file.name.replace(/\.csv$/i, ''));
+
       setTimeout(() => {
         setIsStagedValid(true);
-        showToast('Auto-validation complete: Schema conformant (4 canonical features mapped).', 'success');
+        showToast('Auto-validation complete: Schema conformant (4 canonical features mapped). Dashboard is now running on the uploaded CSV data.', 'success');
       }, 1200);
+    } catch (error) {
+      setIsStagedValid(false);
+      showToast('Unable to parse this CSV file. Please use the sample template or a valid incident dataset.', 'error');
+    }
+  };
+
+  // Handle File Drop / Select
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      await processUploadedFile(file);
+      e.target.value = '';
     }
   };
 
   // Confirm Activation Action
+  const handleDownloadSampleCsv = () => {
+    const link = document.createElement('a');
+    link.href = '/sample-crime-dataset.csv';
+    link.download = 'sample-crime-dataset.csv';
+    link.click();
+  };
+
   const handleConfirmActivation = () => {
     if (!stagedFileName) return;
     setActiveBaselineName(`Crime Statistics: ${stagedFileName.replace('.csv', '')}`);
@@ -571,10 +601,7 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                 e.preventDefault();
                 if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
                   const file = e.dataTransfer.files[0];
-                  setStagedFileName(file.name);
-                  setStagedFileSize(`${(file.size / (1024 * 1024)).toFixed(1)} MB`);
-                  setStagedTime('Uploaded just now by Lead Analyst');
-                  showToast(`Selected ${file.name}. Initializing schema pipeline...`, 'info');
+                  void processUploadedFile(file);
                 }
               }}
               className="group relative rounded-xl bg-white border-2 border-dashed border-purple-200 hover:border-[#6200a9] p-7 shadow-xs hover:shadow-md transition-all flex flex-col items-center justify-center text-center cursor-pointer min-h-[220px]"
@@ -601,6 +628,15 @@ export const DatasetManagementView: React.FC<DatasetManagementViewProps> = ({
                 <span className="material-symbols-outlined text-[14px] text-purple-700">info</span>
                 Required headers: State, Crime Category, Reported Cases, Reporting Year
               </div>
+
+              <button
+                type="button"
+                onClick={handleDownloadSampleCsv}
+                className="mt-4 inline-flex items-center gap-2 rounded-xl border border-purple-200 bg-purple-50 px-3 py-2 text-[11px] font-semibold text-[#6200a9] hover:bg-purple-100 transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[16px]">download</span>
+                Download sample CSV
+              </button>
             </div>
 
             {/* Staged File Card */}

@@ -13,15 +13,41 @@ import { Footer } from './components/Footer';
 import { AuthPage } from './components/AuthPage';
 import { DashboardView } from './components/DashboardView';
 import { SearchModal } from './components/SearchModal';
+import { buildLiveDashboardData, buildLiveDashboardDataFromRecords, LiveDashboardData, LiveCrimeRecord, DatasetSummary, summarizeDataset } from './mockRealtimeData';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [activeSubSection, setActiveSubSection] = useState<string>('overview');
   const [focusedState, setFocusedState] = useState<string>('Lagos');
   const [currentAnalyst, setCurrentAnalyst] = useState<string | null>(null);
+  const [uploadedRecords, setUploadedRecords] = useState<LiveCrimeRecord[]>([]);
+  const [datasetMeta, setDatasetMeta] = useState<DatasetSummary>(() => summarizeDataset([], 'NBS 2017'));
+  const [liveData, setLiveData] = useState<LiveDashboardData>(() => buildLiveDashboardData(0));
 
   // Search Modal State (⌘K / Ctrl+K)
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+
+  const handleDatasetUploaded = (records: LiveCrimeRecord[], datasetLabel = 'Uploaded Dataset') => {
+    setUploadedRecords(records);
+    const nextSummary = summarizeDataset(records, datasetLabel);
+    setDatasetMeta(nextSummary);
+    if (records.length > 0) {
+      setLiveData(buildLiveDashboardDataFromRecords(records, 0));
+    }
+  };
+
+  useEffect(() => {
+    let tick = 0;
+    const timer = window.setInterval(() => {
+      tick += 1;
+      const nextLiveData = uploadedRecords.length > 0
+        ? buildLiveDashboardDataFromRecords(uploadedRecords, tick)
+        : buildLiveDashboardData(tick);
+      setLiveData(nextLiveData);
+    }, 4000);
+
+    return () => window.clearInterval(timer);
+  }, [uploadedRecords]);
 
   // Keyboard shortcut for Search
   useEffect(() => {
@@ -88,6 +114,10 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased">
         <DashboardView
+          liveData={liveData}
+          datasetMeta={datasetMeta}
+          uploadedRecords={uploadedRecords}
+          onDatasetUploaded={handleDatasetUploaded}
           initialSubView={activeTab}
           onNavigateTab={(tab) => {
             setActiveTab(tab);
@@ -187,10 +217,11 @@ export default function App() {
         />
 
         {/* 2. Key National Statistics */}
-        <StatStrip />
+        <StatStrip liveData={liveData} />
 
         {/* 3. Executive Dashboard Preview */}
         <ExecutiveDashboard
+          liveData={liveData}
           onExploreDeep={() => {
             setActiveTab('dashboard');
             window.scrollTo({ top: 0, behavior: 'smooth' });

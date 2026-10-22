@@ -1,4 +1,5 @@
 import React from 'react';
+import operationalImage from './public/pexels-cottonbro-8369518.jpg';
 
 interface CTASectionProps {
   onLaunch: () => void;
@@ -19,6 +20,14 @@ export const CTASection: React.FC<CTASectionProps> = ({ onLaunch, onReadDocs }) 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
             Explore state-level incident breakdowns, analyze verified spatial clusters, and evaluate explainable predictive risk projections across Nigerian states.
           </p>
+        </div>
+
+        <div className="w-full max-w-3xl overflow-hidden rounded-xl border border-slate-700 bg-slate-950 shadow-2xl shadow-purple-950/20">
+          <img
+            src={operationalImage}
+            alt="Operational Intelligence dashboard preview"
+            className="h-48 w-full object-cover sm:h-56 md:h-72"
+          />
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">

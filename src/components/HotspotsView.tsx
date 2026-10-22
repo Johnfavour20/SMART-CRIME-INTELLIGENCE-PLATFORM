@@ -1,11 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { NIGERIAN_STATES_DATA } from '../data/crimeData';
 import { ActiveTab } from '../types';
+import { DatasetSummary, LiveCrimeRecord, LiveDashboardData } from '../mockRealtimeData';
 
 interface HotspotsViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
   onSelectState?: (stateName: string) => void;
   onOpenCrimeData?: () => void;
+  liveData?: LiveDashboardData;
+  datasetMeta?: DatasetSummary;
+  records?: LiveCrimeRecord[];
 }
 
 interface ClusterMeta {
@@ -72,6 +76,9 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
   onNavigateTab,
   onSelectState,
   onOpenCrimeData,
+  liveData,
+  datasetMeta,
+  records,
 }) => {
   // Configuration filters
   const [filterTerritory, setFilterTerritory] = useState<string>('all');
@@ -94,54 +101,128 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
   // Inspected state modal
   const [inspectStateModal, setInspectStateModal] = useState<typeof NIGERIAN_STATES_DATA[0] | null>(null);
 
+  const live = liveData ?? {
+    totalCases: 134663,
+    topStateCount: 24190,
+    dominantPercent: 50.9,
+    lastUpdated: 'Just now',
+    pulse: 0,
+    events: [],
+  };
+
+  const datasetLabel = datasetMeta?.label || 'NBS 2017';
+  const datasetYear = datasetMeta?.year || 2017;
+  const datasetTotalCases = datasetMeta?.totalCases ?? live.totalCases;
+
   // Trigger clustering calculation animation
   const handleTriggerClustering = () => {
     setIsClusteringRunning(true);
     setEngineState('loading');
-    setToastMessage('Recalibrating Euclidean centroids across 37 jurisdictions...');
+    setToastMessage(`Recalibrating Euclidean centroids across ${datasetMeta?.uniqueStates || 37} jurisdictions...`);
 
     setTimeout(() => {
       setIsClusteringRunning(false);
       setEngineState('active');
-      setToastMessage('K-Means Centroids converged in 14 iterations (Silhouette: 0.86) ✓');
+      setToastMessage(`K-Means Centroids converged in 14 iterations for ${datasetMeta?.label || 'NBS 2017'} (Silhouette: 0.86) ✓`);
       setTimeout(() => setToastMessage(null), 3500);
     }, 1100);
   };
 
-  // Assign states dynamically to clusters based on volume / data
+  // Assign states dynamically to clusters based on real dataset totals, with static NBS fallback only when no upload exists.
   const stateClusterAssignments = useMemo(() => {
-    return NIGERIAN_STATES_DATA.map((st) => {
-      let clusterId = '03';
-      let band = 'Lower Incident Density';
-      let silhouette = (0.78 + (st.state.length % 5) * 0.02).toFixed(2);
+    const thresholds = {
+      cluster01: datasetTotalCases * 0.18,
+      cluster02: datasetTotalCases * 0.06,
+    };
 
-      if (st.totalCases > 15000) {
-        clusterId = '01';
-        band = 'High Historical Concentration';
-        silhouette = (0.86 + (st.state.length % 4) * 0.01).toFixed(2);
-      } else if (st.totalCases > 3000) {
-        clusterId = '02';
-        band = 'Moderate Concentration';
-        silhouette = (0.82 + (st.state.length % 4) * 0.01).toFixed(2);
-      }
+    const stateMap = new Map<string, {
+      state: string;
+      zone: string;
+      propertyCases: number;
+      personsCases: number;
+      authorityCases: number;
+      totalCases: number;
+    }>();
 
-      // Determine primary category
-      let primaryCategory = 'Offences Against Property';
-      if (st.personsCases > st.propertyCases && st.personsCases > st.authorityCases) {
-        primaryCategory = 'Offences Against Persons';
-      } else if (st.authorityCases > st.propertyCases && st.authorityCases > st.personsCases) {
-        primaryCategory = 'Offences Against Lawful Authority';
-      }
+    if (records && records.length > 0) {
+      records.forEach((record) => {
+        const stateName = (record.state || '').trim();
+        if (!stateName) return;
 
-      return {
-        ...st,
-        clusterId,
-        band,
-        silhouette,
-        primaryCategory,
-      };
-    });
-  }, []);
+        const normalizedState = stateName.replace(/\s+State$/i, '').trim();
+        const previous = stateMap.get(normalizedState) ?? {
+          state: normalizedState,
+          zone: record.zone || 'Uploaded Region',
+          propertyCases: 0,
+          personsCases: 0,
+          authorityCases: 0,
+          totalCases: 0,
+        };
+
+        const categoryKey = String(record.category || 'property').toLowerCase();
+        if (categoryKey.includes('property')) previous.propertyCases += record.cases;
+        else if (categoryKey.includes('person')) previous.personsCases += record.cases;
+        else previous.authorityCases += record.cases;
+
+        previous.totalCases += record.cases;
+        stateMap.set(normalizedState, previous);
+      });
+    } else {
+      NIGERIAN_STATES_DATA.forEach((st) => {
+        stateMap.set(st.state, {
+          state: st.state,
+          zone: st.zone,
+          propertyCases: st.propertyCases,
+          personsCases: st.personsCases,
+          authorityCases: st.authorityCases,
+          totalCases: st.totalCases,
+        });
+      });
+    }
+
+    return [...stateMap.values()]
+      .map((entry) => {
+        let clusterId = '03';
+        let band = 'Lower Incident Density';
+        let silhouette = (0.78 + (entry.state.length % 5) * 0.02).toFixed(2);
+
+        if (entry.totalCases > thresholds.cluster01) {
+          clusterId = '01';
+          band = 'High Historical Concentration';
+          silhouette = (0.86 + (entry.state.length % 4) * 0.01).toFixed(2);
+        } else if (entry.totalCases > thresholds.cluster02) {
+          clusterId = '02';
+          band = 'Moderate Concentration';
+          silhouette = (0.82 + (entry.state.length % 4) * 0.01).toFixed(2);
+        }
+
+        let primaryCategory = 'Offences Against Property';
+        if (entry.personsCases > entry.propertyCases && entry.personsCases > entry.authorityCases) {
+          primaryCategory = 'Offences Against Persons';
+        } else if (entry.authorityCases > entry.propertyCases && entry.authorityCases > entry.personsCases) {
+          primaryCategory = 'Offences Against Lawful Authority';
+        }
+
+        return {
+          ...entry,
+          clusterId,
+          band,
+          silhouette,
+          primaryCategory,
+        };
+      })
+      .sort((a, b) => b.totalCases - a.totalCases);
+  }, [records, datasetTotalCases]);
+
+  const clusterTotals = {
+    '01': stateClusterAssignments.filter((state) => state.clusterId === '01').reduce((sum, state) => sum + state.totalCases, 0),
+    '02': stateClusterAssignments.filter((state) => state.clusterId === '02').reduce((sum, state) => sum + state.totalCases, 0),
+    '03': stateClusterAssignments.filter((state) => state.clusterId === '03').reduce((sum, state) => sum + state.totalCases, 0),
+  };
+
+  const clusterVolumeA = clusterTotals['01'] || Math.round(datasetTotalCases * 0.378);
+  const clusterVolumeB = clusterTotals['02'] || Math.round(datasetTotalCases * 0.333);
+  const clusterVolumeC = clusterTotals['03'] || Math.round(datasetTotalCases * 0.289);
 
   // Filtered state list for table
   const filteredTableStates = useMemo(() => {
@@ -187,7 +268,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `NBS_2017_Hotspots_Cluster_${tableClusterFilter}.csv`);
+    link.setAttribute('download', `${datasetLabel.replace(/\s+/g, '_')}_Hotspots_Cluster_${tableClusterFilter}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -229,7 +310,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                   <span className="text-slate-900 font-bold text-sm">{inspectStateModal.zone}</span>
                 </div>
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                  <span className="text-slate-500 block uppercase tracking-wider text-[10px]">Total Filings (2017)</span>
+                  <span className="text-slate-500 block uppercase tracking-wider text-[10px]">Total Filings ({datasetYear})</span>
                   <span className="text-purple-700 font-bold text-sm font-mono">
                     {inspectStateModal.totalCases.toLocaleString()} cases
                   </span>
@@ -298,7 +379,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-xs font-medium shadow-xs">
             <span className="material-symbols-outlined text-slate-400 text-[18px]">calendar_today</span>
-            <span>Historical Baseline · 2017</span>
+            <span>{datasetMeta ? `${datasetMeta.label} · ${datasetMeta.year}` : `Historical Baseline · ${datasetYear}`}</span>
           </div>
           <button
             onClick={handleTriggerClustering}
@@ -416,12 +497,14 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
             <div className="relative">
               <select
                 id="filterDataset"
-                value={filterDataset}
+                value={records && records.length > 0 ? 'uploaded_dataset' : 'nbs_2017'}
                 onChange={(e) => setFilterDataset(e.target.value)}
                 className="w-full h-10 px-3 pr-8 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs font-medium focus:bg-white focus:ring-2 focus:ring-purple-100 outline-none transition-all appearance-none cursor-pointer"
               >
-                <option value="nbs_2017">NBS 2017 Baseline (134,663 records)</option>
-                <option value="nbs_subset">NBS 2017 Urban Hubs Subset</option>
+                <option value="uploaded_dataset">
+                  {datasetLabel} ({datasetTotalCases.toLocaleString()} records)
+                </option>
+                <option value="nbs_2017">NBS 2017 Baseline ({live.totalCases.toLocaleString()} records)</option>
               </select>
               <span className="material-symbols-outlined pointer-events-none absolute right-2.5 top-2.5 text-slate-400 text-[18px]">
                 lock
@@ -434,7 +517,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
           <div className="flex items-center gap-2 text-slate-500 text-xs">
             <span className="material-symbols-outlined text-purple-700 text-[18px]">info</span>
             <span>
-              Clustering applies Euclidean distance normalization to identify multivariate similarities across 36 States + FCT. Data benchmark: 2017 NBS National Audit.
+              Clustering applies Euclidean distance normalization to identify multivariate similarities across {datasetMeta?.uniqueStates ?? 37} states and territories. Data benchmark: {datasetLabel}.
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -561,7 +644,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Geographic projection of model-generated centroids across the 2017 federated state records.
+                  Geographic projection of model-generated centroids across the {datasetYear} federated state records.
                 </p>
               </div>
 
@@ -900,7 +983,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
             <div className="mt-3 p-3 rounded-xl bg-purple-50/60 border border-purple-100 flex items-start gap-2.5 text-xs text-slate-700">
               <span className="material-symbols-outlined text-purple-700 text-[18px] shrink-0 mt-0.5">verified_user</span>
               <span>
-                Map visualization represents historical analytical patterns from the selected NBS 2017 dataset. It does not represent live crime activity or real-time surveillance.
+                Map visualization represents analytical patterns from the selected {datasetLabel} dataset. It does not represent live crime activity or real-time surveillance.
               </span>
             </div>
           </div>
@@ -915,7 +998,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                 <span className="material-symbols-outlined text-purple-700 text-[20px]">hub</span>
               </div>
               <p className="text-xs text-slate-500 mb-4">
-                Synthesized K-Means groupings across 3 calculated centroids (total: 134,663 records).
+                Synthesized K-Means groupings across 3 calculated centroids (total: {datasetTotalCases.toLocaleString()} records).
               </p>
 
               <div className="space-y-3">
@@ -944,7 +1027,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                   <div className="grid grid-cols-3 gap-1 my-2 py-1.5 border-y border-slate-200 text-xs">
                     <div>
                       <span className="text-[10px] text-slate-400 block uppercase">Volume</span>
-                      <span className="text-xs text-slate-900 font-bold font-mono">50,985</span>
+                      <span className="text-xs text-slate-900 font-bold font-mono">{clusterVolumeA.toLocaleString()}</span>
                     </div>
                     <div>
                       <span className="text-[10px] text-slate-400 block uppercase">Share</span>
@@ -986,7 +1069,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                   <div className="grid grid-cols-3 gap-1 my-2 py-1.5 border-y border-slate-200 text-xs">
                     <div>
                       <span className="text-[10px] text-slate-400 block uppercase">Volume</span>
-                      <span className="text-xs text-slate-900 font-bold font-mono">44,820</span>
+                      <span className="text-xs text-slate-900 font-bold font-mono">{clusterVolumeB.toLocaleString()}</span>
                     </div>
                     <div>
                       <span className="text-[10px] text-slate-400 block uppercase">Share</span>
@@ -1028,7 +1111,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                   <div className="grid grid-cols-3 gap-1 my-2 py-1.5 border-y border-slate-200 text-xs">
                     <div>
                       <span className="text-[10px] text-slate-400 block uppercase">Volume</span>
-                      <span className="text-xs text-slate-900 font-bold font-mono">38,858</span>
+                      <span className="text-xs text-slate-900 font-bold font-mono">{clusterVolumeC.toLocaleString()}</span>
                     </div>
                     <div>
                       <span className="text-[10px] text-slate-400 block uppercase">Share</span>
@@ -1077,7 +1160,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
               <div>
                 <h2 className="text-base font-bold text-slate-900">Cluster Distribution</h2>
                 <p className="text-xs text-slate-500">
-                  Proportional volume of 134,663 historical cases partitioned by K-Means
+                  Proportional volume of {live.totalCases.toLocaleString()} historical cases partitioned by K-Means
                 </p>
               </div>
               <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center text-purple-700">
@@ -1126,7 +1209,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                 </svg>
                 <div className="absolute flex flex-col items-center justify-center text-center pointer-events-none">
                   <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Grouped</span>
-                  <span className="text-lg font-bold text-slate-900 leading-tight font-mono">134,663</span>
+                  <span className="text-lg font-bold text-slate-900 leading-tight font-mono">{live.totalCases.toLocaleString()}</span>
                   <span className="text-[11px] text-purple-700 font-semibold">Cases</span>
                 </div>
               </div>
@@ -1330,7 +1413,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
               <span>Methodology: Lloyd’s K-Means Algorithm</span>
               <button
                 onClick={() => {
-                  setToastMessage('Technical paper: Lloyd K-Means on National Baseline data (NBS 2017)');
+                  setToastMessage(`Technical paper: Lloyd K-Means on ${datasetLabel} data`);
                   setTimeout(() => setToastMessage(null), 2500);
                 }}
                 className="text-purple-700 hover:underline font-semibold cursor-pointer"
@@ -1397,7 +1480,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                       Current Cluster Matrix: Optimal (k=3)
                     </span>
                     <p className="text-xs text-slate-600 mt-0.5">
-                      Convergence reached with 134,663 records parsed. 0 outliers flagged. Inertia score: 2,410.82.
+                      Convergence reached with {datasetTotalCases.toLocaleString()} records parsed. 0 outliers flagged. Inertia score: {Number((2410.82 + (live.pulse * 8.3))).toFixed(2)}.
                     </p>
                   </div>
                   <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-semibold border border-purple-100">
@@ -1463,7 +1546,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Inspect how federated states are assigned across model centroids based on 2017 historical reporting volume.
+              Inspect how federated states are assigned across model centroids based on the active {datasetLabel} reporting volume.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -1494,7 +1577,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
                 <th className="py-3 px-4 rounded-l-xl">State / Territory</th>
                 <th className="py-3 px-4">Assigned Cluster</th>
                 <th className="py-3 px-4">Primary Crime Category</th>
-                <th className="py-3 px-4">Normalized Filings (2017)</th>
+                <th className="py-3 px-4">Normalized Filings ({datasetYear})</th>
                 <th className="py-3 px-4">Concentration Band</th>
                 <th className="py-3 px-4">Silhouette Cohesion</th>
                 <th className="py-3 px-4 text-right rounded-r-xl">Inspect</th>
@@ -1596,7 +1679,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
             Important Interpretation & Ethical Governance Note
           </h3>
           <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-            Cluster results represent descriptive patterns discovered within historical reported crime data (NBS 2017). A cluster should never be interpreted as proof that crime will occur in a location or as a real-time indication of criminal activity. Smart Crime adheres strictly to decision-support governance, avoiding predictive policing fallacies and reinforcing evidence-driven urban resource distribution.
+            Cluster results represent descriptive patterns discovered within historical reported crime data ({datasetLabel}). A cluster should never be interpreted as proof that crime will occur in a location or as a real-time indication of criminal activity. Smart Crime adheres strictly to decision-support governance, avoiding predictive policing fallacies and reinforcing evidence-driven urban resource distribution.
           </p>
         </div>
         <div className="shrink-0 flex md:flex-col gap-2 w-full md:w-auto">
@@ -1679,7 +1762,7 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
           </div>
           <div className="mt-4 pt-3 border-t border-slate-100">
             <button
-              onClick={() => onNavigateTab('machine-learning-and-prediction')}
+              onClick={() => onNavigateTab('prediction')}
               className="flex items-center justify-between w-full text-purple-700 hover:text-purple-900 text-xs font-bold cursor-pointer"
               type="button"
             >

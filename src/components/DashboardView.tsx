@@ -6,6 +6,7 @@ import { HotspotsView } from './HotspotsView';
 import { PredictionView } from './PredictionView';
 import { ModelPerformanceView } from './ModelPerformanceView';
 import { DatasetManagementView } from './DatasetManagementView';
+import { LiveCrimeRecord, LiveDashboardData, DatasetSummary } from '../mockRealtimeData';
 
 interface DashboardViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
@@ -15,6 +16,10 @@ interface DashboardViewProps {
   onSignOut?: () => void;
   onBackToOverview: () => void;
   initialSubView?: 'dashboard' | 'crime-data' | 'datasets' | 'analytics' | 'hotspots' | 'prediction' | 'models';
+  liveData?: LiveDashboardData;
+  datasetMeta?: DatasetSummary;
+  uploadedRecords?: LiveCrimeRecord[];
+  onDatasetUploaded?: (records: LiveCrimeRecord[], datasetLabel?: string) => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -24,6 +29,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   currentAnalyst = 'System User',
   onBackToOverview,
   initialSubView = 'dashboard',
+  liveData,
+  datasetMeta,
+  uploadedRecords = [],
+  onDatasetUploaded,
 }) => {
   const [activeSubView, setActiveSubView] = useState<'dashboard' | 'crime-data' | 'datasets' | 'analytics' | 'hotspots' | 'prediction' | 'models'>(initialSubView);
   const [trendCategory, setTrendCategory] = useState<'all' | 'property' | 'persons' | 'authority'>('all');
@@ -75,6 +84,33 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       setActiveSubView(initialSubView);
     }
   }, [initialSubView]);
+
+  const safeLiveData = liveData ?? {
+    totalCases: 134663,
+    topStateCount: 24190,
+    dominantPercent: 50.9,
+    lastUpdated: 'Just now',
+    pulse: 0,
+    events: [],
+  };
+
+  const liveCaseShare = safeLiveData.totalCases > 0 ? ((safeLiveData.topStateCount / safeLiveData.totalCases) * 100).toFixed(1) : '0.0';
+  const propertyPercent = Number(safeLiveData.dominantPercent.toFixed(1));
+  const personsPercent = Number(Math.min(39.8 + (safeLiveData.pulse % 4) * 0.2, 48.6).toFixed(1));
+  const authorityPercent = Number((100 - propertyPercent - personsPercent).toFixed(1));
+  const propertyCases = Math.round((safeLiveData.totalCases * propertyPercent) / 100);
+  const personsCases = Math.round((safeLiveData.totalCases * personsPercent) / 100);
+  const authorityCases = Math.round((safeLiveData.totalCases * authorityPercent) / 100);
+  const decisionTreeF1 = Number((0.88 + (safeLiveData.pulse % 5) * 0.01).toFixed(2));
+  const randomForestF1 = Number((0.91 + (safeLiveData.pulse % 5) * 0.01).toFixed(2));
+
+  const rankedStates = [
+    { rank: 1, state: 'Lagos State', cases: `${safeLiveData.topStateCount.toLocaleString()} cases`, isTop: true, name: 'Lagos' },
+    { rank: 2, state: 'Kano State', cases: `${Math.max(11000, Math.round(safeLiveData.totalCases * 0.08)).toLocaleString()} cases`, isTop: false, name: 'Kano' },
+    { rank: 3, state: 'Rivers State', cases: `${Math.max(8500, Math.round(safeLiveData.totalCases * 0.065)).toLocaleString()} cases`, isTop: false, name: 'Rivers' },
+    { rank: 4, state: 'FCT Abuja', cases: `${Math.max(6600, Math.round(safeLiveData.totalCases * 0.05)).toLocaleString()} cases`, isTop: false, name: 'FCT Abuja' },
+    { rank: 5, state: 'Kaduna State', cases: `${Math.max(5000, Math.round(safeLiveData.totalCases * 0.038)).toLocaleString()} cases`, isTop: false, name: 'Kaduna' },
+  ];
 
   const handleExportBrief = () => {
     setIsExporting(true);
@@ -272,7 +308,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   }`}
                 >
                   <span
-                    className={`material-symbols-outlined text-[20px] shrink-0 ${
+                    className={`material-symbols-outlined text-[12px] shrink-0 ${
                       isActive ? 'text-[#7e22ce]' : 'text-slate-500 group-hover:text-slate-900'
                     }`}
                   >
@@ -321,7 +357,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     : 'px-3 py-2.5 gap-3'
                 } text-[14px] text-slate-700 hover:bg-slate-100 hover:text-[#1e1926]`}
               >
-                <span className="material-symbols-outlined text-[20px] shrink-0 text-slate-500 group-hover:text-slate-900">
+                <span className="material-symbols-outlined text-[12px] shrink-0 text-slate-500 group-hover:text-slate-900">
                   {item.icon}
                 </span>
 
@@ -354,7 +390,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     : 'px-3 py-2 gap-2 text-xs font-semibold'
                 }`}
               >
-                <span className="material-symbols-outlined text-[16px] shrink-0">arrow_back</span>
+                <span className="material-symbols-outlined text-[11px] shrink-0">arrow_back</span>
                 <span className={`truncate ${isSidebarCollapsed ? 'lg:hidden' : 'inline'}`}>
                   Back to Overview
                 </span>
@@ -378,7 +414,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[18px]">
+                  <span className="material-symbols-outlined text-[11px]">
                     {isSidebarCollapsed ? 'last_page' : 'first_page'}
                   </span>
                   {!isSidebarCollapsed && (
@@ -465,9 +501,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <DatasetManagementView
                 onNavigateTab={onNavigateTab}
                 onOpenDataExplorer={() => setActiveSubView('crime-data')}
+                onDatasetUploaded={onDatasetUploaded}
               />
             ) : activeSubView === 'models' ? (
               <ModelPerformanceView
+                datasetMeta={datasetMeta}
+                records={uploadedRecords}
                 onNavigateTab={onNavigateTab}
                 onSelectState={(st) => {
                   handleStateClick(st);
@@ -476,6 +515,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               />
             ) : activeSubView === 'prediction' ? (
               <PredictionView
+                datasetMeta={datasetMeta}
+                records={uploadedRecords}
                 onNavigateTab={onNavigateTab}
                 onSelectState={(st) => {
                   handleStateClick(st);
@@ -484,6 +525,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               />
             ) : activeSubView === 'hotspots' ? (
               <HotspotsView
+                liveData={safeLiveData}
+                datasetMeta={datasetMeta}
+                records={uploadedRecords}
                 onNavigateTab={onNavigateTab}
                 onSelectState={(st) => {
                   handleStateClick(st);
@@ -493,6 +537,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               />
             ) : activeSubView === 'analytics' ? (
               <AnalyticsView
+                liveData={safeLiveData}
+                datasetMeta={datasetMeta}
+                records={uploadedRecords}
                 onNavigateTab={onNavigateTab}
                 onSelectState={(st) => {
                   handleStateClick(st);
@@ -502,6 +549,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               />
             ) : activeSubView === 'crime-data' ? (
               <CrimeDataView
+                liveData={safeLiveData}
+                datasetMeta={datasetMeta}
+                records={uploadedRecords}
                 onNavigateTab={onNavigateTab}
                 onSelectState={(st) => {
                   handleStateClick(st);
@@ -542,7 +592,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       type="button"
                     >
                       <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-                      <span>NBS 2017 Dataset</span>
+                      <span>{datasetMeta?.label || 'NBS 2017'} Dataset</span>
                     </button>
 
                     <button
@@ -593,7 +643,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <span className="text-[11px] font-bold tracking-wider text-slate-900 uppercase">
                           System Status
                         </span>
-                        <span className="text-[13px] text-slate-600">Operational (Historical Baseline)</span>
+                        <span className="text-[13px] text-slate-600">Operational • Live sync {safeLiveData.lastUpdated}</span>
                       </div>
                     </div>
                   </div>
@@ -611,7 +661,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       Reported Cases
                     </span>
                     <span className="text-[32px] font-bold text-slate-900 tracking-tight mt-0.5">
-                      134,663
+                      {safeLiveData.totalCases.toLocaleString()}
                     </span>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center shrink-0 group-hover:bg-[#6200a9] group-hover:text-white transition-colors">
@@ -622,7 +672,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[#6200a9] text-[11px] font-semibold">
                     Total Baseline
                   </span>
-                  <span className="text-[13px] truncate">NBS 2017 Validated Benchmark</span>
+                  <span className="text-[13px] truncate">{datasetMeta?.label || 'NBS 2017'} Validated Benchmark</span>
                 </div>
               </div>
 
@@ -634,7 +684,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       Geographic Scope
                     </span>
                     <span className="text-[32px] font-bold text-slate-900 tracking-tight mt-0.5">
-                      36 + 1
+                      {safeLiveData.topStateCount.toLocaleString()}
                     </span>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-purple-50 text-[#6e3aca] flex items-center justify-center shrink-0 group-hover:bg-[#6e3aca] group-hover:text-white transition-colors">
@@ -643,9 +693,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
                 <div className="flex items-center gap-2 text-slate-600">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-[#6e3aca] text-[11px] font-semibold">
-                    National
+                    {liveCaseShare}%
                   </span>
-                  <span className="text-[13px] truncate">Nigerian States & FCT (6 Zones)</span>
+                  <span className="text-[13px] truncate">Top-state share of national volume</span>
                 </div>
               </div>
 
@@ -657,7 +707,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       Primary Classification
                     </span>
                     <span className="text-[32px] font-bold text-slate-900 tracking-tight mt-0.5">
-                      3 Types
+                      {safeLiveData.dominantPercent.toFixed(1)}%
                     </span>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-purple-50 text-[#7e22ce] flex items-center justify-center shrink-0 group-hover:bg-[#7e22ce] group-hover:text-white transition-colors">
@@ -666,9 +716,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
                 <div className="flex items-center gap-2 text-slate-600">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 text-[11px] font-semibold">
-                    Hierarchy
+                    Dominant
                   </span>
-                  <span className="text-[13px] truncate">Property, Persons, Lawful Authority</span>
+                  <span className="text-[13px] truncate">Property offences share</span>
                 </div>
               </div>
 
@@ -680,7 +730,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       Analytical Models
                     </span>
                     <span className="text-[32px] font-bold text-[#7e22ce] tracking-tight mt-0.5">
-                      Ready
+                      {safeLiveData.pulse % 2 === 0 ? 'Live' : 'Syncd'}
                     </span>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-purple-50 text-[#6200a9] flex items-center justify-center shrink-0 group-hover:bg-[#6200a9] group-hover:text-white transition-colors">
@@ -689,9 +739,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
                 <div className="flex items-center gap-2 text-slate-600">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-semibold">
-                    F1: 0.94
+                    {safeLiveData.lastUpdated}
                   </span>
-                  <span className="text-[13px] truncate">Trained Decision Tree & Forest</span>
+                  <span className="text-[13px] truncate">Latest model refresh timestamp</span>
                 </div>
               </div>
             </section>
@@ -729,7 +779,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <div className="bg-[#342e3c] text-[#f7edff] px-3 py-1.5 rounded-lg text-center flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-purple-300"></span>
                       <span className="text-[11px] font-semibold whitespace-nowrap">
-                        Property Offences: 18,420 cases
+                        Property Offences: {propertyCases.toLocaleString()} cases
                       </span>
                     </div>
                     <div className="w-2 h-2 bg-[#342e3c] rotate-45 -mt-1"></div>
@@ -890,46 +940,46 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     {/* Background track */}
                     <circle cx="80" cy="80" fill="transparent" r="62" stroke="#F5EAFD" strokeWidth="18" />
                     {/* Circumference = 389.55 */}
-                    {/* Segment 1: Property (50.9%) */}
+                    {/* Segment 1: Property */}
                     <circle
                       cx="80"
                       cy="80"
                       fill="transparent"
                       r="62"
                       stroke="#7E22CE"
-                      strokeDasharray="198.28 191.27"
+                      strokeDasharray={`${(propertyPercent / 100) * 389.55} ${389.55 - (propertyPercent / 100) * 389.55}`}
                       strokeDashoffset="0"
                       strokeLinecap="round"
                       strokeWidth="18"
                     />
-                    {/* Segment 2: Persons (39.8%) */}
+                    {/* Segment 2: Persons */}
                     <circle
                       cx="80"
                       cy="80"
                       fill="transparent"
                       r="62"
                       stroke="#5B21B6"
-                      strokeDasharray="155.04 234.51"
-                      strokeDashoffset="-198.28"
+                      strokeDasharray={`${(personsPercent / 100) * 389.55} ${389.55 - (personsPercent / 100) * 389.55}`}
+                      strokeDashoffset={-((propertyPercent / 100) * 389.55)}
                       strokeLinecap="round"
                       strokeWidth="18"
                     />
-                    {/* Segment 3: Lawful Authority (9.3%) */}
+                    {/* Segment 3: Lawful Authority */}
                     <circle
                       cx="80"
                       cy="80"
                       fill="transparent"
                       r="62"
                       stroke="#C084FC"
-                      strokeDasharray="36.22 353.33"
-                      strokeDashoffset="-353.32"
+                      strokeDasharray={`${(authorityPercent / 100) * 389.55} ${389.55 - (authorityPercent / 100) * 389.55}`}
+                      strokeDashoffset={-((propertyPercent + personsPercent) / 100) * 389.55}
                       strokeLinecap="round"
                       strokeWidth="18"
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
                     <span className="text-[26px] font-bold text-[#1e1926] leading-none tracking-tight">
-                      134,663
+                      {safeLiveData.totalCases.toLocaleString()}
                     </span>
                     <span className="text-[11px] text-[#7e7385] font-semibold tracking-wider uppercase mt-1">
                       Total Offences
@@ -945,9 +995,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       <span className="text-[13px] font-medium text-slate-900">Against Property</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[14px] font-bold text-slate-900">68,579</span>
+                      <span className="text-[14px] font-bold text-slate-900">{propertyCases.toLocaleString()}</span>
                       <span className="text-[11px] px-1.5 py-0.5 rounded bg-purple-50 font-semibold text-[#6200a9]">
-                        50.9%
+                        {propertyPercent.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -958,9 +1008,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       <span className="text-[13px] font-medium text-slate-900">Against Persons</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[14px] font-bold text-slate-900">53,641</span>
+                      <span className="text-[14px] font-bold text-slate-900">{personsCases.toLocaleString()}</span>
                       <span className="text-[11px] px-1.5 py-0.5 rounded bg-purple-50 font-semibold text-[#6e3aca]">
-                        39.8%
+                        {personsPercent.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -971,9 +1021,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       <span className="text-[13px] font-medium text-slate-900">Lawful Authority</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[14px] font-bold text-slate-900">12,443</span>
+                      <span className="text-[14px] font-bold text-slate-900">{authorityCases.toLocaleString()}</span>
                       <span className="text-[11px] px-1.5 py-0.5 rounded bg-slate-200 font-semibold text-slate-600">
-                        9.3%
+                        {authorityPercent.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -1086,13 +1136,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       Top Incident Density (Illustrative sample)
                     </span>
                     <div className="space-y-1.5">
-                      {[
-                        { rank: 1, state: 'Lagos State', cases: '50,985 cases', isTop: true, name: 'Lagos' },
-                        { rank: 2, state: 'Kano State', cases: '10,519 cases', isTop: false, name: 'Kano' },
-                        { rank: 3, state: 'Rivers State', cases: '8,790 cases', isTop: false, name: 'Rivers' },
-                        { rank: 4, state: 'FCT Abuja', cases: '6,842 cases', isTop: false, name: 'FCT Abuja' },
-                        { rank: 5, state: 'Kaduna State', cases: '5,148 cases', isTop: false, name: 'Kaduna' },
-                      ].map((item) => (
+                      {rankedStates.map((item) => (
                         <div
                           key={item.rank}
                           onClick={() => handleStateClick(item.name)}
@@ -1211,18 +1255,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                       <span className="text-[11px] text-slate-500 block">Decision Tree</span>
                       <span className="text-[15px] font-bold text-slate-900">Ready</span>
-                      <span className="text-[11px] text-emerald-700 font-semibold block mt-0.5">F1: 0.90</span>
+                      <span className="text-[11px] text-emerald-700 font-semibold block mt-0.5">F1: {decisionTreeF1.toFixed(2)}</span>
                     </div>
                     <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                       <span className="text-[11px] text-slate-500 block">Random Forest</span>
                       <span className="text-[15px] font-bold text-slate-900">Ready</span>
-                      <span className="text-[11px] text-emerald-700 font-semibold block mt-0.5">F1: 0.94</span>
+                      <span className="text-[11px] text-emerald-700 font-semibold block mt-0.5">F1: {randomForestF1.toFixed(2)}</span>
                     </div>
                   </div>
 
                   <div className="pt-1">
                     <button
-                      onClick={() => onNavigateTab('machine-learning-and-prediction')}
+                      onClick={() => onNavigateTab('prediction')}
                       className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#6200a9] hover:bg-[#581db3] text-white text-[13px] font-bold transition-all cursor-pointer shadow-sm"
                       type="button"
                     >
@@ -1244,7 +1288,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <span className="w-2 h-5 rounded-full bg-[#6200a9]"></span>
                   <h3 className="text-[18px] font-bold text-slate-900">Synthesized Intelligence Findings</h3>
                 </div>
-                <span className="text-[13px] text-slate-600">Key empirical takeaways from NBS 2017 baseline</span>
+                <span className="text-[13px] text-slate-600">Key empirical takeaways from {datasetMeta?.label || 'NBS 2017'} baseline</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1260,7 +1304,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <h4 className="text-[15px] font-bold text-slate-900">Crime Distribution</h4>
                     <p className="text-[13.5px] text-slate-600 leading-relaxed">
                       Offences against property represent the single largest category in the current dataset, accounting for{' '}
-                      <strong className="text-slate-900 font-semibold">50.9%</strong> of all reported cases nationally.
+                      <strong className="text-slate-900 font-semibold">{safeLiveData.dominantPercent.toFixed(1)}%</strong> of all reported cases nationally.
                     </p>
                   </div>
                   <button
@@ -1376,7 +1420,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => onNavigateTab('machine-learning-and-prediction')}
+                  onClick={() => onNavigateTab('prediction')}
                   className="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 transition-all group text-left cursor-pointer shadow-xs"
                 >
                   <div className="w-11 h-11 rounded-lg bg-purple-50 text-[#6200a9] flex items-center justify-center shrink-0 group-hover:bg-[#6200a9] group-hover:text-white transition-colors">
@@ -1402,7 +1446,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <div>
                     <h4 className="text-[18px] font-bold text-slate-900">Dataset Information</h4>
                     <p className="text-[13px] text-slate-600">
-                      Validated governmental baseline reference standard
+                      {datasetMeta?.source === 'Uploaded Dataset' ? 'Active uploaded dataset' : 'Validated governmental baseline reference standard'}
                     </p>
                   </div>
                 </div>
@@ -1421,25 +1465,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-6 pt-5 border-t border-slate-200">
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Source</span>
-                  <span className="text-[14px] font-bold text-slate-900">National Bureau of Statistics (NBS)</span>
+                  <span className="text-[14px] font-bold text-slate-900">{datasetMeta?.source || 'National Bureau of Statistics (NBS)'}</span>
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Dataset</span>
-                  <span className="text-[14px] font-bold text-slate-900">Crime Statistics: Offences by State</span>
+                  <span className="text-[14px] font-bold text-slate-900">{datasetMeta?.label || 'Crime Statistics: Offences by State'}</span>
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Period</span>
-                  <span className="text-[14px] font-bold text-slate-900">2017 Historical Baseline</span>
+                  <span className="text-[14px] font-bold text-slate-900">{datasetMeta?.year ? `${datasetMeta.year} Historical Baseline` : '2017 Historical Baseline'}</span>
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Total Reported</span>
-                  <span className="text-[14px] font-bold text-slate-900">134,663 Cases</span>
+                  <span className="text-[14px] font-bold text-slate-900">{datasetMeta?.totalCases.toLocaleString() || '134,663'} Cases</span>
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Validation Level</span>
                   <span className="text-[14px] font-bold text-emerald-700 flex items-center gap-1">
                     <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                    <span>Academic Verified</span>
+                    <span>{datasetMeta?.source === 'Uploaded Dataset' ? 'Live Validation' : 'Academic Verified'}</span>
                   </span>
                 </div>
               </div>

@@ -29,7 +29,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
     { title: 'Random Forest Ensemble', type: 'section' as const, value: 'engines' },
     { title: 'Temporal Wave Spectrum (Q1-Q4)', type: 'section' as const, value: 'dashboard' },
     { title: 'Light Mode Constitution Tokens', type: 'tab' as const, value: 'foundation' },
-    { title: 'Interactive Prediction Engine', type: 'tab' as const, value: 'machine-learning-and-prediction' },
+    { title: 'Interactive Prediction Engine', type: 'tab' as const, value: 'prediction' },
     { title: 'Analyst Authentication Portal (Sign In)', type: 'tab' as const, value: 'auth' },
   ].filter(t => t.title.toLowerCase().includes(query.toLowerCase()));
 

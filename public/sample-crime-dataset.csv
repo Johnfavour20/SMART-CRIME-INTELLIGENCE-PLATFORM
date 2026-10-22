@@ -1,0 +1,33 @@
+State,Crime Category,Reported Cases,Reporting Year,Zone
+Lagos,Offences Against Property,32410,2024,South West
+Lagos,Offences Against Persons,24190,2024,South West
+Kano,Offences Against Property,18980,2024,North West
+Kano,Offences Against Persons,14520,2024,North West
+Rivers,Offences Against Property,14280,2024,South South
+Rivers,Offences Against Lawful Authority,4120,2024,South South
+Abuja,Offences Against Property,11840,2024,North Central
+Abuja,Offences Against Persons,6720,2024,North Central
+Kaduna,Offences Against Property,10560,2024,North West
+Kaduna,Offences Against Persons,8430,2024,North West
+Oyo,Offences Against Property,9940,2024,South West
+Oyo,Offences Against Lawful Authority,3810,2024,South West
+Delta,Offences Against Property,9820,2024,South South
+Delta,Offences Against Persons,7740,2024,South South
+Benue,Offences Against Property,7210,2024,North Central
+Benue,Offences Against Persons,6020,2024,North Central
+Anambra,Offences Against Property,8420,2024,South East
+Anambra,Offences Against Lawful Authority,3160,2024,South East
+Plateau,Offences Against Property,6520,2024,North Central
+Plateau,Offences Against Persons,5490,2024,North Central
+Borno,Offences Against Property,6980,2024,North East
+Borno,Offences Against Persons,5110,2024,North East
+Enugu,Offences Against Property,6170,2024,South East
+Enugu,Offences Against Persons,4680,2024,South East
+Ekiti,Offences Against Property,4430,2024,South West
+Ekiti,Offences Against Lawful Authority,1880,2024,South West
+Gombe,Offences Against Property,3920,2024,North East
+Gombe,Offences Against Persons,3510,2024,North East
+Niger,Offences Against Property,6120,2024,North Central
+Niger,Offences Against Persons,4980,2024,North Central
+Bayelsa,Offences Against Property,5270,2024,South South
+Bayelsa,Offences Against Lawful Authority,2140,2024,South South

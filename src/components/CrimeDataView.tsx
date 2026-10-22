@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { NIGERIAN_STATES_DATA } from '../data/crimeData';
 import { ActiveTab } from '../types';
+import { DatasetSummary, LiveCrimeRecord, LiveDashboardData } from '../mockRealtimeData';
 
 export interface CrimeRecord {
   id: string;
@@ -20,15 +21,73 @@ interface CrimeDataViewProps {
   onNavigateTab: (tab: ActiveTab) => void;
   onSelectState?: (stateName: string) => void;
   onOpenDatasetManagement?: () => void;
+  liveData?: LiveDashboardData;
+  datasetMeta?: DatasetSummary;
+  records?: LiveCrimeRecord[];
 }
 
 export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
   onNavigateTab,
   onSelectState,
   onOpenDatasetManagement,
+  liveData,
+  datasetMeta,
+  records,
 }) => {
-  // Build flattened 111 detailed baseline records from 37 states x 3 categories
+  const live = liveData ?? {
+    totalCases: 134663,
+    topStateCount: 24190,
+    dominantPercent: 50.9,
+    lastUpdated: 'Just now',
+    pulse: 0,
+    events: [],
+  };
+  const propertyCases = Math.round((live.totalCases * live.dominantPercent) / 100);
+  const personsPct = Number((100 - live.dominantPercent).toFixed(1));
+  const authorityPct = Number((100 - live.dominantPercent - personsPct).toFixed(1));
+  const personsCases = Math.round((live.totalCases * personsPct) / 100);
+  const authorityCases = Math.round((live.totalCases * authorityPct) / 100);
+
+  const baseStateMeta = useMemo(
+    () => Object.fromEntries(NIGERIAN_STATES_DATA.map((state) => [state.state.toLowerCase(), state])),
+    []
+  );
+
   const allRecords: CrimeRecord[] = useMemo(() => {
+    if (records && records.length > 0) {
+      return records.map((record, index) => {
+        const normalizedCategory = record.category === 'property' || record.category.includes('property')
+          ? 'property'
+          : record.category === 'persons' || record.category.includes('person')
+            ? 'persons'
+            : 'authority';
+
+        const stateName = record.state && record.state.trim() ? record.state.trim() : 'Unknown State';
+        const stateDisplay = stateName.includes('State') || stateName.includes('FCT') ? stateName : `${stateName} State`;
+        const zone = record.zone || baseStateMeta[stateName.toLowerCase()]?.zone || 'Unassigned';
+        const fallbackMeta = baseStateMeta[stateName.toLowerCase()] ?? NIGERIAN_STATES_DATA[0];
+
+        return {
+          id: `${stateDisplay}-${normalizedCategory}-${index}`,
+          state: stateDisplay,
+          zone,
+          category: normalizedCategory,
+          categoryLabel:
+            normalizedCategory === 'property'
+              ? 'Offences Against Property'
+              : normalizedCategory === 'persons'
+                ? 'Offences Against Persons'
+                : 'Against Lawful Authority',
+          cases: Number(record.cases) || 0,
+          year: Number(record.year) || new Date().getFullYear(),
+          status: 'Verified',
+          capital: fallbackMeta.capital || 'N/A',
+          riskScore: Math.max(25, Math.min(99, 50 + (index % 40))),
+          clusterId: (index % 3) + 1,
+        };
+      });
+    }
+
     const list: CrimeRecord[] = [];
     NIGERIAN_STATES_DATA.forEach((st) => {
       list.push({
@@ -72,7 +131,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
       });
     });
     return list;
-  }, []);
+  }, [baseStateMeta, records]);
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -311,7 +370,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
 
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-purple-700 text-xs font-semibold shadow-xs">
             <span className="material-symbols-outlined text-[16px]">verified</span>
-            <span>Dataset: NBS 2017</span>
+            <span>Dataset: {datasetMeta?.label || 'NBS 2017'}</span>
           </div>
 
           <button
@@ -327,7 +386,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
           </button>
 
           <button
-            onClick={() => onNavigateTab('machine-learning-and-prediction')}
+            onClick={() => onNavigateTab('prediction')}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-700 text-white font-semibold text-sm shadow-sm hover:bg-purple-800 transition-all cursor-pointer"
             type="button"
           >
@@ -348,12 +407,12 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
             </div>
           </div>
           <div className="mt-4">
-            <div className="text-2xl sm:text-3xl font-bold text-slate-900 tabular-nums">134,663</div>
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 tabular-nums">{live.totalCases.toLocaleString()}</div>
             <p className="text-xs text-slate-500 mt-0.5">Reported crime cases</p>
           </div>
           <div className="mt-3 pt-2 border-t border-slate-100 flex items-center gap-1.5 text-purple-700 text-xs font-medium">
             <span className="material-symbols-outlined text-[15px]">history_edu</span>
-            <span>NBS 2017 Validated Baseline</span>
+            <span>{datasetMeta?.label || 'NBS 2017'} Validated Baseline</span>
           </div>
         </div>
 
@@ -459,7 +518,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
             <h2 className="text-base font-bold text-slate-900">Filter Crime Records</h2>
           </div>
           <span className="text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full font-medium">
-            Showing filtered results from the historical NBS 2017 dataset
+            Showing filtered results from the historical {datasetMeta?.label || 'NBS 2017'} dataset
           </span>
         </div>
 
@@ -500,10 +559,10 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
                 onChange={(e) => setSelectedStateFilter(e.target.value)}
                 className="w-full h-[42px] px-3 pr-8 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-purple-700/20 focus:border-purple-700 appearance-none transition-all cursor-pointer"
               >
-                <option value="all">All States (36 + FCT)</option>
-                {NIGERIAN_STATES_DATA.map((s) => (
-                  <option key={s.state} value={s.state.toLowerCase()}>
-                    {s.state} {s.state.includes('FCT') ? '' : 'State'}
+                <option value="all">All States ({datasetMeta?.uniqueStates || 37} total)</option>
+                {[...new Set(allRecords.map((record) => record.state))].map((state) => (
+                  <option key={state} value={state.toLowerCase()}>
+                    {state}
                   </option>
                 ))}
               </select>
@@ -525,10 +584,10 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
                 onChange={(e) => setSelectedCategoryFilter(e.target.value)}
                 className="w-full h-[42px] px-3 pr-8 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-purple-700/20 focus:border-purple-700 appearance-none transition-all cursor-pointer"
               >
-                <option value="all">All Categories (3)</option>
-                <option value="property">Offences Against Property (68,579)</option>
-                <option value="persons">Offences Against Persons (53,641)</option>
-                <option value="authority">Offences Against Lawful Authority (12,443)</option>
+                <option value="all">All Categories ({new Set(allRecords.map((record) => record.category)).size})</option>
+                <option value="property">Offences Against Property ({allRecords.filter((record) => record.category === 'property').reduce((sum, record) => sum + record.cases, 0).toLocaleString()})</option>
+                <option value="persons">Offences Against Persons ({allRecords.filter((record) => record.category === 'persons').reduce((sum, record) => sum + record.cases, 0).toLocaleString()})</option>
+                <option value="authority">Offences Against Lawful Authority ({allRecords.filter((record) => record.category === 'authority').reduce((sum, record) => sum + record.cases, 0).toLocaleString()})</option>
               </select>
               <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
                 expand_more
@@ -888,7 +947,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                  <span className="text-xl font-bold text-slate-900 tabular-nums">134,663</span>
+                  <span className="text-xl font-bold text-slate-900 tabular-nums">{live.totalCases.toLocaleString()}</span>
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Filings</span>
                 </div>
               </div>
@@ -902,8 +961,8 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
                   <span className="text-xs font-semibold text-slate-900">Against Property</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-sm font-bold text-slate-900 tabular-nums">68,579</span>
-                  <span className="text-xs text-slate-500 ml-1 font-medium">(50.9%)</span>
+                  <span className="text-sm font-bold text-slate-900 tabular-nums">{propertyCases.toLocaleString()}</span>
+                  <span className="text-xs text-slate-500 ml-1 font-medium">({live.dominantPercent.toFixed(1)}%)</span>
                 </div>
               </div>
 
@@ -913,7 +972,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
                   <span className="text-xs font-semibold text-slate-900">Against Persons</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-sm font-bold text-slate-900 tabular-nums">53,641</span>
+                  <span className="text-sm font-bold text-slate-900 tabular-nums">{personsCases.toLocaleString()}</span>
                   <span className="text-xs text-slate-500 ml-1 font-medium">(39.8%)</span>
                 </div>
               </div>
@@ -924,7 +983,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
                   <span className="text-xs font-semibold text-slate-900">Lawful Authority</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-sm font-bold text-slate-900 tabular-nums">12,443</span>
+                  <span className="text-sm font-bold text-slate-900 tabular-nums">{authorityCases.toLocaleString()}</span>
                   <span className="text-xs text-slate-500 ml-1 font-medium">(9.3%)</span>
                 </div>
               </div>
@@ -1075,7 +1134,7 @@ export const CrimeDataView: React.FC<CrimeDataViewProps> = ({
             </div>
             <div className="pt-4">
               <button
-                onClick={() => onNavigateTab('machine-learning-and-prediction')}
+                onClick={() => onNavigateTab('prediction')}
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-700 hover:text-violet-900 transition-colors cursor-pointer"
                 type="button"
               >
