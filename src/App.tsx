@@ -12,6 +12,7 @@ import { Footer } from './components/Footer';
 
 import { AuthPage } from './components/AuthPage';
 import { DashboardView } from './components/DashboardView';
+import { ReportsView } from './components/ReportsView';
 import { SearchModal } from './components/SearchModal';
 import { buildLiveDashboardData, buildLiveDashboardDataFromRecords, LiveDashboardData, LiveCrimeRecord, DatasetSummary, summarizeDataset } from './mockRealtimeData';
 
@@ -62,7 +63,7 @@ export default function App() {
   }, []);
 
   const handleSubNavNavigate = (sectionId: string) => {
-    if (sectionId === 'dashboard' || sectionId === 'hotspots' || sectionId === 'prediction' || sectionId === 'crime-data') {
+    if (sectionId === 'dashboard' || sectionId === 'hotspots' || sectionId === 'prediction' || sectionId === 'crime-data' || sectionId === 'reports') {
       setActiveTab(sectionId as ActiveTab);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -101,6 +102,58 @@ export default function App() {
     setActiveTab('prediction');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (activeTab === 'reports') {
+    return (
+      <div className="min-h-screen bg-white text-[#1e1926] font-sans antialiased selection:bg-[#6200a9] selection:text-white">
+        <SubNav
+          activeTab={activeTab}
+          activeSection={activeSubSection}
+          onNavigateSection={handleSubNavNavigate}
+          onNavigateTab={(tab) => {
+            setActiveTab(tab);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onLaunchDashboard={() => {
+            setActiveTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onSignIn={() => {
+            setActiveTab('auth');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          currentAnalyst={currentAnalyst}
+          onSignOut={() => setCurrentAnalyst(null)}
+        />
+
+        <main>
+          <ReportsView
+            onBackToOverview={() => {
+              setActiveTab('overview');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onLaunchDashboard={() => {
+              setActiveTab('dashboard');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </main>
+
+        <Footer
+          onNavigate={(target) => {
+            if (target === 'auth') {
+              setActiveTab('auth');
+            } else if (target === 'dashboard' || target === 'hotspots' || target === 'prediction' || target === 'crime-data' || target === 'reports') {
+              setActiveTab(target as ActiveTab);
+            } else {
+              handleSubNavNavigate(target);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      </div>
+    );
+  }
 
   // If user is inside any operational dashboard tab
   if (
@@ -272,7 +325,7 @@ export default function App() {
         onNavigate={(target) => {
           if (target === 'auth') {
             setActiveTab('auth');
-          } else if (target === 'dashboard' || target === 'hotspots' || target === 'prediction' || target === 'crime-data') {
+          } else if (target === 'dashboard' || target === 'hotspots' || target === 'prediction' || target === 'crime-data' || target === 'reports') {
             setActiveTab(target as ActiveTab);
           } else {
             handleSubNavNavigate(target);

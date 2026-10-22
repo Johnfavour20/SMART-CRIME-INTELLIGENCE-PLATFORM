@@ -34,7 +34,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   uploadedRecords = [],
   onDatasetUploaded,
 }) => {
-  const [activeSubView, setActiveSubView] = useState<'dashboard' | 'crime-data' | 'datasets' | 'analytics' | 'hotspots' | 'prediction' | 'models'>(initialSubView);
+  const [activeSubView, setActiveSubView] = useState<'dashboard' | 'crime-data' | 'datasets' | 'analytics' | 'hotspots' | 'prediction' | 'models' | 'reports'>(initialSubView);
   const [trendCategory, setTrendCategory] = useState<'all' | 'property' | 'persons' | 'authority'>('all');
   const [selectedState, setSelectedState] = useState<string>('Lagos');
   const [isExporting, setIsExporting] = useState<boolean>(false);
@@ -179,7 +179,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       id: 'reports',
       label: 'Reports',
       icon: 'description',
-      onClick: () => onNavigateTab('patterns'),
+      onClick: () => onNavigateTab('reports'),
       isActive: false,
     },
   ];

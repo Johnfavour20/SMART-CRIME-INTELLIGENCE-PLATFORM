@@ -55,6 +55,7 @@ export type ActiveTab =
   | 'hotspots'
   | 'prediction'
   | 'models'
+  | 'reports'
   | 'patterns'
   | 'foundation'
   | 'auth';

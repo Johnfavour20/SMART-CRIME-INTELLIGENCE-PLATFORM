@@ -46,6 +46,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDoc }) => {
             <button onClick={() => onNavigate && onNavigate('prediction')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
               Crime Risk Predictor
             </button>
+            <button onClick={() => onNavigate && onNavigate('reports')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
+              Report Center
+            </button>
             <button onClick={() => onNavigate && onNavigate('crime-data')} className="text-left text-[13px] text-slate-600 hover:text-purple-700 transition-colors cursor-pointer">
               NBS Crime Records
             </button>
