@@ -56,12 +56,19 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
         'Integration of anonymous incident reporting dropboxes in high-transit motor parks.'
       ];
 
+      const rfVoteDistribution = {
+        low: Math.max(8, Math.round((100 - finalScore) * 0.42)),
+        moderate: Math.max(15, Math.round((finalScore + 20) * 0.28)),
+        high: Math.max(12, Math.round(finalScore * 0.5)),
+      };
+
       setResult({
         riskScore: finalScore,
-        level,
-        confidence: 91.8 + Math.round((finalScore % 3) * 10) / 10,
-        clusterId: stateData.clusterId,
-        decisionPath,
+        riskLevel: level,
+        confidence: 0.918 + Math.round((finalScore % 3) * 10) / 1000,
+        kMeansCluster: stateData.clusterId,
+        decisionTreePath: decisionPath,
+        rfVoteDistribution,
         recommendations,
       });
       setIsCalculating(false);
@@ -283,15 +290,15 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                       Risk Classification
                     </span>
                     <span className={`px-3 py-1 rounded-md text-xs font-bold ${
-                      result.level === 'Critical' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
-                      result.level === 'High' ? 'bg-orange-100 text-orange-900 border border-orange-300' :
-                      result.level === 'Moderate' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                      result.riskLevel === 'Critical' ? 'bg-rose-100 text-rose-900 border border-rose-300' :
+                      result.riskLevel === 'High' ? 'bg-orange-100 text-orange-900 border border-orange-300' :
+                      result.riskLevel === 'Moderate' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
                       'bg-emerald-100 text-emerald-900 border border-emerald-300'
                     }`}>
-                      {result.level} Intensity
+                      {result.riskLevel} Intensity
                     </span>
                     <span className="text-xs text-slate-500 mt-1">
-                      Assigned to Spatial Cluster #{result.clusterId}
+                      Assigned to Spatial Cluster #{result.kMeansCluster}
                     </span>
                   </div>
                 </div>
@@ -306,7 +313,7 @@ export const PredictionSimulator: React.FC<PredictionSimulatorProps> = ({
                   </div>
                   
                   <div className="space-y-2">
-                    {result.decisionPath.map((step, idx) => (
+                    {result.decisionTreePath.map((step, idx) => (
                       <div
                         key={idx}
                         className="p-3 rounded-xl bg-white border border-slate-200 text-[12px] flex items-start gap-2.5 shadow-xs"

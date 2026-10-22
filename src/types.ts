@@ -46,13 +46,16 @@ export interface PredictionResult {
   recommendations: string[];
 }
 
-export type ActiveTab = 
-  | 'overview' 
+export type ActiveTab =
+  | 'overview'
   | 'dashboard'
   | 'crime-data'
   | 'analytics'
+  | 'data-visualizations'
   | 'hotspots'
   | 'prediction'
   | 'models'
+  | 'patterns'
+  | 'foundation'
   | 'auth';
 

@@ -98,8 +98,21 @@ export const HotspotsView: React.FC<HotspotsViewProps> = ({
   // Map zoom level simulation
   const [mapZoom, setMapZoom] = useState<number>(1);
 
+  type ClusterStateSummary = {
+    state: string;
+    zone: string;
+    propertyCases: number;
+    personsCases: number;
+    authorityCases: number;
+    totalCases: number;
+    clusterId: string;
+    band: string;
+    silhouette: string;
+    primaryCategory: string;
+  };
+
   // Inspected state modal
-  const [inspectStateModal, setInspectStateModal] = useState<typeof NIGERIAN_STATES_DATA[0] | null>(null);
+  const [inspectStateModal, setInspectStateModal] = useState<ClusterStateSummary | null>(null);
 
   const live = liveData ?? {
     totalCases: 134663,
